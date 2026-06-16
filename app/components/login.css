@@ -1,0 +1,439 @@
+.sonic-login-root {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #08080a;
+  display: flex;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Inter", sans-serif;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* TOP NAVIGATION */
+.sonic-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 32px 64px;
+  gap: 56px;
+  z-index: 10;
+}
+
+.sonic-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.sonic-logo-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1ED760;
+}
+
+.sonic-nav-links {
+  display: flex;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.sonic-nav-links a {
+  color: #a7a7a7;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.sonic-nav-links a:hover {
+  color: #ffffff;
+}
+
+/* LEFT COLUMN - FORM */
+.sonic-login-left {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 48px 48px 80px;
+  position: relative;
+  z-index: 2;
+  background: radial-gradient(circle at 15% 90%, rgba(30, 215, 96, 0.05) 0%, transparent 50%);
+}
+
+.sonic-form-container {
+  width: 100%;
+  max-width: 420px;
+  z-index: 2;
+}
+
+.sonic-form-header h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0 0 10px;
+  letter-spacing: -0.03em;
+}
+
+.sonic-form-header p {
+  color: #a7a7a7;
+  font-size: 15px;
+  margin: 0 0 40px;
+}
+
+.sonic-social-logins {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sonic-social-logins button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sonic-social-logins button:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sonic-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 32px 0;
+  color: #777777;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.sonic-divider::before,
+.sonic-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sonic-divider span {
+  padding: 0 16px;
+}
+
+.sonic-field {
+  margin-bottom: 20px;
+}
+
+.sonic-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #eeeeee;
+}
+
+.sonic-field input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.sonic-field input:focus {
+  border-color: #1ED760;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sonic-field input::placeholder {
+  color: #666666;
+}
+
+.sonic-input-wrap {
+  position: relative;
+}
+
+.sonic-pass-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.sonic-pass-toggle:hover {
+  color: #ffffff;
+}
+
+.sonic-form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 32px;
+}
+
+.sonic-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #a7a7a7;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sonic-check input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.sonic-check input:checked {
+  background: #1ED760;
+  border-color: #1ED760;
+}
+
+.sonic-check input:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.sonic-forgot-link {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.sonic-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.sonic-submit {
+  width: 100%;
+  padding: 16px;
+  border-radius: 999px;
+  border: none;
+  background: #1ED760;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.sonic-submit:hover {
+  background: #1fdf64;
+  transform: scale(1.02);
+}
+
+.sonic-login-prompt {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 14px;
+  color: #a7a7a7;
+}
+
+.sonic-login-prompt a {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sonic-login-prompt a:hover {
+  text-decoration: underline;
+}
+
+/* RIGHT COLUMN - HERO VISUALS */
+.sonic-login-right {
+  flex: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 80px 48px 48px;
+  position: relative;
+}
+
+.sonic-login-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("https://images.unsplash.com/photo-1690991114897-7dc74a822372?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsaXZlJTIwbXVzaWMlMjBkaiUyMG5lb24lMjBkYXJrfGVufDF8fHx8MTc4MDI5NjgzNnww&ixlib=rb-4.1.0&q=80&w=1080") center/cover;
+  opacity: 0.35;
+  -webkit-mask-image: linear-gradient(to left, transparent, rgba(0,0,0,1) 30%);
+  mask-image: linear-gradient(to left, transparent, rgba(0,0,0,1) 30%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sonic-hero-visuals {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.sonic-player-widget {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 24px;
+  width: 380px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
+  transform: rotate(2deg) translateY(-10px);
+  transition: transform 0.3s ease;
+}
+
+.sonic-player-widget:hover {
+  transform: rotate(0deg) translateY(0);
+}
+
+.sonic-player-art {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.sonic-player-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sonic-player-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sonic-player-text h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.sonic-player-text p {
+  font-size: 13px;
+  color: #a7a7a7;
+  margin: 0;
+}
+
+.sonic-player-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #ffffff;
+}
+
+.sonic-player-controls button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.sonic-player-controls button:hover {
+  transform: scale(1.1);
+  color: #1ED760;
+}
+
+.sonic-play-btn {
+  color: #1ED760 !important;
+}
+
+.sonic-play-btn:hover {
+  transform: scale(1.15) !important;
+  color: #1fdf64 !important;
+}
+
+.sonic-floating-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: rotate(-2deg);
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .sonic-login-root {
+    flex-direction: column;
+  }
+  .sonic-nav {
+    position: relative;
+    padding: 24px;
+  }
+  .sonic-login-left {
+    padding: 24px 24px 48px;
+  }
+  .sonic-form-container {
+    max-width: 100%;
+  }
+  .sonic-login-right {
+    display: none; /* Hide visual on smaller screens to prioritize login form */
+  }
+}

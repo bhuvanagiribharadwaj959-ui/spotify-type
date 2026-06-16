@@ -1,0 +1,645 @@
+.sonic-signup-root {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #08080a;
+  background-image: 
+    radial-gradient(circle at 78% 12%, rgba(30, 215, 96, 0.1) 0%, transparent 32%),
+    radial-gradient(circle at 20% 88%, rgba(255, 122, 0, 0.08) 0%, transparent 34%);
+  display: flex;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Inter", sans-serif;
+  color: #ffffff;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* TOP NAVIGATION */
+.sonic-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 28px clamp(24px, 5vw, 72px);
+  gap: 56px;
+  z-index: 10;
+}
+
+.sonic-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.sonic-logo-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1ED760;
+}
+
+.sonic-nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+.sonic-nav-links a {
+  color: #a7a7a7;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.sonic-nav-links a:hover {
+  color: #ffffff;
+}
+
+/* LEFT COLUMN - HERO */
+.sonic-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 56px 72px clamp(28px, 6vw, 88px);
+  position: relative;
+  z-index: 2;
+}
+
+.sonic-hero {
+  max-width: 620px;
+}
+
+.sonic-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(30, 215, 96, 0.3);
+  background: rgba(30, 215, 96, 0.08);
+  color: #1ED760;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+
+.sonic-headline {
+  font-size: clamp(48px, 5.8vw, 76px);
+  line-height: 1.08;
+  letter-spacing: 0;
+  font-weight: 800;
+  margin: 0 0 24px;
+}
+
+.sonic-headline em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.sonic-sub {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #a7a7a7;
+  max-width: 520px;
+  margin: 0 0 42px;
+}
+
+.sonic-hero-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.sonic-btn-primary {
+  background: #1ED760;
+  color: #000000;
+  border: none;
+  border-radius: 999px;
+  padding: 16px 36px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.sonic-btn-primary:hover {
+  background: #1fdf64;
+  transform: scale(1.04);
+}
+
+.sonic-btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 16px 36px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.sonic-btn-secondary:hover {
+  border-color: #ffffff;
+  transform: scale(1.04);
+}
+
+.sonic-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #a7a7a7;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sonic-avatars {
+  display: flex;
+}
+
+.sonic-avatars span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #08080a;
+  margin-left: -10px;
+}
+.sonic-avatars span:first-child { margin-left: 0; }
+
+/* RIGHT COLUMN - FORM */
+.sonic-right {
+  flex: 0 1 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px clamp(28px, 6vw, 88px) 72px 32px;
+  position: relative;
+  min-height: 100vh;
+}
+
+.sonic-right-bg {
+  position: absolute;
+  inset: 0;
+  background: url("https://images.unsplash.com/photo-1459749411175-04bf5292ceea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMGNvbmNlcnQlMjBjcm93ZCUyMGRhcmt8ZW58MXx8fHwxNzgwMjk2MjA1fDA&ixlib=rb-4.1.0&q=80&w=1080") center/cover;
+  opacity: 0.18;
+  -webkit-mask-image: linear-gradient(to right, transparent, rgba(0,0,0,1) 40%);
+  mask-image: linear-gradient(to right, transparent, rgba(0,0,0,1) 40%);
+  pointer-events: none;
+  z-index: 0;
+  /* Promote to its own GPU layer so it never repaints over siblings */
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.sonic-form-container {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  background: rgba(12, 12, 15, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: clamp(28px, 4vw, 42px);
+  z-index: 1;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  /* Also promote form to its own layer to prevent bleed-through */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.sonic-form-header h2 {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  letter-spacing: 0;
+}
+
+.sonic-form-header p {
+  color: #a7a7a7;
+  font-size: 15px;
+  margin: 0 0 28px;
+}
+
+.sonic-social-logins {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.sonic-social-logins button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sonic-social-logins button:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sonic-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: #777777;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.sonic-divider::before,
+.sonic-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sonic-divider span {
+  padding: 0 16px;
+}
+
+.sonic-field {
+  margin-bottom: 18px;
+}
+
+.sonic-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #eeeeee;
+}
+
+.sonic-field input {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.sonic-field input:focus {
+  border-color: #1ED760;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sonic-field input::placeholder {
+  color: #666666;
+}
+.sonic-field input:-webkit-autofill,
+.sonic-field input:-webkit-autofill:hover,
+.sonic-field input:-webkit-autofill:focus,
+.sonic-field input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.sonic-input-wrap {
+  position: relative;
+}
+
+.sonic-pass-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.sonic-pass-toggle:hover {
+  color: #ffffff;
+}
+
+.sonic-strength {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.sonic-strength span {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  transition: background 0.3s;
+}
+
+.sonic-strength[data-level="1"] span:nth-child(1) { background: #ff4d4f; }
+.sonic-strength[data-level="2"] span:nth-child(-n+2) { background: #faad14; }
+.sonic-strength[data-level="3"] span:nth-child(-n+3) { background: #1ED760; }
+.sonic-strength[data-level="4"] span:nth-child(-n+4) { background: #1ED760; }
+
+.sonic-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: #a7a7a7;
+  margin-top: 20px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.sonic-check input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.2s;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.sonic-check input:checked {
+  background: #1ED760;
+  border-color: #1ED760;
+}
+
+.sonic-check input:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.sonic-check a {
+  color: #1ED760;
+  text-decoration: none;
+}
+
+.sonic-check a:hover {
+  text-decoration: underline;
+}
+
+.sonic-submit {
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #1ED760;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.sonic-submit:hover {
+  background: #1fdf64;
+  transform: scale(1.02);
+}
+
+.sonic-login-prompt {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 14px;
+  color: #a7a7a7;
+}
+
+.sonic-login-prompt a {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sonic-login-prompt a:hover {
+  text-decoration: underline;
+}
+
+.sonic-error-message {
+  width: 100%;
+  word-break: break-word;
+  white-space: normal;
+  display: flex;
+  align-items: flex-start;
+  font-size: 13px;
+  color: #ff4d4f;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 77, 79, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 77, 79, 0.1);
+  line-height: 1.45;
+}
+
+.sonic-info-message {
+  color: #d6ccff;
+  background: rgba(124, 92, 255, 0.12);
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  border: 1px solid rgba(124, 92, 255, 0.22);
+  line-height: 1.5;
+}
+
+.sonic-verification-card {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 22px;
+  border-radius: 8px;
+  border: 1px solid rgba(30, 215, 96, 0.2);
+  background: rgba(30, 215, 96, 0.08);
+}
+
+.sonic-verification-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #1ED760;
+  background: rgba(30, 215, 96, 0.13);
+}
+
+.sonic-verification-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.sonic-verification-card p {
+  margin: 0;
+  color: #d7d7d7;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sonic-verification-card strong {
+  color: #ffffff;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.sonic-verification-card span {
+  display: block;
+  margin-top: 8px;
+  color: #9be7b8;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.sonic-verification-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sonic-verification-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sonic-verification-actions button:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sonic-verification-actions button:disabled,
+.sonic-social-logins button:disabled,
+.sonic-field input:disabled,
+.sonic-pass-toggle:disabled,
+.sonic-check input:disabled,
+.sonic-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .sonic-signup-root {
+    flex-direction: column;
+    min-height: 100svh;
+  }
+  .sonic-nav {
+    position: relative;
+    padding: 24px;
+    justify-content: space-between;
+  }
+  .sonic-nav-links {
+    display: none;
+  }
+  .sonic-left {
+    padding: 34px 24px 18px;
+  }
+  .sonic-headline {
+    font-size: 44px;
+  }
+  .sonic-sub {
+    font-size: 16px;
+  }
+  .sonic-hero-buttons {
+    flex-direction: column;
+    margin-bottom: 34px;
+  }
+  .sonic-btn-primary,
+  .sonic-btn-secondary {
+    width: 100%;
+  }
+  .sonic-right {
+    min-height: auto;
+    padding: 24px 24px 64px;
+  }
+  .sonic-right-bg {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,1) 40%);
+    mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,1) 40%);
+  }
+}
+
+@media (max-width: 560px) {
+  .sonic-chip {
+    margin-bottom: 24px;
+  }
+
+  .sonic-headline {
+    font-size: 38px;
+  }
+
+  .sonic-social-proof {
+    align-items: flex-start;
+  }
+
+  .sonic-form-container {
+    padding: 24px;
+  }
+
+  .sonic-form-header h2 {
+    font-size: 28px;
+  }
+
+  .sonic-verification-card {
+    grid-template-columns: 1fr;
+  }
+
+  .sonic-verification-actions button {
+    flex: 1 1 130px;
+  }
+}
