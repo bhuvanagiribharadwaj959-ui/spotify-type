@@ -80,6 +80,9 @@ export async function POST(req: NextRequest) {
     
     // 1. Fetch Lyrics using Genius API
     let lyrics = 'No lyrics found';
+    if (!process.env.GENIUS_API) {
+      lyrics = 'No lyrics found (GENIUS_API secret is missing in Hugging Face Settings)';
+    }
     try {
       if (process.env.GENIUS_API) {
         const options = {
@@ -93,8 +96,9 @@ export async function POST(req: NextRequest) {
           lyrics = fetchedLyrics;
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Genius API Error:", e);
+      lyrics = `No lyrics found (Error: ${e.message || 'Blocked by Genius / Unknown Error'})`;
     }
 
     // 2. Fetch Audio URL fallback (Frontend uses static Supabase URLs, so this is just a fallback for older songs)
