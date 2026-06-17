@@ -234,32 +234,7 @@ export default function PlayingOverlay({
                 <img src={track.img} alt={track.title} className="playing-cover" />
               </div>
 
-              {alternatives && alternatives.length > 0 && (
-                <div style={{ width: '100%', maxWidth: '400px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px', maxHeight: '200px', overflowY: 'auto' }}>
-                  <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px' }}>Alternative Audio Sources</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {alternatives.map((alt, i) => (
-                      <button 
-                        key={i}
-                        onClick={() => onAlternativeSelect && onAlternativeSelect(alt.encrypted_url)}
-                        style={{ 
-                          background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', 
-                          padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', textAlign: 'left',
-                          display: 'flex', flexDirection: 'column', gap: '4px', transition: 'background 0.2s'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                      >
-                        <div style={{ fontWeight: 600, fontSize: '14px' }}>{alt.title}</div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
-                          <span>{alt.subtitle}</span>
-                          <span>{formatTimeReal(alt.duration)}</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+
             </div>
           </div>
 
