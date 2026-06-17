@@ -42,6 +42,11 @@ type DaliTrack = {
     language?: string;
     genres?: string[];
   };
+  audio?: {
+    url: string;
+    path: string;
+    working: boolean;
+  };
 };
 
 type DashboardTrack = {
@@ -51,6 +56,7 @@ type DashboardTrack = {
   artist: string;
   language?: string;
   genres?: string[];
+  audioUrl?: string;
 };
 
 const daliTracks = Object.entries(daliMetadata as Record<string, Omit<DaliTrack, "id">>)
@@ -64,6 +70,7 @@ const toDashboardTrack = (track: DaliTrack & { metadata: { cover: string } }): D
   artist: track.artist,
   language: track.metadata.language,
   genres: track.metadata.genres || [],
+  audioUrl: track.audio?.working ? track.audio.url : undefined,
 });
 
 const dashboardTracks = daliTracks.map(toDashboardTrack);
@@ -155,9 +162,21 @@ export default function Dashboard() {
   const [randomHeroSlides, setRandomHeroSlides] = useState<DashboardTrack[]>([]);
   const [popularArtists, setPopularArtists] = useState<{ name: string, img: string }[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [alternatives, setAlternatives] = useState<any[]>([]);
 
   const allTracks = useMemo(() => {
-    return [...dbSongs, ...dashboardTracks];
+    // Put dashboardTracks first so they have priority over dbSongs!
+    const combined = [...dashboardTracks, ...dbSongs];
+    const unique = [];
+    const seenTitles = new Set<string>();
+    for (const track of combined) {
+      const lowerTitle = track.title.toLowerCase();
+      if (!seenTitles.has(lowerTitle)) {
+        seenTitles.add(lowerTitle);
+        unique.push(track);
+      }
+    }
+    return unique;
   }, [dbSongs]);
 
   useEffect(() => {
@@ -227,6 +246,8 @@ export default function Dashboard() {
             });
           }
         });
+        
+        fetched.sort((a, b) => a.title.localeCompare(b.title));
         setDbSongs(fetched);
       } catch (err) {
         // console.error(err);
@@ -315,34 +336,81 @@ export default function Dashboard() {
         audioRef.current.load();
       }
 
+      // Pre-load the static CDN stream if we have it in the database!
+      let hasPlayedStatic = false;
+      if (currentSong.audioUrl && audioRef.current) {
+        // We proxy it through our audio-proxy to avoid CORS issues if needed, or play directly.
+        // The API route currently proxies it as: `/api/audio-proxy?url=...`
+        audioRef.current.src = `/api/audio-proxy?url=${encodeURIComponent(currentSong.audioUrl)}`;
+        if (playingRef.current) {
+          playAudio();
+        }
+        hasPlayedStatic = true;
+      }
+
       try {
         const res = await fetch('/api/song', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: currentSong.id, title: currentSong.title, artist: currentSong.artist })
         });
+        if (!res.ok) {
+          const errData = await res.json();
+          setLyrics(`Failed to load song. Error: ${errData.details || errData.error || 'Unknown error'}`);
+          return;
+        }
+
         const data = await res.json();
-        if (data.audioUrl && audioRef.current) {
+        if (data.alternatives) {
+          setAlternatives(data.alternatives);
+        } else {
+          setAlternatives([]);
+        }
+
+        // Only use the fetched audio URL if we didn't already play the pre-calculated one
+        if (!hasPlayedStatic && data.audioUrl && audioRef.current) {
           audioRef.current.src = data.audioUrl;
-          // Use playingRef to get the most up-to-date playing state
           if (playingRef.current) {
             playAudio();
           }
+        } else if (!hasPlayedStatic && data.error) {
+          console.warn("Audio fetching failed:", data.error);
+          setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
+          return;
         }
         if (data.lyrics) {
           setLyrics(data.lyrics);
         } else {
-          setLyrics("");
+          setLyrics("No lyrics found");
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error("Error fetching song", e);
-        setLyrics("");
+        setLyrics(`Network error: ${e.message}`);
       } finally {
         setIsLoadingAudio(false);
       }
     };
     fetchSongData();
   }, [currentSong]);
+
+  const handleAlternativeSelect = async (encryptedUrl: string) => {
+    try {
+      const res = await fetch(`/api/song/auth?url=${encodeURIComponent(encryptedUrl)}`);
+      const data = await res.json();
+      if (data.audioUrl && audioRef.current) {
+        audioRef.current.src = data.audioUrl;
+        if (playingRef.current) {
+          playAudio();
+        } else {
+          setPlaying(true);
+        }
+      } else {
+        alert("Failed to load alternative track.");
+      }
+    } catch (e) {
+      alert("Error loading alternative track.");
+    }
+  };
 
   useEffect(() => {
     if (audioRef.current) {
@@ -519,7 +587,7 @@ export default function Dashboard() {
         
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${song.artist} - ${song.title}.m4a`;
+        a.download = `${song.artist} - ${song.title}.mp3`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -1193,6 +1261,8 @@ export default function Dashboard() {
         abLoopEnd={abLoopEnd}
         onProgressClick={handleProgressClick}
         onDownload={(e: any) => downloadTrack(e, currentSong)}
+        alternatives={alternatives}
+        onAlternativeSelect={handleAlternativeSelect}
       />
     </div>
   );

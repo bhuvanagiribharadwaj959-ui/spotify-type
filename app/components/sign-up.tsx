@@ -35,8 +35,14 @@ function authErrorMessage(err: unknown) {
         return "Network error. Please check your internet connection.";
       case "auth/popup-closed-by-user":
         return "Sign-in popup was closed before completing.";
+      case "auth/popup-blocked":
+        return "Sign-in popup was blocked by your browser. Please allow popups for this site.";
+      case "auth/cancelled-popup-request":
+        return "Sign-in request was cancelled because a new one was started.";
+      case "auth/unauthorized-domain":
+        return "This domain is not authorized for OAuth operations. Please check Firebase settings.";
       default:
-        return "An unexpected error occurred. Please try again.";
+        return `Error: ${err.message}`;
     }
   }
 

@@ -50,7 +50,9 @@ type PlayingOverlayProps = {
   abLoopStart?: number | null;
   abLoopEnd?: number | null;
   onProgressClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onDownload?: () => void;
+  onDownload?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  alternatives?: any[];
+  onAlternativeSelect?: (url: string) => void;
 };
 
 export default function PlayingOverlay({
@@ -78,7 +80,9 @@ export default function PlayingOverlay({
   abLoopStart = null,
   abLoopEnd = null,
   onProgressClick,
-  onDownload
+  onDownload,
+  alternatives = [],
+  onAlternativeSelect
 }: PlayingOverlayProps) {
   
   useEffect(() => {
@@ -91,10 +95,11 @@ export default function PlayingOverlay({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isExpanded, onClose]);
 
-  const formatTimeReal = (seconds: number) => {
-    if (isNaN(seconds) || seconds < 0) return "0:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+  const formatTimeReal = (seconds: number | string) => {
+    const secs = typeof seconds === 'string' ? parseInt(seconds) : seconds;
+    if (isNaN(secs) || secs < 0) return "0:00";
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
 
@@ -177,7 +182,25 @@ export default function PlayingOverlay({
             <div className="playing-lyrics-container" ref={lyricsContainerRef}>
               <div className="playing-lyrics">
                 {isLoading ? (
-                  <h1 className="lyric-line active" style={{ animation: "pulse 1.5s infinite" }}>Loading audio & lyrics...</h1>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '300px', gap: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', height: '60px' }}>
+                      <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "40px", "10px"] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
+                      <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "60px", "10px"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.1 }} />
+                      <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "30px", "10px"] }} transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut", delay: 0.2 }} />
+                      <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "50px", "10px"] }} transition={{ repeat: Infinity, duration: 1.1, ease: "easeInOut", delay: 0.3 }} />
+                    </div>
+                    <motion.h1 
+                      className="lyric-line active" 
+                      style={{ fontSize: '28px', margin: 0, textAlign: 'center' }}
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                    >
+                      Extracting Audio & Lyrics...
+                    </motion.h1>
+                    <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>
+                      Hang tight, we're pulling the highest quality stream.
+                    </div>
+                  </div>
                 ) : parsedLyrics.length > 0 ? (
                   parsedLyrics.map((line, i) => {
                     const isActive = i === activeLineIndex;
@@ -206,10 +229,37 @@ export default function PlayingOverlay({
             </div>
 
             {/* Right Side: Info & Cover */}
-            <div className="playing-info-container" style={{ justifyContent: 'center' }}>
-              <div className="playing-cover-wrapper" style={{ width: '100%', height: 'auto', aspectRatio: '1/1', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
+            <div className="playing-info-container" style={{ justifyContent: 'center', flexDirection: 'column', gap: '2rem' }}>
+              <div className="playing-cover-wrapper" style={{ width: '100%', maxWidth: '400px', height: 'auto', aspectRatio: '1/1', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
                 <img src={track.img} alt={track.title} className="playing-cover" />
               </div>
+
+              {alternatives && alternatives.length > 0 && (
+                <div style={{ width: '100%', maxWidth: '400px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px', maxHeight: '200px', overflowY: 'auto' }}>
+                  <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px' }}>Alternative Audio Sources</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {alternatives.map((alt, i) => (
+                      <button 
+                        key={i}
+                        onClick={() => onAlternativeSelect && onAlternativeSelect(alt.encrypted_url)}
+                        style={{ 
+                          background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', 
+                          padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', textAlign: 'left',
+                          display: 'flex', flexDirection: 'column', gap: '4px', transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                      >
+                        <div style={{ fontWeight: 600, fontSize: '14px' }}>{alt.title}</div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+                          <span>{alt.subtitle}</span>
+                          <span>{formatTimeReal(alt.duration)}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

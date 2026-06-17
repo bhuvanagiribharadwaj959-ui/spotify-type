@@ -1,0 +1,19 @@
+
+> my-app@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.1.11:3001
+- Environments: .env
+✓ Rea POST /api/song 200 in 5.0s (next.js: 10ms, application-code: 5.0s)
+  Reload env: .env
+  Reload env: .env
+  Reload env: .env
+  Reload env: .env
+laze/Documents/projects/spotify-type/my-app
+- Log:          .next/dev/logs/next-development.log
+
+Run kill 28490 to stop it.
+[?25h

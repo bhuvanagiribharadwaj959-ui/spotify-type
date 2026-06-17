@@ -1,0 +1,3570 @@
+{
+    "local_song_3": {
+        "artist": "Drake 21 Savage",
+        "title": "Bs On The Table",
+        "file_name": "Drake 21 Savage - Bs On The Table.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d43d3509b45726896cdbf6a62024243c.1000x1000x1.jpg"
+        }
+    },
+    "local_song_9": {
+        "artist": "Unknown Artist",
+        "title": "Make Them Cry",
+        "file_name": "Make Them Cry.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8e7083915305505aa19bd5dfdf275c75.1000x1000x1.png"
+        }
+    },
+    "local_song_7": {
+        "artist": "Kane Brown",
+        "title": "Woman",
+        "file_name": "Kane Brown - Woman (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0a38e4370fa2c45a2b5af136c6c927f8.1000x1000x1.png"
+        }
+    },
+    "local_song_6": {
+        "artist": "Taylor Swift",
+        "title": "Fortnight",
+        "file_name": "Taylor Swift - Fortnight (feat. Post Malone) (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9e602eb80c004d0302187f908fa5afea.1000x1000x1.png"
+        }
+    },
+    "local_song_0": {
+        "artist": "Lil Durk",
+        "title": "What Happened to Virgil",
+        "file_name": "Lil Durk - What Happened to Virgil ft. Gunna (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/eaf4e8005183d25651216b532cfd928e.1000x1000x1.png"
+        }
+    },
+    "local_song_4": {
+        "artist": "Lil Tecca",
+        "title": "Dark Thoughts",
+        "file_name": "Lil Tecca - Dark Thoughts (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d1b9e0fdf120bf30418d9decdf195b20.1000x1000x1.png"
+        }
+    },
+    "local_song_5": {
+        "artist": "Eminem",
+        "title": "Houdini",
+        "file_name": "Eminem - Houdini [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5e019df474c54f4153f09dd45c36475b.1000x1000x1.png"
+        }
+    },
+    "local_song_2": {
+        "artist": "Morgan Wallen",
+        "title": "Just In Case",
+        "file_name": "Morgan Wallen - Just In Case (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1aa93b2406efd2da3c892e5a4acc6474.344x344x1.jpg"
+        }
+    },
+    "local_song_8": {
+        "artist": "Bad Bunny",
+        "title": "Tit Me Pregunt   Un Verano Sin Ti",
+        "file_name": "Bad Bunny - Tit Me Pregunt (Video Oficial)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/63ae1eeeb328e5cac95b28ae6ef81dce.1000x1000x1.png"
+        }
+    },
+    "local_song_11": {
+        "artist": "Post Malone",
+        "title": "Chemical",
+        "file_name": "Post Malone - Chemical (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/93e2f0204a0e1df474c9111984c81ec8.1000x1000x1.png"
+        }
+    },
+    "local_song_1": {
+        "artist": "Olivia Rodrigo",
+        "title": "the cure",
+        "file_name": "Olivia Rodrigo - the cure (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c3f739f50bebc2225c391f0e40f98d6a.1000x1000x1.png"
+        }
+    },
+    "local_song_10": {
+        "artist": "SIENNA SPIRO",
+        "title": "Die On This Hill",
+        "file_name": "SIENNA SPIRO - Die On This Hill (Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9b03b86450acbe243524c3ffd5ac473e.1000x1000x1.png"
+        }
+    },
+    "local_song_13": {
+        "artist": "Glass Animals",
+        "title": "Heat Waves",
+        "file_name": "Glass Animals - Heat Waves (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/14f9d7ab46d7737d9a6d7459c7333392.1000x1000x1.png"
+        }
+    },
+    "local_song_16": {
+        "artist": "Tyla",
+        "title": "Water",
+        "file_name": "Tyla - Water (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/106f2de60431db9409b3a29204be249e.1000x1000x1.png"
+        }
+    },
+    "local_song_15": {
+        "artist": "Doechii",
+        "title": "Anxiety",
+        "file_name": "Doechii - Anxiety.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0b1988e6769ead4e2be5368c231d532e.1000x1000x1.png"
+        }
+    },
+    "local_song_14": {
+        "artist": "Jessie Murph Jelly Roll",
+        "title": "Wild Ones",
+        "file_name": "Jessie Murph Jelly Roll - Wild Ones (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/06b4d7589922739bf1f4e59201d052f3.603x603x1.png"
+        }
+    },
+    "local_song_17": {
+        "artist": "Luke Combs",
+        "title": "The Kind of Love We Make",
+        "file_name": "Luke Combs - The Kind of Love We Make (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/31cc087eb81f253827843032bce26202.1000x1000x1.jpg"
+        }
+    },
+    "local_song_19": {
+        "artist": "Sabrina Carpenter",
+        "title": "Please Please Please",
+        "file_name": "Sabrina Carpenter - Please Please Please.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5b6f726b3b98c5b275bf51967e26b80f.1000x1000x1.png"
+        }
+    },
+    "local_song_20": {
+        "artist": "Adele",
+        "title": "Easy On Me",
+        "file_name": "Adele - Easy On Me (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/15057eb95cfc185bb9be3d955c19c164.1000x1000x1.png"
+        }
+    },
+    "local_song_18": {
+        "artist": "Rihanna",
+        "title": "Lift Me Up",
+        "file_name": "Rihanna - Lift Me Up (From Black Panther Wakanda Forever).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b563763ff8d56034064790eadf0d5605.1000x1000x1.png"
+        }
+    },
+    "local_song_21": {
+        "artist": "Chris Stapleton",
+        "title": "You Should Probably Leave",
+        "file_name": "Chris Stapleton - You Should Probably Leave (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/84b33ef309a95178ff3cbdf7cb6b93ac.563x563x1.jpg"
+        }
+    },
+    "local_song_22": {
+        "artist": "Drake",
+        "title": "Jimmy Cooks",
+        "file_name": "Drake - Jimmy Cooks (Audio) ft. 21 Savage.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b87845b85927c18b7012f9fcede109ec.1000x1000x1.png"
+        }
+    },
+    "local_song_24": {
+        "artist": "Megan Moroney",
+        "title": "Am I Okay",
+        "file_name": "Megan Moroney - Am I Okay (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2344deb966251fba32b97f02b75e8ce3.800x800x1.jpg"
+        }
+    },
+    "local_song_30": {
+        "artist": "Fuerza Regida x Grupo Frontera",
+        "title": "Bebe Dame",
+        "file_name": "Fuerza Regida x Grupo Frontera - Bebe Dame.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_27": {
+        "artist": "Drake",
+        "title": "Plot Twist",
+        "file_name": "Drake - Plot Twist.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_26": {
+        "artist": "Unknown Artist",
+        "title": "Classic",
+        "file_name": "Classic.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8e7083915305505aa19bd5dfdf275c75.1000x1000x1.png"
+        }
+    },
+    "local_song_12": {
+        "artist": "Benson Boone",
+        "title": "Mystical Magical",
+        "file_name": "Benson Boone - Mystical Magical (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e3e6ed32a30aae63ef7d25b004b17eb4.1000x1000x1.png"
+        }
+    },
+    "local_song_25": {
+        "artist": "Nicki Minaj",
+        "title": "Everybody",
+        "file_name": "Nicki Minaj - Everybody (Visualizer) ft. Lil Uzi Vert.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c03081ed79d9397f83d7e36a17202cda.1000x1000x1.png"
+        }
+    },
+    "local_song_32": {
+        "artist": "Morgan Wallen",
+        "title": "I Wrote The Book",
+        "file_name": "Morgan Wallen - I Wrote The Book (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a2124e16f9e39c243c01ef1f26aa5f45.1000x1000x1.png"
+        }
+    },
+    "local_song_23": {
+        "artist": "ERNEST",
+        "title": "Flower Shops",
+        "file_name": "ERNEST - Flower Shops (feat. Morgan Wallen) (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f7621797d9db6b6a15b2a5672cb6345b.1000x1000x1.jpg"
+        }
+    },
+    "local_song_34": {
+        "artist": "Victoria Mont",
+        "title": "On My Mama",
+        "file_name": "Victoria Mont - On My Mama (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4532718f8679bd19b22285a821984d84.600x600x1.jpg"
+        }
+    },
+    "local_song_35": {
+        "artist": "Bruno Mars",
+        "title": "Risk It All",
+        "file_name": "Bruno Mars - Risk It All [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/04159db08b6ef156e3418efa558af170.1000x1000x1.png"
+        }
+    },
+    "local_song_33": {
+        "artist": "Lil Nas X",
+        "title": "THATS WHAT I WANT",
+        "file_name": "Lil Nas X - THATS WHAT I WANT (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/52ff516ba3efdd22cc0a154eb4c75d2d.1000x1000x1.png"
+        }
+    },
+    "local_song_31": {
+        "artist": "NEIKED Mae Muller Polo G",
+        "title": "Better Days",
+        "file_name": "NEIKED Mae Muller Polo G - Better Days.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c937b5b3bfbf1c35a5dc40b2ee62ed90.1000x1000x1.png"
+        }
+    },
+    "local_song_36": {
+        "artist": "Saja Boys",
+        "title": "Soda Pop   K-Pop Demon Hunters  Netflix",
+        "file_name": "Saja Boys - Soda Pop (Official Lyric Video)  K-Pop Demon Hunters  Netflix.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_37": {
+        "artist": "Taylor Swift",
+        "title": "Cruel Summer",
+        "file_name": "Taylor Swift - Cruel Summer (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8109424a2bb5b226dbb3482466d51e34.1000x1000x1.png"
+        }
+    },
+    "local_song_39": {
+        "artist": "SZA",
+        "title": "Shirt",
+        "file_name": "SZA - Shirt (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/38464c020a973c45b7a87293b619b1cd.1000x1000x1.png"
+        }
+    },
+    "local_song_38": {
+        "artist": "Nate Smith",
+        "title": "Bulletproof",
+        "file_name": "Nate Smith - Bulletproof (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/87e6930377a46e1a66f85f86aa96056a.1000x1000x1.png"
+        }
+    },
+    "local_song_43": {
+        "artist": "Drake",
+        "title": "Dont Worry",
+        "file_name": "Drake - Dont Worry.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_44": {
+        "artist": "Ariana Grande",
+        "title": "hate that i made you love me",
+        "file_name": "Ariana Grande - hate that i made you love me (official music video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0f28be9dbdd56983cda0fe579668a844.1000x1000x1.png"
+        }
+    },
+    "local_song_40": {
+        "artist": "Drake",
+        "title": "NOKIA",
+        "file_name": "Drake - NOKIA (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/825cd524d153c58e7540cc3059770083.1000x1000x1.png"
+        }
+    },
+    "local_song_42": {
+        "artist": "WILLOW THE ANXIETY Tyler Cole",
+        "title": "Meet Me At Our Spot",
+        "file_name": "WILLOW THE ANXIETY Tyler Cole - Meet Me At Our Spot (Live Performance).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/07b7b745cb540e44f1e044af9af74af8.640x640x1.jpg"
+        }
+    },
+    "local_song_29": {
+        "artist": "Taylor Swift",
+        "title": "Is It Over Now",
+        "file_name": "Taylor Swift - Is It Over Now (Taylors Version) (From The Vault) (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a7c0bb49114dc476947df4375fb2ca0b.1000x1000x1.png"
+        }
+    },
+    "local_song_28": {
+        "artist": "Toosii",
+        "title": "Favorite Song",
+        "file_name": "Toosii - Favorite Song (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4486e319b31440254384fb70e1ea5cf5.1000x1000x1.jpg"
+        }
+    },
+    "local_song_45": {
+        "artist": "Benson Boone",
+        "title": "Beautiful Things",
+        "file_name": "Benson Boone - Beautiful Things (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/21a16766e0b99b72e30d1ea3d69bbe77.1000x1000x1.png"
+        }
+    },
+    "local_song_46": {
+        "artist": "Kendrick Lamar",
+        "title": "tv off",
+        "file_name": "Kendrick Lamar - tv off (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aa7b86debf8b362bad3018cb881cfdc1.1000x1000x1.png"
+        }
+    },
+    "local_song_52": {
+        "artist": "Unknown Artist",
+        "title": "Jason Aldean Trouble With A Heartbreak (Official Music Video)",
+        "file_name": "Jason Aldean Trouble With A Heartbreak (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_50": {
+        "artist": "SZA",
+        "title": "BMF",
+        "file_name": "SZA - BMF (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1ec6707691f2cbe2715f37e92f3456f0.1000x1000x1.png"
+        }
+    },
+    "local_song_47": {
+        "artist": "Kane Brown",
+        "title": "One Mississippi",
+        "file_name": "Kane Brown - One Mississippi (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ed3f01b5b46c524efd63e98960a4b288.600x600x1.jpg"
+        }
+    },
+    "local_song_48": {
+        "artist": "Bailey Zimmerman with Luke Combs",
+        "title": "Backup Plan",
+        "file_name": "Bailey Zimmerman with Luke Combs - Backup Plan (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f127c78bf34c581cc9dca7e9d1742e68.1000x1000x1.png"
+        }
+    },
+    "local_song_51": {
+        "artist": "Sexyy Red Get It Sexyy (Official Video",
+        "title": "No Skits)",
+        "file_name": "Sexyy Red Get It Sexyy (Official Video - No Skits).mp3",
+        "metadata": {
+            "cover": "https://assets.genius.com/images/default_cover_image.png?1781623551"
+        }
+    },
+    "local_song_53": {
+        "artist": "Tyler The Creator",
+        "title": "Sticky",
+        "file_name": "Tyler The Creator - Sticky feat. GloRilla Sexyy Red  Lil Wayne (LetraLegendado).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/206f16145c6ad42142656b0a53a0638f.1000x1000x1.png"
+        }
+    },
+    "local_song_49": {
+        "artist": "Harry Styles",
+        "title": "American Girls",
+        "file_name": "Harry Styles - American Girls (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a726a01bc512531e90918959acf6a298.1000x1000x1.png"
+        }
+    },
+    "local_song_55": {
+        "artist": "Warren Zeiders",
+        "title": "Pretty Little Poison",
+        "file_name": "Warren Zeiders - Pretty Little Poison (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3a5d69f7584defd522b7199f7412a1bf.1000x1000x1.png"
+        }
+    },
+    "local_song_56": {
+        "artist": "Bailey Zimmerman",
+        "title": "Rock and A Hard Place",
+        "file_name": "Bailey Zimmerman - Rock and A Hard Place (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/15b907968f50f1facc0e013d75be71ae.1000x1000x1.png"
+        }
+    },
+    "local_song_41": {
+        "artist": "Miguel",
+        "title": "Sure Thing",
+        "file_name": "Miguel - Sure Thing (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e7b616d1520ba0b02039022163f3b397.1000x1000x1.png"
+        }
+    },
+    "local_song_58": {
+        "artist": "Chris Stapleton",
+        "title": "White Horse",
+        "file_name": "Chris Stapleton - White Horse (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/935a7b490553a16e6810b671211bcdad.770x770x1.jpg"
+        }
+    },
+    "local_song_63": {
+        "artist": "Unknown Artist",
+        "title": "The Weeknd  Ariana Grande  Save Your Tears (Live on The 2021 iHeart Radio Music Awards)",
+        "file_name": "The Weeknd  Ariana Grande  Save Your Tears (Live on The 2021 iHeart Radio Music Awards).mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_60": {
+        "artist": "Harry Styles",
+        "title": "As It Was",
+        "file_name": "Harry Styles - As It Was (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/cddf6d7bb531c9b23ccb4a719d833ff1.1000x1000x1.png"
+        }
+    },
+    "local_song_59": {
+        "artist": "Morgan Wallen",
+        "title": "Last Night",
+        "file_name": "Morgan Wallen - Last Night (One Record At A Time Sessions).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a2124e16f9e39c243c01ef1f26aa5f45.1000x1000x1.png"
+        }
+    },
+    "local_song_62": {
+        "artist": "Jelly Roll",
+        "title": "NEED A FAVOR",
+        "file_name": "Jelly Roll - NEED A FAVOR (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/95b7b52e87f575f7cfb4a849b62beee5.1000x1000x1.png"
+        }
+    },
+    "local_song_61": {
+        "artist": "Zach Bryan",
+        "title": "Something In The Orange",
+        "file_name": "Zach Bryan - Something In The Orange.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/baeced2a2efdaf8614a8484748175dbf.1000x1000x1.png"
+        }
+    },
+    "local_song_54": {
+        "artist": "Kendrick Lamar",
+        "title": "Not Like Us",
+        "file_name": "Kendrick Lamar - Not Like Us.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/95cfea0187b37c7731e11d54b07d2415.1000x1000x1.png"
+        }
+    },
+    "local_song_65": {
+        "artist": "BAD BUNNY",
+        "title": "BAILE INoLVIDABLE   DeB TiRAR MS FOToS",
+        "file_name": "BAD BUNNY - BAILE INoLVIDABLE (Video Oficial)  DeB TiRAR MS FOToS.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_64": {
+        "artist": "JVKE",
+        "title": "golden hour",
+        "file_name": "JVKE - golden hour (official music video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a0e840f0babf662c68825023f0d3e32b.1000x1000x1.png"
+        }
+    },
+    "local_song_66": {
+        "artist": "Doechii",
+        "title": "What It Is",
+        "file_name": "Doechii - What It Is (Block Boy) feat. Kodak Black [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0a7c34395ae8737327d8e53f466ebc1c.1000x1000x1.png"
+        }
+    },
+    "local_song_57": {
+        "artist": "Doechii",
+        "title": "DENIAL IS A RIVER",
+        "file_name": "Doechii - DENIAL IS A RIVER.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a899e6cbe67695bfa7e2a716c50d7583.1000x1000x1.png"
+        }
+    },
+    "local_song_75": {
+        "artist": "Riley Green",
+        "title": "Riley Green - My Way  - As Seen on CBS Marshals",
+        "file_name": "Riley Green - Riley Green - My Way (Lyric Video) - As Seen on CBS Marshals.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/08850b832ee3317a76eb474cc133466a.1000x1000x1.png"
+        }
+    },
+    "local_song_72": {
+        "artist": "GloRilla",
+        "title": "Yeah Glo",
+        "file_name": "GloRilla - Yeah Glo (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e8b3c3993496e3673952a46218bb0f2c.1000x1000x1.png"
+        }
+    },
+    "local_song_73": {
+        "artist": "Taylor Swift",
+        "title": "Opalite",
+        "file_name": "Taylor Swift - Opalite (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d7305e426764545307ba91e692cac6d8.1000x1000x1.png"
+        }
+    },
+    "local_song_68": {
+        "artist": "Nicki Minaj",
+        "title": "FTCU",
+        "file_name": "Nicki Minaj - FTCU (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aa6d0f257f9a368de4ea272ee1bb786d.1000x1000x1.png"
+        }
+    },
+    "local_song_70": {
+        "artist": "Ella Langley",
+        "title": "werent for the wind",
+        "file_name": "Ella Langley - werent for the wind (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/42433dba114ad9cd6fb5d77b6285683a.300x300x1.jpg"
+        }
+    },
+    "local_song_71": {
+        "artist": "Noah Kahan",
+        "title": "Orbiter",
+        "file_name": "Noah Kahan - Orbiter (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/65b0196ab67c739665422cb69b2933ed.1000x1000x1.png"
+        }
+    },
+    "local_song_74": {
+        "artist": "Alex Warren",
+        "title": "FEVER DREAM",
+        "file_name": "Alex Warren - FEVER DREAM (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3fb44dc25ebf05db4180e6fb178929f7.1000x1000x1.png"
+        }
+    },
+    "local_song_67": {
+        "artist": "Parker McCollum",
+        "title": "Handle On You",
+        "file_name": "Parker McCollum - Handle On You (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2a83a774e889075bcd806e736fe45037.1000x1000x1.jpg"
+        }
+    },
+    "local_song_69": {
+        "artist": "Kacey Musgraves",
+        "title": "Dry Spell",
+        "file_name": "Kacey Musgraves - Dry Spell (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e26cf0ab1d33ccf893321b58d26e87dd.430x430x1.png"
+        }
+    },
+    "local_song_82": {
+        "artist": "BAD BUNNY",
+        "title": "NUEVAYoL   DeB TiRAR MS FOToS",
+        "file_name": "BAD BUNNY - NUEVAYoL (Video Oficial)  DeB TiRAR MS FOToS.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_79": {
+        "artist": "Unknown Artist",
+        "title": "EJAE Audrey Nuna and Rei Ami from KPop Demon Hunters Golden  The Tonight Show",
+        "file_name": "EJAE Audrey Nuna and Rei Ami from KPop Demon Hunters Golden  The Tonight Show.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_80": {
+        "artist": "GloRilla",
+        "title": "WHATCHU KNO ABOUT ME",
+        "file_name": "GloRilla - WHATCHU KNO ABOUT ME ft. Sexyy Red (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/37b6413497181727f67c3789ecf862dd.1000x1000x1.png"
+        }
+    },
+    "local_song_76": {
+        "artist": "Travis Scott",
+        "title": "FEN",
+        "file_name": "Travis Scott - FEN ft. Playboi Carti.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8f37c3fca69f717af019953bb6364df7.500x500x1.jpg"
+        }
+    },
+    "local_song_81": {
+        "artist": "Ella Langley",
+        "title": "Dandelion",
+        "file_name": "Ella Langley - Dandelion (Official Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/535437a10bd9e316db4d07ed1cb6ea8c.1000x1000x1.png"
+        }
+    },
+    "local_song_77": {
+        "artist": "Unknown Artist",
+        "title": "Hoe Phase",
+        "file_name": "Hoe Phase.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/632bf8f8030f484f4e1c2a761fc1f804.599x601x1.jpg"
+        }
+    },
+    "local_song_86": {
+        "artist": "Oscar Maydon x Fuerza Regida",
+        "title": "Tu Boda",
+        "file_name": "Oscar Maydon x Fuerza Regida - Tu Boda [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/6429b08c00223e8faa8fd1091f40a6a7.1000x1000x1.png"
+        }
+    },
+    "local_song_83": {
+        "artist": "Future",
+        "title": "WAIT FOR U",
+        "file_name": "Future - WAIT FOR U (Official Music Video) ft. Drake Tems.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c07c1aa672e8578e2a5b34cc2b005d40.1000x1000x1.png"
+        }
+    },
+    "local_song_84": {
+        "artist": "Luke Combs",
+        "title": "Be By You",
+        "file_name": "Luke Combs - Be By You (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/61b677df29a5eb12ea682aff18d36bf1.1000x1000x1.png"
+        }
+    },
+    "local_song_85": {
+        "artist": "Tate McRae",
+        "title": "Revolving door",
+        "file_name": "Tate McRae - Revolving door (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7708e31c8a0e0ea01d5864c5e8f3a004.1000x1000x1.png"
+        }
+    },
+    "local_song_87": {
+        "artist": "HARDY Eric Church Morgan Wallen Tim McGraw",
+        "title": "McArthur",
+        "file_name": "HARDY Eric Church Morgan Wallen Tim McGraw - McArthur (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/61430a0987d394568d3865714c0efba0.1000x1000x1.png"
+        }
+    },
+    "local_song_78": {
+        "artist": "Doja Cat The Weeknd",
+        "title": "You Right",
+        "file_name": "Doja Cat The Weeknd - You Right (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c8c933088c7d7750731233af43bc648a.1000x1000x1.png"
+        }
+    },
+    "local_song_88": {
+        "artist": "The Weeknd",
+        "title": "Cry For Me",
+        "file_name": "The Weeknd - Cry For Me (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f88f169c51765afadd1e2add95f76cb0.1000x1000x1.png"
+        }
+    },
+    "local_song_91": {
+        "artist": "Thomas Rhett",
+        "title": "After All The Bars Are Closed",
+        "file_name": "Thomas Rhett - After All The Bars Are Closed (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/dc5889f6a7ab706d51e181150356909e.1000x1000x1.png"
+        }
+    },
+    "local_song_93": {
+        "artist": "Unknown Artist",
+        "title": "Babydoll",
+        "file_name": "Babydoll.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d2dd577522a1d7b87b339c32b8df2dfe.999x999x1.png"
+        }
+    },
+    "local_song_92": {
+        "artist": "Latto",
+        "title": "Put It On Da Floor Again",
+        "file_name": "Latto - Put It On Da Floor Again (Official Video) ft. Cardi B.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d7649d183cafd21a390e85b50ace76f1.1000x1000x1.png"
+        }
+    },
+    "local_song_89": {
+        "artist": "Lady Gaga Bruno Mars",
+        "title": "Die With A Smile",
+        "file_name": "Lady Gaga Bruno Mars - Die With A Smile (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/abe185baf2b9fd84ebb5d493ffe715b3.1000x1000x1.png"
+        }
+    },
+    "local_song_94": {
+        "artist": "Shaboozey",
+        "title": "Good News",
+        "file_name": "Shaboozey - Good News.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/516957cfb2c48cfe75e278dbfa3a1f1b.1000x1000x1.png"
+        }
+    },
+    "local_song_95": {
+        "artist": "Michael Jackson",
+        "title": "Billie Jean",
+        "file_name": "Michael Jackson - Billie Jean (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bf705f7b0a2cdf0c76588aae2256616d.1000x1000x1.png"
+        }
+    },
+    "local_song_96": {
+        "artist": "Olivia Dean",
+        "title": "So Easy",
+        "file_name": "Olivia Dean - So Easy (To Fall In Love).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/51a46ef360cb8f6132064f990c9ebbf2.1000x1000x1.png"
+        }
+    },
+    "local_song_90": {
+        "artist": "Billie Eilish",
+        "title": "WILDFLOWER",
+        "file_name": "Billie Eilish - WILDFLOWER (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5e7bf410789d01a90983b2641b88e5bd.1000x1000x1.png"
+        }
+    },
+    "local_song_97": {
+        "artist": "Peso Pluma",
+        "title": "Por Las Noches",
+        "file_name": "Peso Pluma - Por Las Noches (Video Oficial).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/13bc563fd88ef2dd7e5674ab855d3ea1.632x632x1.jpg"
+        }
+    },
+    "local_song_99": {
+        "artist": "Drake",
+        "title": "Burning Bridges",
+        "file_name": "Drake - Burning Bridges.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_98": {
+        "artist": "USHER Summer Walker 21 Savage",
+        "title": "Good Good",
+        "file_name": "USHER Summer Walker 21 Savage - Good Good (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/6429b08c00223e8faa8fd1091f40a6a7.1000x1000x1.png"
+        }
+    },
+    "local_song_100": {
+        "artist": "Lady Gaga",
+        "title": "Abracadabra",
+        "file_name": "Lady Gaga - Abracadabra (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/20da1cdb81648c3303700782accffb9c.1000x1000x1.png"
+        }
+    },
+    "local_song_104": {
+        "artist": "Unknown Artist",
+        "title": "Luke Combs  Aint No Love In Oklahoma (From Twisters The Album) [Official Music Video]",
+        "file_name": "Luke Combs  Aint No Love In Oklahoma (From Twisters The Album) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_101": {
+        "artist": "Zach Top",
+        "title": "I Never Lie",
+        "file_name": "Zach Top - I Never Lie (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ed8fc0c554919593a810b6e332bac07e.1000x1000x1.png"
+        }
+    },
+    "local_song_102": {
+        "artist": "Tommy Richman",
+        "title": "MILLION DOLLAR BABY",
+        "file_name": "Tommy Richman - MILLION DOLLAR BABY (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5f158869a36fcdcd129b6d4cf2f4dfe2.998x998x1.jpg"
+        }
+    },
+    "local_song_105": {
+        "artist": "OneRepublic",
+        "title": "I Aint Worried",
+        "file_name": "OneRepublic - I Aint Worried (From Top Gun Maverick) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/06742b3f76453ffb820c14cc665e365e.1000x1000x1.png"
+        }
+    },
+    "local_song_103": {
+        "artist": "Taylor Swift",
+        "title": "I Knew It I Knew You",
+        "file_name": "Taylor Swift - I Knew It I Knew You (from Toy Story 5).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/602cf9b745d51604d18bf715e05aef87.1000x1000x1.png"
+        }
+    },
+    "local_song_109": {
+        "artist": "Nicky Youre dazy",
+        "title": "Sunroof",
+        "file_name": "Nicky Youre dazy - Sunroof (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1729378bb29676184cc8d92de72aff2f.1000x1000x1.png"
+        }
+    },
+    "local_song_107": {
+        "artist": "Mariah the Scientist",
+        "title": "Burning Blue",
+        "file_name": "Mariah the Scientist - Burning Blue (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9ced88eab8971c823ac8ffe0ec3ef3eb.1000x1000x1.png"
+        }
+    },
+    "local_song_108": {
+        "artist": "Billie Eilish",
+        "title": "What Was I Made For",
+        "file_name": "Billie Eilish - What Was I Made For (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/da24a694842af9c824e21506c99f470b.1000x1000x1.png"
+        }
+    },
+    "local_song_106": {
+        "artist": "Benson Boone",
+        "title": "Sorry Im Here For Someone Else",
+        "file_name": "Benson Boone - Sorry Im Here For Someone Else (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/39d496ef99aa1a4aeb564e5494c9a812.1000x1000x1.png"
+        }
+    },
+    "local_song_111": {
+        "artist": "Sam Barber",
+        "title": "Indigo",
+        "file_name": "Sam Barber - Indigo (feat. Avery Anna) (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8aaea18a24de3e034fc2e3db47bb7ba2.1000x1000x1.png"
+        }
+    },
+    "local_song_110": {
+        "artist": "Bailey Zimmerman",
+        "title": "Fall In Love",
+        "file_name": "Bailey Zimmerman - Fall In Love (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3b8d551b458aa2cec31572fe5571ff2e.1000x1000x1.png"
+        }
+    },
+    "local_song_112": {
+        "artist": "Bad Bunny",
+        "title": "DtMF",
+        "file_name": "Bad Bunny - DtMF (Letra).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/66f08db4c1d9d323ab441ab6c04a034a.1000x1000x1.png"
+        }
+    },
+    "local_song_113": {
+        "artist": "Morgan Wallen",
+        "title": "I Got Better",
+        "file_name": "Morgan Wallen - I Got Better (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f8e8d52006f2a56642b6b4e4c3b01360.800x800x1.jpg"
+        }
+    },
+    "local_song_117": {
+        "artist": "Gunna  Future",
+        "title": "pushin P",
+        "file_name": "Gunna  Future - pushin P (feat. Young Thug) [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/47c4f2ebef991df92f859b463148a708.1000x1000x1.png"
+        }
+    },
+    "local_song_116": {
+        "artist": "Beyonc",
+        "title": "TEXAS HOLD EM",
+        "file_name": "Beyonc - TEXAS HOLD EM (Official Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/af1d2aed95b5b136eff8a8cce22f3722.1000x1000x1.png"
+        }
+    },
+    "local_song_114": {
+        "artist": "GloRilla Cardi B",
+        "title": "Tomorrow 2",
+        "file_name": "GloRilla Cardi B - Tomorrow 2 (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4f41ad71742585522ca63bc1c07bb750.1000x1000x1.jpg"
+        }
+    },
+    "local_song_115": {
+        "artist": "Djo",
+        "title": "End Of Beginning",
+        "file_name": "Djo - End Of Beginning (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9f2993e6261114e21a0a685bd2ede191.1000x1000x1.png"
+        }
+    },
+    "local_song_118": {
+        "artist": "Wham",
+        "title": "Last Christmas",
+        "file_name": "Wham - Last Christmas (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e7c004d9c548b6266cd351ee9dd93e97.1000x1000x1.png"
+        }
+    },
+    "local_song_121": {
+        "artist": "Young Nudy",
+        "title": "Peaches  Eggplants",
+        "file_name": "Young Nudy - Peaches  Eggplants (Official Video) ft. 21 Savage.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9a6e46ea2b5e7d77938eac9acc337844.999x999x1.png"
+        }
+    },
+    "local_song_120": {
+        "artist": "Morgan Wallen",
+        "title": "Love Somebody",
+        "file_name": "Morgan Wallen - Love Somebody (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fb99818574c326037d01194a2ccd42ef.1000x1000x1.png"
+        }
+    },
+    "local_song_123": {
+        "artist": "Paul Russell",
+        "title": "Lil Boo Thang",
+        "file_name": "Paul Russell - Lil Boo Thang (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/81ed03e77ee8bdf9752910862ab5ff2e.1000x1000x1.png"
+        }
+    },
+    "local_song_124": {
+        "artist": "Morgan Wallen",
+        "title": "Cowgirls",
+        "file_name": "Morgan Wallen - Cowgirls (Lyric Video) ft. ERNEST.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/dc9c962c6b47f115a4e82ec75fa82a8e.800x800x1.jpg"
+        }
+    },
+    "local_song_127": {
+        "artist": "Doja Cat",
+        "title": "Kiss Me More",
+        "file_name": "Doja Cat - Kiss Me More (Official Video) ft. SZA.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4fece65614c07ed3947fe0095025dd50.1000x1000x1.png"
+        }
+    },
+    "local_song_125": {
+        "artist": "Hozier",
+        "title": "Too Sweet",
+        "file_name": "Hozier - Too Sweet (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/540267f20416960ce544a3265faa6a5a.1000x1000x1.png"
+        }
+    },
+    "local_song_126": {
+        "artist": "Bad Bunny",
+        "title": "WHERE SHE GOES",
+        "file_name": "Bad Bunny - WHERE SHE GOES (Video Oficial).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c184524aa8c01b09363cd68c64c8b61c.1000x1000x1.png"
+        }
+    },
+    "local_song_122": {
+        "artist": "Flo Milli",
+        "title": "Never Lose Me",
+        "file_name": "Flo Milli - Never Lose Me (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/589c6375bdbd0df5d7dd6639b4869343.1000x1000x1.png"
+        }
+    },
+    "local_song_128": {
+        "artist": "Unknown Artist",
+        "title": "Im Spent",
+        "file_name": "Im Spent.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8e7083915305505aa19bd5dfdf275c75.1000x1000x1.png"
+        }
+    },
+    "local_song_119": {
+        "artist": "Bobby Helms",
+        "title": "Jingle Bell Rock",
+        "file_name": "Bobby Helms - Jingle Bell Rock.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f86745817d0648ed09be4de1577b2f94.600x600x1.jpg"
+        }
+    },
+    "local_song_129": {
+        "artist": "Metro Boomin  Future",
+        "title": "Superhero",
+        "file_name": "Metro Boomin  Future - Superhero (Heroes  Villains) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3d4aa285b052f6933fdf6a23e2f3626a.1000x1000x1.jpg"
+        }
+    },
+    "local_song_130": {
+        "artist": "Future Metro Boomin Kendrick Lamar",
+        "title": "Like That",
+        "file_name": "Future Metro Boomin Kendrick Lamar - Like That (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5ec900dc6ebc47ab8f405bd05f06adba.1000x1000x1.png"
+        }
+    },
+    "local_song_136": {
+        "artist": "BAD BUNNY",
+        "title": "MONACO   nadie sabe lo que va a pasar maana",
+        "file_name": "BAD BUNNY - MONACO (Official Video)  nadie sabe lo que va a pasar maana.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_131": {
+        "artist": "Post Malone ft. Blake Shelton",
+        "title": "Pour Me A Drink",
+        "file_name": "Post Malone ft. Blake Shelton - Pour Me A Drink (Official Video) ft. Blake Shelton.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/870d3dbac37c80163ff464a21dbf4209.1000x1000x1.png"
+        }
+    },
+    "local_song_132": {
+        "artist": "Doja Cat",
+        "title": "Agora Hills",
+        "file_name": "Doja Cat - Agora Hills (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e1c7dc1e1a5aaa5d8238702efc786725.1000x1000x1.png"
+        }
+    },
+    "local_song_133": {
+        "artist": "Morgan Wallen",
+        "title": "Thought You Should Know",
+        "file_name": "Morgan Wallen - Thought You Should Know.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/694dad332e146013f9b3183d32351e9a.511x511x1.jpg"
+        }
+    },
+    "local_song_135": {
+        "artist": "Cody Johnson",
+        "title": "Til You Cant",
+        "file_name": "Cody Johnson - Til You Cant (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/724452a021a687cba21acf6503c86f23.400x400x1.jpg"
+        }
+    },
+    "local_song_134": {
+        "artist": "Morgan Wallen Post Malone",
+        "title": "I Aint Comin Back",
+        "file_name": "Morgan Wallen Post Malone - I Aint Comin Back (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3c4a47b2ef4ab759a5b616c4258c46ad.1000x1000x1.png"
+        }
+    },
+    "local_song_141": {
+        "artist": "Unknown Artist",
+        "title": "Nicki Minaj  Ice Spice  Barbie World (with Aqua) [Official Music Video]",
+        "file_name": "Nicki Minaj  Ice Spice  Barbie World (with Aqua) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_137": {
+        "artist": "Artemas",
+        "title": "i like the way you kiss me",
+        "file_name": "Artemas - i like the way you kiss me (official music video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/77fb2c35b831e46fa149e82c521b1c14.1000x1000x1.png"
+        }
+    },
+    "local_song_139": {
+        "artist": "Malcolm Todd",
+        "title": "Earrings",
+        "file_name": "Malcolm Todd - Earrings (Official Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e99e2aa0f27efc0e1dffc527c0d3609d.1000x1000x1.png"
+        }
+    },
+    "local_song_140": {
+        "artist": "DRAKE",
+        "title": "WHAT DID I MISS",
+        "file_name": "DRAKE - WHAT DID I MISS.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f00b59b92981cd7462110d59367c36ec.1000x1000x1.png"
+        }
+    },
+    "local_song_138": {
+        "artist": "Dave",
+        "title": "Raindance",
+        "file_name": "Dave - Raindance (ft. Tems).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1587028290f87090ed228ed739522844.1000x1000x1.png"
+        }
+    },
+    "local_song_142": {
+        "artist": "Bruce Springsteen",
+        "title": "Streets Of Minneapolis",
+        "file_name": "Bruce Springsteen - Streets Of Minneapolis (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8fcd568c7425bd24fb22050879482fe3.1000x1000x1.png"
+        }
+    },
+    "local_song_143": {
+        "artist": "sombr",
+        "title": "back to friends",
+        "file_name": "sombr - back to friends (official video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d21469deba7c8c34af722030c0ece1ab.1000x1000x1.png"
+        }
+    },
+    "local_song_149": {
+        "artist": "BAD BUNNY",
+        "title": "EoO   DeB TiRAR MS FOToS",
+        "file_name": "BAD BUNNY - EoO (Visualizer)  DeB TiRAR MS FOToS.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_144": {
+        "artist": "Adele",
+        "title": "Oh My God",
+        "file_name": "Adele - Oh My God (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ef62c92b3e328a3a5b3ff2383eca6b6c.1000x1000x1.png"
+        }
+    },
+    "local_song_145": {
+        "artist": "sombr",
+        "title": "Homewrecker",
+        "file_name": "sombr - Homewrecker (official video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0300d1b5435bd315d33c820e6d7efcf6.1000x1000x1.png"
+        }
+    },
+    "local_song_146": {
+        "artist": "KAROL G",
+        "title": "Provenza",
+        "file_name": "KAROL G - Provenza (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8164ddd1384338bab2645ebcb6b794bd.1000x1000x1.jpg"
+        }
+    },
+    "local_song_152": {
+        "artist": "Unknown Artist",
+        "title": "SHAKIRA  BZRP Music Sessions 5366",
+        "file_name": "SHAKIRA  BZRP Music Sessions 5366.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_148": {
+        "artist": "Morgan Wallen",
+        "title": "20 Cigarettes",
+        "file_name": "Morgan Wallen - 20 Cigarettes (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b57c009ab79f07057c13b261d6ac84d7.1000x1000x1.jpg"
+        }
+    },
+    "local_song_150": {
+        "artist": "FloyyMenor Cris MJ",
+        "title": "Gata Only",
+        "file_name": "FloyyMenor Cris MJ - Gata Only.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/715ee7f5c7f078e46cd0f9e30be43339.1000x1000x1.png"
+        }
+    },
+    "local_song_147": {
+        "artist": "Dasha",
+        "title": "Austin",
+        "file_name": "Dasha - Austin (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fdc5831039f45a042ba278bddec4bf57.1000x1000x1.png"
+        }
+    },
+    "local_song_151": {
+        "artist": "Justin Bieber",
+        "title": "Ghost",
+        "file_name": "Justin Bieber - Ghost.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ae3c78d485c51675dcbfa1653910ee0c.1000x1000x1.png"
+        }
+    },
+    "local_song_153": {
+        "artist": "Unknown Artist",
+        "title": "squabble up",
+        "file_name": "squabble up.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2c6affab95ff90617bd3cfc7d4b74635.444x444x1.jpg"
+        }
+    },
+    "local_song_154": {
+        "artist": "Madonna  Sabrina Carpenter",
+        "title": "Bring Your Love",
+        "file_name": "Madonna  Sabrina Carpenter - Bring Your Love (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/90f26842c13e3b1228b4d14d49a731e9.440x440x1.jpg"
+        }
+    },
+    "local_song_155": {
+        "artist": "Michael Jackson",
+        "title": "Human Nature",
+        "file_name": "Michael Jackson - Human Nature (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/213af8262f5e4a83564a627afcae025e.1000x1000x1.png"
+        }
+    },
+    "local_song_156": {
+        "artist": "Drake",
+        "title": "Knife Talk",
+        "file_name": "Drake - Knife Talk (Official Video) ft. 21 Savage Project Pat.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fa02d8bc4c7ee74b5a1408c2be032fea.1000x1000x1.png"
+        }
+    },
+    "local_song_157": {
+        "artist": "Riley Green",
+        "title": "Change My Mind",
+        "file_name": "Riley Green - Change My Mind (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/845377377d4b6aeff745ab879bbaafad.800x800x1.jpg"
+        }
+    },
+    "local_song_159": {
+        "artist": "Zara Larsson",
+        "title": "Lush Life",
+        "file_name": "Zara Larsson - Lush Life (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/efab62b42538171c7e93610050e7582f.1000x1000x1.png"
+        }
+    },
+    "local_song_158": {
+        "artist": "Taylor Swift",
+        "title": "Lavender Haze",
+        "file_name": "Taylor Swift - Lavender Haze (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/30cfee5aea3d5a7a8ad2aa47d75f0414.1000x1000x1.png"
+        }
+    },
+    "local_song_161": {
+        "artist": "Taylor Swift ft. Ice Spice",
+        "title": "Karma",
+        "file_name": "Taylor Swift ft. Ice Spice - Karma (Official Music Video) ft. Ice Spice.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ab72f76dfefafba664d0818d13eeb9a1.252x252x1.png"
+        }
+    },
+    "local_song_162": {
+        "artist": "Teddy Swims",
+        "title": "Bad Dreams",
+        "file_name": "Teddy Swims - Bad Dreams (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aa94f3edeadbe1fbef0db540fe53f954.1000x1000x1.png"
+        }
+    },
+    "local_song_166": {
+        "artist": "TheMarias",
+        "title": "No One Noticed",
+        "file_name": "TheMarias - No One Noticed (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/03f7f3388ba12c7102180ed5fb272941.665x1000x1.jpg"
+        }
+    },
+    "local_song_160": {
+        "artist": "Lauren Spencer Smith",
+        "title": "Fingers Crossed",
+        "file_name": "Lauren Spencer Smith - Fingers Crossed.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7eb4abe5f5b4426ec6352168c8aba3e4.1000x1000x1.png"
+        }
+    },
+    "local_song_163": {
+        "artist": "Jack Harlow",
+        "title": "Lovin On Me",
+        "file_name": "Jack Harlow - Lovin On Me [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/24e304c51642a72f7ed46d57b03aa0a3.1000x1000x1.png"
+        }
+    },
+    "local_song_165": {
+        "artist": "Bad Bunny",
+        "title": "Despus de la Playa   Un Verano Sin Ti",
+        "file_name": "Bad Bunny - Despus de la Playa (360 Visualizer)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/38d032c7843a27dde1953b66f8751404.640x640x1.jpg"
+        }
+    },
+    "local_song_164": {
+        "artist": "Teddy Swims",
+        "title": "Mr. Know It All",
+        "file_name": "Teddy Swims - Mr. Know It All.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/060ce22757b98911fee76ab5fa650c43.1000x1000x1.png"
+        }
+    },
+    "local_song_167": {
+        "artist": "Doja Cat",
+        "title": "Need to Know",
+        "file_name": "Doja Cat - Need to Know (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1782fcd53f49a260290081c89edd2d39.1000x1000x1.png"
+        }
+    },
+    "local_song_168": {
+        "artist": "Jon Pardi",
+        "title": "Last Night Lonely",
+        "file_name": "Jon Pardi - Last Night Lonely (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/cd642e2259dff76d613e74ea5c19d979.1000x1000x1.jpg"
+        }
+    },
+    "local_song_175": {
+        "artist": "Morgan Wallen",
+        "title": "Im The Problem",
+        "file_name": "Morgan Wallen - Im The Problem (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9c880842e1b0dcf2e91060a40e6f3f14.1000x1000x1.png"
+        }
+    },
+    "local_song_170": {
+        "artist": "Drake 21 Savage",
+        "title": "Rich Flex",
+        "file_name": "Drake 21 Savage - Rich Flex (Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/945dce123c5cf31e7e16eeb61052c6c1.1000x1000x1.jpg"
+        }
+    },
+    "local_song_171": {
+        "artist": "David Kushner",
+        "title": "Daylight",
+        "file_name": "David Kushner - Daylight (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4a9da28af52b02ed198802eeffc5ff31.1000x1000x1.png"
+        }
+    },
+    "local_song_174": {
+        "artist": "Drake",
+        "title": "Dust",
+        "file_name": "Drake - Dust.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_173": {
+        "artist": "SZA",
+        "title": "I Hate U",
+        "file_name": "SZA - I Hate U (Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d307661651f3185646fb2f7645c67757.1000x1000x1.png"
+        }
+    },
+    "local_song_172": {
+        "artist": "Tame Impala JENNIE",
+        "title": "Dracula",
+        "file_name": "Tame Impala JENNIE - Dracula (JENNIE Remix - Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/41c419b90e8d81750c543c7e0aab48ed.1000x1000x1.png"
+        }
+    },
+    "local_song_169": {
+        "artist": "Lil Uzi Vert",
+        "title": "Just Wanna Rock",
+        "file_name": "Lil Uzi Vert - Just Wanna Rock [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3f9d2ac828b5a8a754e5be21aeb31fb8.1000x1000x1.png"
+        }
+    },
+    "local_song_177": {
+        "artist": "Doja Cat",
+        "title": "Vegas",
+        "file_name": "Doja Cat - Vegas (From the Original Motion Picture Soundtrack ELVIS) (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5cb2970bb0532f755370ff8b775e367c.1000x1000x1.png"
+        }
+    },
+    "local_song_178": {
+        "artist": "Zach Bryan",
+        "title": "Pink Skies",
+        "file_name": "Zach Bryan - Pink Skies (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2c4bbd77f24be1352a8c1c1db9521f43.1000x1000x1.png"
+        }
+    },
+    "local_song_176": {
+        "artist": "Megan Thee Stallion  Dua Lipa",
+        "title": "Sweetest Pie",
+        "file_name": "Megan Thee Stallion  Dua Lipa - Sweetest Pie [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/07f3366dfd1e5a832ccf24fc3e32b50f.1000x1000x1.png"
+        }
+    },
+    "local_song_179": {
+        "artist": "HARDY",
+        "title": "TRUCK BED",
+        "file_name": "HARDY - TRUCK BED (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f0bba589305a8bec3f7d649963d4dc31.563x563x1.jpg"
+        }
+    },
+    "local_song_180": {
+        "artist": "Tate McRae",
+        "title": "greedy",
+        "file_name": "Tate McRae - greedy (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1b810476ebc5abb270a0eeb60a980b7f.1000x1000x1.png"
+        }
+    },
+    "local_song_181": {
+        "artist": "Drake Future Molly Santana",
+        "title": "Ran To Atlanta",
+        "file_name": "Drake Future Molly Santana - Ran To Atlanta.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d43d3509b45726896cdbf6a62024243c.1000x1000x1.jpg"
+        }
+    },
+    "local_song_183": {
+        "artist": "Steve Lacy",
+        "title": "Bad Habit",
+        "file_name": "Steve Lacy - Bad Habit (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/48ad06b7c45c448ae15e07b84b2a1ada.1000x1000x1.png"
+        }
+    },
+    "local_song_184": {
+        "artist": "Unknown Artist",
+        "title": "WNBA",
+        "file_name": "WNBA.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/657fc84f7547a41c9d5865a39d88a2d7.1000x1000x1.jpg"
+        }
+    },
+    "local_song_182": {
+        "artist": "ROSE  Bruno Mars",
+        "title": "APT.",
+        "file_name": "ROSE  Bruno Mars - APT. (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ac23432083b9a59565c98b92825bc709.1000x1000x1.png"
+        }
+    },
+    "local_song_185": {
+        "artist": "Jelly Roll",
+        "title": "I Am Not Okay",
+        "file_name": "Jelly Roll - I Am Not Okay (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5c1cbd878eaa48cd989531ea12838c94.1000x1000x1.jpg"
+        }
+    },
+    "local_song_186": {
+        "artist": "Russell Dickerson",
+        "title": "Happen To Me",
+        "file_name": "Russell Dickerson - Happen To Me.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4f0ed229bb47736eae7b2e03a6efd832.1000x1000x1.png"
+        }
+    },
+    "local_song_187": {
+        "artist": "Bruno Mars",
+        "title": "I Just Might",
+        "file_name": "Bruno Mars - I Just Might [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0d3e226af80cdc8de82aa57d362df2f8.1000x1000x1.png"
+        }
+    },
+    "local_song_190": {
+        "artist": "BigXthaPlug",
+        "title": "All The Way",
+        "file_name": "BigXthaPlug - All The Way feat. Bailey Zimmerman (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1b373b55ec1dbef7733fbc4f61eca4a8.1000x1000x1.png"
+        }
+    },
+    "local_song_188": {
+        "artist": "Taylor Swift",
+        "title": "The Fate of Ophelia",
+        "file_name": "Taylor Swift - The Fate of Ophelia (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/20137020caed6518eafd30ae87b0c216.1000x1000x1.png"
+        }
+    },
+    "local_song_192": {
+        "artist": "Travis Scott",
+        "title": "MELTDOWN",
+        "file_name": "Travis Scott - MELTDOWN (Official Audio) ft. Drake.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/93c577bcd2cce45a2e7063978bcb3b1a.1000x1000x1.png"
+        }
+    },
+    "local_song_191": {
+        "artist": "Bruno Mars Anderson .Paak Silk Sonic",
+        "title": "Leave the Door Open",
+        "file_name": "Bruno Mars Anderson .Paak Silk Sonic - Leave the Door Open [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fcfa6eefb77ab788a73c1ccaf73e9a4b.554x554x1.jpg"
+        }
+    },
+    "local_song_194": {
+        "artist": "Maren Morris",
+        "title": "Circles Around This Town",
+        "file_name": "Maren Morris - Circles Around This Town (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5a5405d92804d6c6eaf6bf553ce8d9c2.1000x1000x1.png"
+        }
+    },
+    "local_song_193": {
+        "artist": "Doja Cat",
+        "title": "Get Into It",
+        "file_name": "Doja Cat - Get Into It (Yuh) (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7977903f270e57a9e00913c9b1df14e4.1000x1000x1.png"
+        }
+    },
+    "local_song_195": {
+        "artist": "Don Toliver",
+        "title": "No Pole",
+        "file_name": "Don Toliver - No Pole [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e9b1e3420362778dc3953c14c8ca3ba5.1000x1000x1.png"
+        }
+    },
+    "local_song_196": {
+        "artist": "The Weeknd",
+        "title": "Blinding Lights",
+        "file_name": "The Weeknd - Blinding Lights (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/34c1c35ca27a735e6e5f18611acb1c16.1000x1000x1.png"
+        }
+    },
+    "local_song_197": {
+        "artist": "Jason Aldean",
+        "title": "Try That In A Small Town",
+        "file_name": "Jason Aldean - Try That In A Small Town (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c95f235fb30ed63631dd30a8fb392325.1000x1000x1.jpg"
+        }
+    },
+    "local_song_198": {
+        "artist": "Jordan Davis",
+        "title": "Buy Dirt",
+        "file_name": "Jordan Davis - Buy Dirt ft. Luke Bryan (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a3b8cd180fc27bed983ca9f29d9bcdd4.1000x1000x1.png"
+        }
+    },
+    "local_song_200": {
+        "artist": "24kGoldn",
+        "title": "Mood",
+        "file_name": "24kGoldn - Mood (Official Video) ft. iann dior.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ec359c594229814c28cb116dddc696d8.1000x1000x1.png"
+        }
+    },
+    "local_song_189": {
+        "artist": "Tate McRae",
+        "title": "Sports car",
+        "file_name": "Tate McRae - Sports car (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/94f947822fff7281d8a114b9ccb974ec.1000x1000x1.png"
+        }
+    },
+    "local_song_201": {
+        "artist": "Drake",
+        "title": "Search  Rescue",
+        "file_name": "Drake - Search  Rescue (Official Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e5d3eab203273e9170337dc392c226ec.1000x1000x1.png"
+        }
+    },
+    "local_song_199": {
+        "artist": "Peso Pluma Natanael Cano",
+        "title": "PRC",
+        "file_name": "Peso Pluma Natanael Cano - PRC (Video Oficial).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ce406c924648eab7ad98a3637f7ad62b.1000x1000x1.png"
+        }
+    },
+    "local_song_202": {
+        "artist": "Drake",
+        "title": "IDGAF",
+        "file_name": "Drake - IDGAF (Audio) ft. Yeat.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d8319d9cc19962f26a1494d036901ffc.1000x1000x1.png"
+        }
+    },
+    "local_song_203": {
+        "artist": "Luke Combs",
+        "title": "Going Going Gone",
+        "file_name": "Luke Combs - Going Going Gone (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3fe974995db6f9ba76144d524ce37123.344x344x1.jpg"
+        }
+    },
+    "local_song_204": {
+        "artist": "21 Savage",
+        "title": "redrum",
+        "file_name": "21 Savage - redrum (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/6a5f3688f53e9c170e8e0da57a0cf586.1000x1000x1.png"
+        }
+    },
+    "local_song_206": {
+        "artist": "Kane Brown",
+        "title": "Like I Love Country Music",
+        "file_name": "Kane Brown - Like I Love Country Music (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bca9f6d1b8a7fa7421fa31d0416f28e5.1000x1000x1.jpg"
+        }
+    },
+    "local_song_205": {
+        "artist": "Kodak Black",
+        "title": "Super Gremlin",
+        "file_name": "Kodak Black - Super Gremlin [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fdb804935e9fabd50ac354b629701476.300x300x1.jpg"
+        }
+    },
+    "local_song_208": {
+        "artist": "Grupo Frontera x Bad Bunny",
+        "title": "UN X100TO",
+        "file_name": "Grupo Frontera x Bad Bunny - UN X100TO (Video Oficial).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/63ae1eeeb328e5cac95b28ae6ef81dce.1000x1000x1.png"
+        }
+    },
+    "local_song_207": {
+        "artist": "Metro Boomin The Weeknd 21 Savage",
+        "title": "Creepin",
+        "file_name": "Metro Boomin The Weeknd 21 Savage - Creepin (Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fd82fb04756581da5b0cd6a1d48e3172.736x736x1.jpg"
+        }
+    },
+    "local_song_212": {
+        "artist": "Morgan Wallen",
+        "title": "Lies Lies Lies",
+        "file_name": "Morgan Wallen - Lies Lies Lies (Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aa193dbc8869eb7809d1e8be2f36fad4.400x400x1.jpg"
+        }
+    },
+    "local_song_210": {
+        "artist": "Bailey Zimmerman",
+        "title": "Religiously",
+        "file_name": "Bailey Zimmerman - Religiously (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7a16478f5c3b7d2fd54788874b94cfd3.1000x1000x1.jpg"
+        }
+    },
+    "local_song_209": {
+        "artist": "Lady Gaga",
+        "title": "Bloody Mary",
+        "file_name": "Lady Gaga - Bloody Mary (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/232ec544d2da23fdb4f3b459e8e83827.1000x1000x1.png"
+        }
+    },
+    "local_song_213": {
+        "artist": "Playboi Carti  The Weeknd",
+        "title": "RATHER LIE",
+        "file_name": "Playboi Carti  The Weeknd - RATHER LIE (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/06b9b8e5e701698bfa2724562f7b2537.1000x1000x1.png"
+        }
+    },
+    "local_song_214": {
+        "artist": "Muni Long",
+        "title": "Made For Me",
+        "file_name": "Muni Long - Made For Me (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e5d1a3a4c17f262e3596dda4fbd77d40.1000x1000x1.png"
+        }
+    },
+    "local_song_211": {
+        "artist": "Taylor Swift",
+        "title": "Down Bad",
+        "file_name": "Taylor Swift - Down Bad (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/48394cc3d17656b89aec73549d8863b6.1000x1000x1.png"
+        }
+    },
+    "local_song_215": {
+        "artist": "Don Toliver",
+        "title": "E85",
+        "file_name": "Don Toliver - E85 [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b03f54795bc876f8fe0b4b7fea315d25.1000x1000x1.png"
+        }
+    },
+    "local_song_216": {
+        "artist": "Sabrina Carpenter",
+        "title": "Manchild",
+        "file_name": "Sabrina Carpenter - Manchild (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5b099a4fe7bc649900fd54fd4dd747f9.1000x1000x1.png"
+        }
+    },
+    "local_song_223": {
+        "artist": "FIFTY FIFTY ()",
+        "title": "Cupid  Official MV",
+        "file_name": "FIFTY FIFTY () - Cupid  Official MV.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_217": {
+        "artist": "Sabrina Carpenter",
+        "title": "Bed Chem",
+        "file_name": "Sabrina Carpenter - Bed Chem (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ad47be9ef03ed27af9ed4e88c6f1ec18.1000x1000x1.png"
+        }
+    },
+    "local_song_218": {
+        "artist": "Dua Lipa",
+        "title": "Levitating Featuring DaBaby",
+        "file_name": "Dua Lipa - Levitating Featuring DaBaby (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/20a7eb63cf4d0cb26e9eea0f73540d77.1000x1000x1.jpg"
+        }
+    },
+    "local_song_220": {
+        "artist": "Billie Eilish",
+        "title": "LUNCH",
+        "file_name": "Billie Eilish - LUNCH (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5e7bf410789d01a90983b2641b88e5bd.1000x1000x1.png"
+        }
+    },
+    "local_song_226": {
+        "artist": "BAD BUNNY",
+        "title": "DtMF   DeB TiRAR MS FOToS",
+        "file_name": "BAD BUNNY - DtMF (Visualizer)  DeB TiRAR MS FOToS.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_219": {
+        "artist": "SZA",
+        "title": "Saturn",
+        "file_name": "SZA - Saturn.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f811f6720c5a5f0ae005b3d631e4b3fa.1000x1000x1.png"
+        }
+    },
+    "local_song_222": {
+        "artist": "Future Metro Boomin Travis Scott Playboi Carti",
+        "title": "Type Shit",
+        "file_name": "Future Metro Boomin Travis Scott Playboi Carti - Type Shit (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5ec900dc6ebc47ab8f405bd05f06adba.1000x1000x1.png"
+        }
+    },
+    "local_song_221": {
+        "artist": "Cole Swindell  Lainey Wilson",
+        "title": "Never Say Never",
+        "file_name": "Cole Swindell  Lainey Wilson - Never Say Never (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/222f541ba006c0afe4073024bb486e93.197x197x1.jpg"
+        }
+    },
+    "local_song_224": {
+        "artist": "Mac Miller",
+        "title": "Cinderella",
+        "file_name": "Mac Miller - Cinderella (feat. Ty Dolla ign).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/38df584102fc6044e8a6f70ae0bea6e2.1000x1000x1.png"
+        }
+    },
+    "local_song_225": {
+        "artist": "Future",
+        "title": "PUFFIN ON ZOOTIEZ",
+        "file_name": "Future - PUFFIN ON ZOOTIEZ (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b6d5655f4f008a6d4df7b4c7ca553a04.1000x1000x1.png"
+        }
+    },
+    "local_song_229": {
+        "artist": "Drake",
+        "title": "Make Them Remember",
+        "file_name": "Drake - Make Them Remember.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_233": {
+        "artist": "Ella Baila Sola",
+        "title": "- Eslabon Armado y Peso Pluma - DEL Records 2023",
+        "file_name": "Ella Baila Sola - (Video Oficial) - Eslabon Armado y Peso Pluma - DEL Records 2023.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_228": {
+        "artist": "Morgan Wallen",
+        "title": "Wasted On You",
+        "file_name": "Morgan Wallen - Wasted On You (The Dangerous Sessions).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/6a8be239b313a50a184a74f8d7571084.563x563x1.png"
+        }
+    },
+    "local_song_227": {
+        "artist": "Russell Dickerson",
+        "title": "She Likes It",
+        "file_name": "Russell Dickerson - She Likes It (feat. Jake Scott).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f7783e3da4f342513f166462f06f6bea.640x640x1.jpg"
+        }
+    },
+    "local_song_230": {
+        "artist": "Kane Brown",
+        "title": "Bury Me in Georgia",
+        "file_name": "Kane Brown - Bury Me in Georgia (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9492ce043c682059567500e4c2bfb2aa.1000x1000x1.jpg"
+        }
+    },
+    "local_song_231": {
+        "artist": "Rema Selena Gomez",
+        "title": "Calm Down",
+        "file_name": "Rema Selena Gomez - Calm Down (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/73d6c09e8b63e23f377a50901dd6cc30.1000x1000x1.jpg"
+        }
+    },
+    "local_song_234": {
+        "artist": "Parker McCollum",
+        "title": "Burn It Down",
+        "file_name": "Parker McCollum - Burn It Down (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/72dd0ccce8de2aee17da6d97895cd897.563x563x1.jpg"
+        }
+    },
+    "local_song_232": {
+        "artist": "Bruno Mars Anderson .Paak Silk Sonic",
+        "title": "Smokin Out The Window",
+        "file_name": "Bruno Mars Anderson .Paak Silk Sonic - Smokin Out The Window [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8c8f7f0f59eda88ab60da98f6df4ca96.1000x1000x1.png"
+        }
+    },
+    "local_song_236": {
+        "artist": "Kendrick Lamar",
+        "title": "peekaboo",
+        "file_name": "Kendrick Lamar - peekaboo (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aa7b86debf8b362bad3018cb881cfdc1.1000x1000x1.png"
+        }
+    },
+    "local_song_235": {
+        "artist": "Kate Bush",
+        "title": "Running Up That Hill - Official Music Video",
+        "file_name": "Kate Bush - Running Up That Hill - Official Music Video.mp3",
+        "metadata": {
+            "cover": "https://images.rapgenius.com/95bb2406e6bf75c6cb955c2b22bc59c2.805x805x1.png"
+        }
+    },
+    "local_song_238": {
+        "artist": "Megan Moroney",
+        "title": "Tennessee Orange",
+        "file_name": "Megan Moroney - Tennessee Orange (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/619052668b0de6d4216181fa9cc480f0.1000x1000x1.png"
+        }
+    },
+    "local_song_244": {
+        "artist": "Unknown Artist",
+        "title": "How Its Done Official Lyric Video  KPop Demon Hunters  Sony Animation",
+        "file_name": "How Its Done Official Lyric Video  KPop Demon Hunters  Sony Animation.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_239": {
+        "artist": "Michael Jackson",
+        "title": "Chicago",
+        "file_name": "Michael Jackson - Chicago (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d332054458345a1cb3e750cca9a2d687.1000x1000x1.png"
+        }
+    },
+    "local_song_240": {
+        "artist": "Leon Thomas",
+        "title": "MUTT",
+        "file_name": "Leon Thomas - MUTT (Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e2ef0500d1f91e30313985872425dec5.1000x1000x1.png"
+        }
+    },
+    "local_song_243": {
+        "artist": "Lizzo",
+        "title": "About Damn Time",
+        "file_name": "Lizzo - About Damn Time [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d69c5f3c6f3b7505bb86fade416ae187.1000x1000x1.png"
+        }
+    },
+    "local_song_242": {
+        "artist": "Morgan Wallen",
+        "title": "What I Want",
+        "file_name": "Morgan Wallen - What I Want (feat. Tate McRae) (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3c4a47b2ef4ab759a5b616c4258c46ad.1000x1000x1.png"
+        }
+    },
+    "local_song_241": {
+        "artist": "Stella Lefty",
+        "title": "Boston",
+        "file_name": "Stella Lefty - Boston (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/068adc8b4ec3b524c9d653f04c6601ff.800x800x1.jpg"
+        }
+    },
+    "local_song_245": {
+        "artist": "Old Dominion",
+        "title": "Memory Lane",
+        "file_name": "Old Dominion - Memory Lane (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/dc5cb666e7cc976d1b0a6308ade15c67.1000x1000x1.png"
+        }
+    },
+    "local_song_246": {
+        "artist": "Dua Lipa",
+        "title": "Houdini",
+        "file_name": "Dua Lipa - Houdini (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/703b74c35a76f0ed763a6e50e73fb4fd.1000x1000x1.png"
+        }
+    },
+    "local_song_247": {
+        "artist": "GloRilla Megan Thee Stallion",
+        "title": "Wanna Be",
+        "file_name": "GloRilla Megan Thee Stallion - Wanna Be.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bfeb0e84018f1ca0eda74b3359937a86.842x842x1.png"
+        }
+    },
+    "local_song_248": {
+        "artist": "Jordan Davis",
+        "title": "Next Thing You Know",
+        "file_name": "Jordan Davis - Next Thing You Know (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/61ceed3faa2a36f344c24e12b14e8c08.500x500x1.jpg"
+        }
+    },
+    "local_song_237": {
+        "artist": "Drake",
+        "title": "First Person Shooter",
+        "file_name": "Drake - First Person Shooter ft. J. Cole.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f197d0c689b4c739c1402f69b7951792.1000x1000x1.png"
+        }
+    },
+    "local_song_250": {
+        "artist": "Morgan Wallen",
+        "title": "Superman",
+        "file_name": "Morgan Wallen - Superman (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0c083dff9252e24f8fe8669543a86162.180x180x1.jpg"
+        }
+    },
+    "local_song_249": {
+        "artist": "Lil Durk",
+        "title": "All My Life",
+        "file_name": "Lil Durk - All My Life ft. J. Cole.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1d9d47a7b4e881ef85e906b51b9e1419.999x999x1.png"
+        }
+    },
+    "local_song_252": {
+        "artist": "Chris Brown",
+        "title": "Residuals",
+        "file_name": "Chris Brown - Residuals (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c64cae77e064a02ec22c23b5a20fa42d.1000x1000x1.png"
+        }
+    },
+    "local_song_253": {
+        "artist": "Lainey Wilson",
+        "title": "Heart Like A Truck",
+        "file_name": "Lainey Wilson - Heart Like A Truck (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/11ef83a1aab7122308af8917fbc29661.1000x1000x1.jpg"
+        }
+    },
+    "local_song_254": {
+        "artist": "Neton Vega",
+        "title": "Loco",
+        "file_name": "Neton Vega - Loco (Video Oficial).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7da302a1d41978545ea332a2c8703877.1000x1000x1.png"
+        }
+    },
+    "local_song_255": {
+        "artist": "DaBaby",
+        "title": "POP DAT THANG",
+        "file_name": "DaBaby - POP DAT THANG.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ba4e968b24854952d33215b74c835c05.1000x1000x1.png"
+        }
+    },
+    "local_song_261": {
+        "artist": "Unknown Artist",
+        "title": "(Jung Kook) Seven (feat. Latto) Official MV",
+        "file_name": " (Jung Kook) Seven (feat. Latto) Official MV.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_259": {
+        "artist": "Sabrina Carpenter",
+        "title": "Taste",
+        "file_name": "Sabrina Carpenter - Taste (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b623e2d6cac33d7d8c4ee70d0dd9ac01.1000x1000x1.png"
+        }
+    },
+    "local_song_256": {
+        "artist": "Yng Lvcas  Peso Pluma",
+        "title": "La Bebe",
+        "file_name": "Yng Lvcas  Peso Pluma - La Bebe (Remix) [Video Oficial].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/cf3e43ed749808c1acc2861c4fa256e5.1000x1000x1.png"
+        }
+    },
+    "local_song_258": {
+        "artist": "Walker Hayes",
+        "title": "AA",
+        "file_name": "Walker Hayes - AA (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/54c6c5bfdc307c5709294d660eaa2e25.249x250x1.jpg"
+        }
+    },
+    "local_song_257": {
+        "artist": "Drake 21 Savage",
+        "title": "Spin Bout U",
+        "file_name": "Drake 21 Savage - Spin Bout U.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/31496d46a302dd9b55416525688ac9d9.1000x1000x1.png"
+        }
+    },
+    "local_song_260": {
+        "artist": "KAROL G Shakira",
+        "title": "TQG",
+        "file_name": "KAROL G Shakira - TQG (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/06b4d7589922739bf1f4e59201d052f3.603x603x1.png"
+        }
+    },
+    "local_song_262": {
+        "artist": "Luke Combs",
+        "title": "Rethink Some Things",
+        "file_name": "Luke Combs - Rethink Some Things (Official Studio Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/61b677df29a5eb12ea682aff18d36bf1.1000x1000x1.png"
+        }
+    },
+    "local_song_265": {
+        "artist": "SZA",
+        "title": "30 For 30",
+        "file_name": "SZA - 30 For 30 feat. Kendrick Lamar (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1ec6707691f2cbe2715f37e92f3456f0.1000x1000x1.png"
+        }
+    },
+    "local_song_251": {
+        "artist": "Nicki Minaj",
+        "title": "Super Freaky Girl",
+        "file_name": "Nicki Minaj - Super Freaky Girl (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e8ee867665afeca5d1ca6061f4c4cfed.1000x1000x1.png"
+        }
+    },
+    "local_song_263": {
+        "artist": "Ed Sheeran",
+        "title": "Shivers",
+        "file_name": "Ed Sheeran - Shivers [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9ec01a63b7b06a35d3d0b97536ff8181.1000x1000x1.png"
+        }
+    },
+    "local_song_264": {
+        "artist": "Dua Lipa",
+        "title": "Dance The Night",
+        "file_name": "Dua Lipa - Dance The Night (From Barbie The Album) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ffda18a964e590e86c5fd85fb7c5ced4.1000x1000x1.png"
+        }
+    },
+    "local_song_266": {
+        "artist": "Don Toliver",
+        "title": "Body",
+        "file_name": "Don Toliver - Body [Official Visualizer].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b03f54795bc876f8fe0b4b7fea315d25.1000x1000x1.png"
+        }
+    },
+    "local_song_267": {
+        "artist": "Morgan Wallen",
+        "title": "Thinkin Bout Me",
+        "file_name": "Morgan Wallen - Thinkin Bout Me (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a2124e16f9e39c243c01ef1f26aa5f45.1000x1000x1.png"
+        }
+    },
+    "local_song_270": {
+        "artist": "Muni Long",
+        "title": "Hrs  Hrs",
+        "file_name": "Muni Long - Hrs  Hrs.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/16186b8ab5f8c0b1a41da03cd951b705.1000x1000x1.png"
+        }
+    },
+    "local_song_268": {
+        "artist": "Doja Cat",
+        "title": "Woman",
+        "file_name": "Doja Cat - Woman (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7977903f270e57a9e00913c9b1df14e4.1000x1000x1.png"
+        }
+    },
+    "local_song_273": {
+        "artist": "Burl Ives",
+        "title": "A Holly Jolly Christmas",
+        "file_name": "Burl Ives - A Holly Jolly Christmas (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ecad879091cd50387b5b6f149bca1da5.600x600x1.jpg"
+        }
+    },
+    "local_song_271": {
+        "artist": "Teddy Swims",
+        "title": "Lose Control",
+        "file_name": "Teddy Swims - Lose Control (The Village Sessions).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/34a99478a6dba3fb7fe23183d3862ff8.300x300x1.jpg"
+        }
+    },
+    "local_song_272": {
+        "artist": "Drake",
+        "title": "2 Hard 4 The Radio",
+        "file_name": "Drake - 2 Hard 4 The Radio.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_274": {
+        "artist": "Temper City",
+        "title": "Self Aware",
+        "file_name": "Temper City - Self Aware (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3f517b638fe10dfe8caffec5a7029628.1000x1000x1.png"
+        }
+    },
+    "local_song_269": {
+        "artist": "Meghan Trainor",
+        "title": "Made You Look",
+        "file_name": "Meghan Trainor - Made You Look (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/22f6515bad57e7ddc98a6ce314c8b207.1000x1000x1.png"
+        }
+    },
+    "local_song_275": {
+        "artist": "Chappell Roan",
+        "title": "Good Luck Babe",
+        "file_name": "Chappell Roan - Good Luck Babe (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2dcdc8ffb20ffef584eaa13f1afbe28a.1000x1000x1.png"
+        }
+    },
+    "local_song_276": {
+        "artist": "Noah Kahan",
+        "title": "Stick Season",
+        "file_name": "Noah Kahan - Stick Season.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/579f88b2c39dc0ad876f77ed9f0cd3fe.1000x1000x1.png"
+        }
+    },
+    "local_song_277": {
+        "artist": "Luke Combs",
+        "title": "Where the Wild Things Are",
+        "file_name": "Luke Combs - Where the Wild Things Are (Official Studio Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4fcd66a2c69a23ee9541da0b02e44436.400x400x1.jpg"
+        }
+    },
+    "local_song_282": {
+        "artist": "Bad Bunny ft. Chencho Corleone",
+        "title": "Me Porto Bonito   Un Verano Sin Ti",
+        "file_name": "Bad Bunny ft. Chencho Corleone - Me Porto Bonito (Video Oficial)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_279": {
+        "artist": "Morgan Wallen",
+        "title": "Dont We",
+        "file_name": "Morgan Wallen - Dont We (Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/5c6e602f1a6fecb0615aa0fb1b168364.800x800x1.jpg"
+        }
+    },
+    "local_song_278": {
+        "artist": "Luke Combs",
+        "title": "Sleepless in a Hotel Room",
+        "file_name": "Luke Combs - Sleepless in a Hotel Room (Official Studio Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/61b677df29a5eb12ea682aff18d36bf1.1000x1000x1.png"
+        }
+    },
+    "local_song_280": {
+        "artist": "Lil Nas X Jack Harlow",
+        "title": "INDUSTRY BABY",
+        "file_name": "Lil Nas X Jack Harlow - INDUSTRY BABY (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/69fdc9e890b815312ceff7d309f93d65.1000x1000x1.png"
+        }
+    },
+    "local_song_281": {
+        "artist": "Morgan Wallen",
+        "title": "Everything I Love",
+        "file_name": "Morgan Wallen - Everything I Love (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/400caba9d5386835a25a4477fd13d534.1000x924x1.jpg"
+        }
+    },
+    "local_song_284": {
+        "artist": "Lil Durk",
+        "title": "Broadway Girls",
+        "file_name": "Lil Durk - Broadway Girls feat. Morgan Wallen - (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2ecda996ca5b95e1cd3797513d2207af.1000x1000x1.png"
+        }
+    },
+    "local_song_283": {
+        "artist": "PinkPantheress Ice Spice",
+        "title": "Boys a liar Pt. 2",
+        "file_name": "PinkPantheress Ice Spice - Boys a liar Pt. 2 (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7479aef13a2a7c404824a4700f1ccf58.1000x1000x1.jpg"
+        }
+    },
+    "local_song_292": {
+        "artist": "Unknown Artist",
+        "title": "BTS () SWIM Official MV",
+        "file_name": "BTS () SWIM Official MV.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_286": {
+        "artist": "Doja Cat",
+        "title": "Paint The Town Red",
+        "file_name": "Doja Cat - Paint The Town Red (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1d8e1fe878b2e21d73e716b09230d41c.1000x1000x1.png"
+        }
+    },
+    "local_song_288": {
+        "artist": "Noah Kahan",
+        "title": "Willing and Able",
+        "file_name": "Noah Kahan - Willing and Able (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ebf70a5438857a790ae024150073bb59.1000x1000x1.png"
+        }
+    },
+    "local_song_290": {
+        "artist": "Sam Smith Kim Petras",
+        "title": "Unholy",
+        "file_name": "Sam Smith Kim Petras - Unholy (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f182f7c3563ed695e2c206395714c11b.1000x1000x1.png"
+        }
+    },
+    "local_song_287": {
+        "artist": "Drake",
+        "title": "Whisper My Name",
+        "file_name": "Drake - Whisper My Name.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_289": {
+        "artist": "Cody Johnson",
+        "title": "Im Gonna Love You",
+        "file_name": "Cody Johnson - Im Gonna Love You (with Carrie Underwood) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/62076f05f7ffb9ec1d340e517eef06fd.1000x1000x1.jpg"
+        }
+    },
+    "local_song_291": {
+        "artist": "Gunna",
+        "title": "fukumean",
+        "file_name": "Gunna - fukumean [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1d0342d2e4f8a7cc7f350453b66449e3.1000x999x1.png"
+        }
+    },
+    "local_song_293": {
+        "artist": "RAYE 070 Shake",
+        "title": "Escapism.",
+        "file_name": "RAYE 070 Shake - Escapism. (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bf1a0dabbd214f8682dd8fb6e7724e93.1000x1000x1.jpg"
+        }
+    },
+    "local_song_285": {
+        "artist": "Latto",
+        "title": "Big Energy",
+        "file_name": "Latto - Big Energy (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e810fb0a11326f2181cf5fcef8f81d2a.1000x1000x1.png"
+        }
+    },
+    "local_song_297": {
+        "artist": "Unknown Artist",
+        "title": "(Jimin) Who Official MV",
+        "file_name": " (Jimin) Who Official MV.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_294": {
+        "artist": "Miley Cyrus",
+        "title": "Flowers",
+        "file_name": "Miley Cyrus - Flowers (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bbfe0b512d64b4c6e8264211c009877c.1000x1000x1.png"
+        }
+    },
+    "local_song_298": {
+        "artist": "Unknown Artist",
+        "title": "Morgan Wallen Sand In My Boots (The Dangerous Sessions)",
+        "file_name": "Morgan Wallen Sand In My Boots (The Dangerous Sessions).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/775a6505124973cecbe401839760818a.541x541x1.png"
+        }
+    },
+    "local_song_296": {
+        "artist": "Drake",
+        "title": "National Treasures",
+        "file_name": "Drake - National Treasures.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_295": {
+        "artist": "Post Malone",
+        "title": "I Had Some Help",
+        "file_name": "Post Malone - I Had Some Help (feat. Morgan Wallen) (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/47f7c3382c5b12a2874cdaa591ba1316.1000x1000x1.png"
+        }
+    },
+    "local_song_303": {
+        "artist": "Koe Wetzel Jessie Murph",
+        "title": "High Road",
+        "file_name": "Koe Wetzel Jessie Murph - High Road (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3004bddca6a6a03ad016a37a5237e556.674x673x1.png"
+        }
+    },
+    "local_song_299": {
+        "artist": "SZA",
+        "title": "Kill Bill",
+        "file_name": "SZA - Kill Bill (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/48c8aef710ceebdef3ed1ca0da0c4195.1000x1000x1.png"
+        }
+    },
+    "local_song_305": {
+        "artist": "Bad Bunny",
+        "title": "Moscow Mule   Un Verano Sin Ti",
+        "file_name": "Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/825221ecc952cdaa2d792f2e8491e49e.211x211x1.png"
+        }
+    },
+    "local_song_300": {
+        "artist": "Kane Brown Katelyn Brown",
+        "title": "Thank God",
+        "file_name": "Kane Brown Katelyn Brown - Thank God (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/222f541ba006c0afe4073024bb486e93.197x197x1.jpg"
+        }
+    },
+    "local_song_301": {
+        "artist": "Cody Johnson",
+        "title": "The Painter",
+        "file_name": "Cody Johnson - The Painter (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b91f03f5e4a2b8c390f24ab99e999b0d.1000x1000x1.jpg"
+        }
+    },
+    "local_song_302": {
+        "artist": "Gracie Abrams",
+        "title": "Hit the Wall",
+        "file_name": "Gracie Abrams - Hit the Wall (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/164044d77d2ef5e78cf8f2efb633935f.1000x1000x1.png"
+        }
+    },
+    "local_song_304": {
+        "artist": "Kanye West  Ty Dolla ign",
+        "title": "CARNIVAL",
+        "file_name": "Kanye West  Ty Dolla ign - CARNIVAL (Lyrics) ft.Playboi Carti  Rich The Kid.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/32dbc2258ac0f7be0a8238c934be00d1.340x340x1.png"
+        }
+    },
+    "local_song_307": {
+        "artist": "Bad Bunny",
+        "title": "Efecto   Un Verano Sin Ti",
+        "file_name": "Bad Bunny - Efecto (360 Visualizer)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/63ae1eeeb328e5cac95b28ae6ef81dce.1000x1000x1.png"
+        }
+    },
+    "local_song_306": {
+        "artist": "Jordan Davis",
+        "title": "What My World Spins Around",
+        "file_name": "Jordan Davis - What My World Spins Around (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/96baea39f691b91cc9d34a8ea756d26f.1000x1000x1.jpg"
+        }
+    },
+    "local_song_309": {
+        "artist": "Kehlani",
+        "title": "Folded",
+        "file_name": "Kehlani - Folded [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d1c16be5cc68546034b7b1ceb30228fa.1000x1000x1.png"
+        }
+    },
+    "local_song_312": {
+        "artist": "Drake",
+        "title": "shabang",
+        "file_name": "Drake - shabang.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_311": {
+        "artist": "Harry Styles",
+        "title": "Late Night Talking",
+        "file_name": "Harry Styles - Late Night Talking (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a2848a60053f84995abd490438ff4efa.1000x1000x1.png"
+        }
+    },
+    "local_song_310": {
+        "artist": "Kaliii",
+        "title": "Area Codes",
+        "file_name": "Kaliii - Area Codes (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/534fbd7e61e57d667c63d678670d3155.1000x1000x1.png"
+        }
+    },
+    "local_song_313": {
+        "artist": "Benson Boone",
+        "title": "Slow It Down",
+        "file_name": "Benson Boone - Slow It Down (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9dad8c392ae1858e7f043d8283a971aa.1000x1000x1.png"
+        }
+    },
+    "local_song_314": {
+        "artist": "Morgan Wallen",
+        "title": "You Proof",
+        "file_name": "Morgan Wallen - You Proof.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/827ef1974a1c33b4422106bfd2101a40.1000x1000x1.png"
+        }
+    },
+    "local_song_315": {
+        "artist": "Lil Baby",
+        "title": "In A Minute",
+        "file_name": "Lil Baby - In A Minute (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e2be3d8682fe0dd21b36ac42e971b4f1.1000x1000x1.png"
+        }
+    },
+    "local_song_317": {
+        "artist": "Jelly Roll",
+        "title": "Liar",
+        "file_name": "Jelly Roll - Liar (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b99712e9dc734f429c453efa28a73ed0.1000x1000x1.png"
+        }
+    },
+    "local_song_308": {
+        "artist": "Elton John Dua Lipa",
+        "title": "Cold Heart",
+        "file_name": "Elton John Dua Lipa - Cold Heart (PNAU Remix) (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aae0405faf96696f89c6818d6a7f0749.1000x1000x1.jpg"
+        }
+    },
+    "local_song_316": {
+        "artist": "Ella Langley  Morgan Wallen",
+        "title": "I Cant Love You Anymore",
+        "file_name": "Ella Langley  Morgan Wallen - I Cant Love You Anymore (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/61430a0987d394568d3865714c0efba0.1000x1000x1.png"
+        }
+    },
+    "local_song_324": {
+        "artist": "Hudson Westbrook",
+        "title": "House Again",
+        "file_name": "Hudson Westbrook - House Again (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/752258e841d52e95abc0e2920eef08d4.600x600x1.jpg"
+        }
+    },
+    "local_song_321": {
+        "artist": "Lainey Wilson",
+        "title": "Watermelon Moonshine",
+        "file_name": "Lainey Wilson - Watermelon Moonshine (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9820e6654dbc7548498573c7be3420ea.1000x1000x1.jpg"
+        }
+    },
+    "local_song_319": {
+        "artist": "Wizkid",
+        "title": "Essence",
+        "file_name": "Wizkid - Essence (Audio) ft. Justin Bieber Tems.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/be55aee3a7ba2bda6add24235cd25685.1000x1000x1.png"
+        }
+    },
+    "local_song_320": {
+        "artist": "Scotty McCreery",
+        "title": "Damn Strait",
+        "file_name": "Scotty McCreery - Damn Strait.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bb39ef042b88aaec73c8b5ad3fa865de.563x563x1.jpg"
+        }
+    },
+    "local_song_318": {
+        "artist": "The Weeknd Ariana Grande",
+        "title": "Die For You",
+        "file_name": "The Weeknd Ariana Grande - Die For You (Remix  Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/06b4d7589922739bf1f4e59201d052f3.603x603x1.png"
+        }
+    },
+    "local_song_325": {
+        "artist": "Noah Kahan Post Malone",
+        "title": "Dial Drunk",
+        "file_name": "Noah Kahan Post Malone - Dial Drunk (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/70b8654164d6108c9fd0c8c219f06686.1000x1000x1.png"
+        }
+    },
+    "local_song_323": {
+        "artist": "Ed Sheeran",
+        "title": "Eyes Closed",
+        "file_name": "Ed Sheeran - Eyes Closed [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7b8f03f3060500dedb13f9a1fb889dde.1000x1000x1.png"
+        }
+    },
+    "local_song_322": {
+        "artist": "4Batz",
+        "title": "act ii date  8",
+        "file_name": "4Batz - act ii date  8 (remix) feat. Drake.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/592fa2858b5a1b1cec4717a0d4181225.1000x1000x1.png"
+        }
+    },
+    "local_song_327": {
+        "artist": "Marshmello Kane Brown",
+        "title": "Miles On It",
+        "file_name": "Marshmello Kane Brown - Miles On It (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/6429b08c00223e8faa8fd1091f40a6a7.1000x1000x1.png"
+        }
+    },
+    "local_song_326": {
+        "artist": "Ella Langley",
+        "title": "Choosin Texas",
+        "file_name": "Ella Langley - Choosin Texas (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ed0e327a48d72283dcfee3c3e6930111.1000x1000x1.png"
+        }
+    },
+    "local_song_329": {
+        "artist": "HARDY",
+        "title": "wait in the truck",
+        "file_name": "HARDY - wait in the truck (feat. Lainey Wilson) (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/acebe33f2304fe3adf37ce8c8f228304.1000x1000x1.png"
+        }
+    },
+    "local_song_332": {
+        "artist": "PARMALEE",
+        "title": "Take My Name",
+        "file_name": "PARMALEE- Take My Name (Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ae9a3396a0d6c57a0b8e8fb0e606f0e8.1000x1000x1.jpg"
+        }
+    },
+    "local_song_328": {
+        "artist": "Olivia Rodrigo",
+        "title": "drop dead",
+        "file_name": "Olivia Rodrigo - drop dead (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1c3e8d137ad31e42a7b0a71e2dfb1cfb.1000x1000x1.png"
+        }
+    },
+    "local_song_335": {
+        "artist": "sombr",
+        "title": "Potential",
+        "file_name": "sombr - Potential (official video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8ea15481bcf33ad7c2fbc531b499d31c.1000x1000x1.png"
+        }
+    },
+    "local_song_333": {
+        "artist": "Don Toliver",
+        "title": "OPPOSITE",
+        "file_name": "Don Toliver - OPPOSITE (unreleased).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b03f54795bc876f8fe0b4b7fea315d25.1000x1000x1.png"
+        }
+    },
+    "local_song_334": {
+        "artist": "David Guetta  Bebe Rexha",
+        "title": "Im Good",
+        "file_name": "David Guetta  Bebe Rexha - Im Good (Blue) [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f4eacd64dc39815cf3b789fc21b3e3b2.1000x1000x1.png"
+        }
+    },
+    "local_song_330": {
+        "artist": "Jordan Davis",
+        "title": "Turn This Truck Around",
+        "file_name": "Jordan Davis - Turn This Truck Around (Official Audio Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7f14ffa44943bfc3269297693f0ae90e.750x750x1.jpg"
+        }
+    },
+    "local_song_331": {
+        "artist": "Niall Horan",
+        "title": "Dinner Party",
+        "file_name": "Niall Horan - Dinner Party (Live from The Today Show  2026).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/eb9b37b90898f16b7f19adc4314c4381.1000x1000x1.png"
+        }
+    },
+    "local_song_337": {
+        "artist": "Olivia Rodrigo",
+        "title": "drivers license",
+        "file_name": "Olivia Rodrigo - drivers license (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/339f422ffef17de52344fd01c2e4bfff.1000x1000x1.png"
+        }
+    },
+    "local_song_336": {
+        "artist": "Oliver Anthony",
+        "title": "Rich Men North Of Richmond",
+        "file_name": "Oliver Anthony - Rich Men North Of Richmond.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d818c744303ddf885799f7b9742ea05d.1000x1000x1.png"
+        }
+    },
+    "local_song_340": {
+        "artist": "Olivia Dean",
+        "title": "Man I Need",
+        "file_name": "Olivia Dean - Man I Need.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/cc879cdc352214176a83c239f7abb708.1000x1000x1.png"
+        }
+    },
+    "local_song_341": {
+        "artist": "Malcolm Todd",
+        "title": "Do That Again",
+        "file_name": "Malcolm Todd - Do That Again (Official Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/629c30fed0dc67ddd48d5000c331f7fe.1000x1000x1.png"
+        }
+    },
+    "local_song_343": {
+        "artist": "Sabrina Carpenter",
+        "title": "Espresso",
+        "file_name": "Sabrina Carpenter - Espresso.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/8e8e92eda3d816065a4272a56b6f5ef6.1000x1000x1.png"
+        }
+    },
+    "local_song_342": {
+        "artist": "Lola Young",
+        "title": "Messy",
+        "file_name": "Lola Young - Messy (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f5d325d1a49947c54358c234263d4428.1000x1000x1.png"
+        }
+    },
+    "local_song_345": {
+        "artist": "The Weeknd Playboi Carti",
+        "title": "Timeless",
+        "file_name": "The Weeknd Playboi Carti - Timeless.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/519e51e8e7d3fa18a78dacd83ff39a10.1000x1000x1.png"
+        }
+    },
+    "local_song_338": {
+        "artist": "Michael Jackson",
+        "title": "Dont Stop Til You Get Enough",
+        "file_name": "Michael Jackson - Dont Stop Til You Get Enough (Official Video - Upscaled).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fad6a932fbe7edd13f93dfc0b92d90ee.1000x1000x1.png"
+        }
+    },
+    "local_song_347": {
+        "artist": "F3miii",
+        "title": "NOBLE",
+        "file_name": "F3miii - NOBLE (OFFICIAL MUSIC VIDEO).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e959619cc44d73edb26269d58252b48e.1000x1000x1.png"
+        }
+    },
+    "local_song_339": {
+        "artist": "Noah Kahan",
+        "title": "The Great Divide",
+        "file_name": "Noah Kahan - The Great Divide (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ebf70a5438857a790ae024150073bb59.1000x1000x1.png"
+        }
+    },
+    "local_song_344": {
+        "artist": "The Kid LAROI Justin Bieber",
+        "title": "STAY",
+        "file_name": "The Kid LAROI Justin Bieber - STAY (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/6b8c69dff2504539aaf711e38c824096.1000x1000x1.png"
+        }
+    },
+    "local_song_346": {
+        "artist": "Morgan Wallen",
+        "title": "Smile",
+        "file_name": "Morgan Wallen - Smile (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9017273db6751c64d7109f268bf1cb09.1000x1000x1.png"
+        }
+    },
+    "local_song_348": {
+        "artist": "Em Beihold",
+        "title": "Numb Little Bug",
+        "file_name": "Em Beihold - Numb Little Bug.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0c1e5497811625f2d4b48fc9e6c240a6.1000x1000x1.png"
+        }
+    },
+    "local_song_349": {
+        "artist": "Zara Larsson",
+        "title": "Midnight Sun",
+        "file_name": "Zara Larsson - Midnight Sun (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/447259841d4acd3669fb9229e3b7e05f.1000x1000x1.png"
+        }
+    },
+    "local_song_350": {
+        "artist": "Riley Green",
+        "title": "Worst Way",
+        "file_name": "Riley Green - Worst Way (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7e4a7b2ee2a991f2255d0b9638b6f050.800x800x1.jpg"
+        }
+    },
+    "local_song_351": {
+        "artist": "Olivia Rodrigo",
+        "title": "vampire",
+        "file_name": "Olivia Rodrigo - vampire (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4ed882736282fcf77a994fc1fbcc777c.1000x1000x1.png"
+        }
+    },
+    "local_song_352": {
+        "artist": "Dexter and The Moonrocks",
+        "title": "Freakin Out",
+        "file_name": "Dexter and The Moonrocks - Freakin Out (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/41945953d705fc9333f6bb262aae3ddb.1000x1000x1.png"
+        }
+    },
+    "local_song_353": {
+        "artist": "Luke Combs",
+        "title": "Love You Anyway",
+        "file_name": "Luke Combs - Love You Anyway (Official Studio Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/46b35f97b46624349f9fd15cc8ab7e19.640x640x1.jpg"
+        }
+    },
+    "local_song_354": {
+        "artist": "Ed Sheeran",
+        "title": "Bad Habits",
+        "file_name": "Ed Sheeran - Bad Habits [Official Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2c924ef9617ca96ba49e89969c002964.1000x1000x1.png"
+        }
+    },
+    "local_song_355": {
+        "artist": "Billie Eilish",
+        "title": "BIRDS OF A FEATHER",
+        "file_name": "Billie Eilish - BIRDS OF A FEATHER (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fe2847a838ab618ba01bff598fdcc46f.1000x1000x1.png"
+        }
+    },
+    "local_song_357": {
+        "artist": "Taylor Swift",
+        "title": "Anti-Hero",
+        "file_name": "Taylor Swift - Anti-Hero (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/30cfee5aea3d5a7a8ad2aa47d75f0414.1000x1000x1.png"
+        }
+    },
+    "local_song_356": {
+        "artist": "Noah Kahan",
+        "title": "Doors",
+        "file_name": "Noah Kahan - Doors (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ebf70a5438857a790ae024150073bb59.1000x1000x1.png"
+        }
+    },
+    "local_song_359": {
+        "artist": "Bad Bunny ft. Bomba Estreo",
+        "title": "Ojitos Lindos   Un Verano Sin Ti",
+        "file_name": "Bad Bunny ft. Bomba Estreo - Ojitos Lindos (Video Oficial)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_360": {
+        "artist": "Unknown Artist",
+        "title": "What It Sounds Like   Official Song Clip  KPop Demon Hunters  Sony Animation",
+        "file_name": "What It Sounds Like   Official Song Clip  KPop Demon Hunters  Sony Animation.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_358": {
+        "artist": "Drake",
+        "title": "Make Them Pay",
+        "file_name": "Drake - Make Them Pay.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_367": {
+        "artist": "Unknown Artist",
+        "title": "Your Idol  Official Song Clip  KPop Demon Hunters  Sony Animation",
+        "file_name": "Your Idol  Official Song Clip  KPop Demon Hunters  Sony Animation.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_366": {
+        "artist": "Unknown Artist",
+        "title": "Free  Official Lyric Video  Sony Animation",
+        "file_name": "Free  Official Lyric Video  Sony Animation.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_364": {
+        "artist": "Dove Cameron",
+        "title": "Boyfriend",
+        "file_name": "Dove Cameron - Boyfriend (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/951abce5775489659144bd68a0144b39.1000x1000x1.png"
+        }
+    },
+    "local_song_362": {
+        "artist": "Gigi Perez",
+        "title": "Sailor Song",
+        "file_name": "Gigi Perez - Sailor Song (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/649aaf0ddb67f7ddad4424924d76cc48.1000x1000x1.png"
+        }
+    },
+    "local_song_361": {
+        "artist": "Jason Aldean",
+        "title": "Dont Tell On Me",
+        "file_name": "Jason Aldean - Dont Tell On Me (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f8736c34ebba94c78898f257866e45fe.1000x1000x1.jpg"
+        }
+    },
+    "local_song_363": {
+        "artist": "Luke Combs",
+        "title": "Doin This",
+        "file_name": "Luke Combs - Doin This (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c543384b7cdfe6fe524f5685ca648ed7.480x480x1.jpg"
+        }
+    },
+    "local_song_365": {
+        "artist": "Stephen Sanchez",
+        "title": "Until I Found You",
+        "file_name": "Stephen Sanchez - Until I Found You (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a75a23d59c8ad5f0e2d564aa9e687ff8.1000x1000x1.png"
+        }
+    },
+    "local_song_368": {
+        "artist": "SZA",
+        "title": "Nobody Gets Me",
+        "file_name": "SZA - Nobody Gets Me (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/cde31e780d76c90305bc02d73bf4640b.1000x1000x1.png"
+        }
+    },
+    "local_song_369": {
+        "artist": "Jack Harlow",
+        "title": "First Class",
+        "file_name": "Jack Harlow - First Class [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/87249068d05ab2839374c0fdae42da50.1000x1000x1.png"
+        }
+    },
+    "local_song_371": {
+        "artist": "Chappell Roan",
+        "title": "Pink Pony Club",
+        "file_name": "Chappell Roan - Pink Pony Club (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/535a8dfc7e5e58bd9fc7b6847a30101e.1000x1000x1.png"
+        }
+    },
+    "local_song_372": {
+        "artist": "Bailey Zimmerman",
+        "title": "Where It Ends",
+        "file_name": "Bailey Zimmerman - Where It Ends (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1b5e7a6076005b15c7e57c667bed0d4e.1000x1000x1.png"
+        }
+    },
+    "local_song_374": {
+        "artist": "Drake",
+        "title": "Janice STFU",
+        "file_name": "Drake - Janice STFU.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_373": {
+        "artist": "PinkPantheress",
+        "title": "Stateside  Zara Larsson",
+        "file_name": "PinkPantheress - Stateside  Zara Larsson (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e22d0e15f79bdd6c4e201a319f0f82f3.1000x1000x1.png"
+        }
+    },
+    "local_song_375": {
+        "artist": "Kendrick Lamar SZA",
+        "title": "luther",
+        "file_name": "Kendrick Lamar SZA - luther.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/012d76f2f3aa2aa704958e9ad1abb7f6.1000x1000x1.png"
+        }
+    },
+    "local_song_370": {
+        "artist": "Charli xcx",
+        "title": "SS26",
+        "file_name": "Charli xcx - SS26 (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fbd35033e7dd14122cad22603068c51e.1000x1000x1.png"
+        }
+    },
+    "local_song_376": {
+        "artist": "Nate Smith",
+        "title": "World on Fire",
+        "file_name": "Nate Smith - World on Fire (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4b607def84b8690ab5251a3c83790974.400x400x1.jpg"
+        }
+    },
+    "local_song_377": {
+        "artist": "Kacey Musgraves",
+        "title": "Mexico Honey",
+        "file_name": "Kacey Musgraves - Mexico Honey (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aaba3a2978f25160f2ee1050e1a752cc.1000x1000x1.png"
+        }
+    },
+    "local_song_378": {
+        "artist": "Chris Brown",
+        "title": "Under The Influence",
+        "file_name": "Chris Brown - Under The Influence (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aeeccfba7c784f5efa73c92b05f52168.600x600x1.jpg"
+        }
+    },
+    "local_song_379": {
+        "artist": "PARTYNEXTDOOR Drake",
+        "title": "SOMEBODY LOVES ME",
+        "file_name": "PARTYNEXTDOOR Drake - SOMEBODY LOVES ME.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fc0032787cd862549a2df4872aadec52.1000x1000x1.png"
+        }
+    },
+    "local_song_381": {
+        "artist": "Becky G KAROL G",
+        "title": "MAMIII",
+        "file_name": "Becky G KAROL G - MAMIII (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0de7c7e0244d478331bc3d7c53df0399.1000x1000x1.png"
+        }
+    },
+    "local_song_380": {
+        "artist": "Post Malone The Weeknd",
+        "title": "One Right Now",
+        "file_name": "Post Malone The Weeknd - One Right Now.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/930d8536a2b9f887294d412e4545a7b6.1000x1000x1.jpg"
+        }
+    },
+    "local_song_383": {
+        "artist": "sombr",
+        "title": "undressed",
+        "file_name": "sombr - undressed (official video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ec1735ce9498b0f07847c7f9aae0f7af.1000x1000x1.png"
+        }
+    },
+    "local_song_382": {
+        "artist": "Camila Cabello",
+        "title": "Bam Bam",
+        "file_name": "Camila Cabello - Bam Bam (Official Music Video) ft. Ed Sheeran.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e8be73c71f910eaa7be819b9ceb4c85c.1000x1000x1.png"
+        }
+    },
+    "local_song_386": {
+        "artist": "Ravyn Lenae",
+        "title": "Love Me Not",
+        "file_name": "Ravyn Lenae - Love Me Not (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ccc73eac1f990488a26f3959223f8979.1000x1000x1.png"
+        }
+    },
+    "local_song_387": {
+        "artist": "Alex Warren",
+        "title": "Ordinary",
+        "file_name": "Alex Warren - Ordinary (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/30e72e090d74f195ddf3cd5d5f1e4b14.1000x1000x1.png"
+        }
+    },
+    "local_song_384": {
+        "artist": "Imagine Dragons x J.I.D",
+        "title": "Enemy",
+        "file_name": "Imagine Dragons x J.I.D - Enemy (from the series Arcane League of Legends).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ca5ca43c1cbafe72fcb6d69520b666e3.640x640x1.jpg"
+        }
+    },
+    "local_song_385": {
+        "artist": "Tyler The Creator",
+        "title": "Like Him",
+        "file_name": "Tyler The Creator - Like Him (feat. Lola Young) [Lyrics].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/206f16145c6ad42142656b0a53a0638f.1000x1000x1.png"
+        }
+    },
+    "local_song_388": {
+        "artist": "Brenda Lee",
+        "title": "Rockin Around The Christmas Tree",
+        "file_name": "Brenda Lee - Rockin Around The Christmas Tree (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/601413e05fc8a315f655d608c4bd03d5.1000x1000x1.png"
+        }
+    },
+    "local_song_389": {
+        "artist": "JNR CHOI Sam Tompkins",
+        "title": "TO THE MOON",
+        "file_name": "JNR CHOI Sam Tompkins - TO THE MOON (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/3759b284290b61bf9eb7867cccc18827.1000x1000x1.png"
+        }
+    },
+    "local_song_391": {
+        "artist": "Ella Langley",
+        "title": "Loving Life Again",
+        "file_name": "Ella Langley - Loving Life Again (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/535437a10bd9e316db4d07ed1cb6ea8c.1000x1000x1.png"
+        }
+    },
+    "local_song_392": {
+        "artist": "Olivia Rodrigo",
+        "title": "good 4 u",
+        "file_name": "Olivia Rodrigo - good 4 u (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9b7e8e155104780646cc8e10d518dae5.1000x1000x1.png"
+        }
+    },
+    "local_song_390": {
+        "artist": "Beyonc",
+        "title": "BREAK MY SOUL",
+        "file_name": "Beyonc - BREAK MY SOUL (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f76571c1c627a3b6a959a4bc873ff313.1000x1000x1.png"
+        }
+    },
+    "local_song_393": {
+        "artist": "SZA",
+        "title": "Snooze",
+        "file_name": "SZA - Snooze (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c4338786abde3848361ffdd0f2b4676e.1000x1000x1.png"
+        }
+    },
+    "local_song_394": {
+        "artist": "BossMan Dlow",
+        "title": "Motion Party",
+        "file_name": "BossMan Dlow - Motion Party (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ddbf7833f8004a0199495055f8edebea.1000x1000x1.png"
+        }
+    },
+    "local_song_395": {
+        "artist": "Jelly Roll",
+        "title": "Save Me",
+        "file_name": "Jelly Roll - Save Me (with Lainey Wilson) [Official Audio].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/250f689cecd3926a532a6c4251e6277f.1000x1000x1.jpg"
+        }
+    },
+    "local_song_397": {
+        "artist": "Drake",
+        "title": "Little Birdie",
+        "file_name": "Drake - Little Birdie.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_396": {
+        "artist": "Stella Lefty  Vincent Mason",
+        "title": "Something To Lose",
+        "file_name": "Stella Lefty  Vincent Mason - Something To Lose (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/f0fac4ee55b582cf416c2a9f7a4f123c.1000x1000x1.png"
+        }
+    },
+    "local_song_401": {
+        "artist": "Unknown Artist",
+        "title": "euphoria",
+        "file_name": "euphoria.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/573e7d85433d56494024ea9c7a914e42.500x500x1.jpg"
+        }
+    },
+    "local_song_399": {
+        "artist": "Justin Bieber",
+        "title": "DAISIES",
+        "file_name": "Justin Bieber - DAISIES (Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/40618136b6f4da3af79a024ef551d8c3.1000x1000x1.png"
+        }
+    },
+    "local_song_398": {
+        "artist": "Tucker Wetmore",
+        "title": "Wind Up Missin You",
+        "file_name": "Tucker Wetmore - Wind Up Missin You (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ca30d95426023faf4b2b296399249485.1000x1000x1.png"
+        }
+    },
+    "local_song_400": {
+        "artist": "Chappell Roan",
+        "title": "HOT TO GO",
+        "file_name": "Chappell Roan - HOT TO GO (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c854fbe3a7c59d2f42a4224362f84afb.1000x1000x1.png"
+        }
+    },
+    "local_song_403": {
+        "artist": "Xavi",
+        "title": "La Diabla",
+        "file_name": "Xavi - La Diabla (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/562f7d3489294b634cfc06217a373b23.1000x1000x1.png"
+        }
+    },
+    "local_song_402": {
+        "artist": "Tate McRae",
+        "title": "shes all i wanna be",
+        "file_name": "Tate McRae - shes all i wanna be (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b8acfa886075e5f4060e108c1675bcfb.1000x1000x1.png"
+        }
+    },
+    "local_song_404": {
+        "artist": "Josh Ross",
+        "title": "Hate How You Look",
+        "file_name": "Josh Ross - Hate How You Look (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1f33a09aa32d9d75a7ada12cb9d27b0a.1000x1000x1.png"
+        }
+    },
+    "local_song_408": {
+        "artist": "Unknown Artist",
+        "title": "Takedown Official Lyric Video feat. Jeongyeon Jihyo and Chaeyoung from TWICE  KPop Demon Hunters",
+        "file_name": "Takedown Official Lyric Video feat. Jeongyeon Jihyo and Chaeyoung from TWICE  KPop Demon Hunters.mp3",
+        "metadata": {
+            "cover": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+        }
+    },
+    "local_song_405": {
+        "artist": "Summer Walker",
+        "title": "Heart Of A Woman",
+        "file_name": "Summer Walker - Heart Of A Woman (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/05394e419a4ec5e57651ab249e8a588e.1000x1000x1.png"
+        }
+    },
+    "local_song_407": {
+        "artist": "Morgan Wallen",
+        "title": "One Thing At A Time",
+        "file_name": "Morgan Wallen - One Thing At A Time (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a2124e16f9e39c243c01ef1f26aa5f45.1000x1000x1.png"
+        }
+    },
+    "local_song_409": {
+        "artist": "Drake",
+        "title": "Make Them Know",
+        "file_name": "Drake - Make Them Know.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6619186e8f93ff5c7ce61912e08d9c0.1000x1000x1.png"
+        }
+    },
+    "local_song_406": {
+        "artist": "Ice Spice  Nicki Minaj",
+        "title": "Princess Diana",
+        "file_name": "Ice Spice  Nicki Minaj - Princess Diana (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bd4c20a06f8ecd50a9a89f3ed4685aa7.486x486x1.png"
+        }
+    },
+    "local_song_410": {
+        "artist": "T.I.",
+        "title": "LET EM KNOW",
+        "file_name": "T.I. - LET EM KNOW (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/31e55ee2c31350af3eea41e52976d8f1.1000x1000x1.png"
+        }
+    },
+    "local_song_413": {
+        "artist": "GAYLE",
+        "title": "abcdefu",
+        "file_name": "GAYLE - abcdefu (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bc365a9a876b54fbb2cf937a4b795a17.1000x1000x1.png"
+        }
+    },
+    "local_song_414": {
+        "artist": "Zach Bryan",
+        "title": "I Remember Everything",
+        "file_name": "Zach Bryan - I Remember Everything (feat. Kacey Musgraves).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/421361b4cbaed1db2edcb52f48e16af7.1000x1000x1.png"
+        }
+    },
+    "local_song_411": {
+        "artist": "Mariah Carey",
+        "title": "All I Want for Christmas Is You",
+        "file_name": "Mariah Carey - All I Want for Christmas Is You (Make My Wish Come True Edition).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/00a1b9b85511e9a1a14d147bd490a696.1000x1000x1.png"
+        }
+    },
+    "local_song_416": {
+        "artist": "Ariana Grande",
+        "title": "We Cant Be Friends",
+        "file_name": "Ariana Grande - We Cant Be Friends (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/64a67e83b9838d89d135da4e32d54745.1000x1000x1.png"
+        }
+    },
+    "local_song_415": {
+        "artist": "Cole Swindell",
+        "title": "She Had Me At Heads Carolina",
+        "file_name": "Cole Swindell - She Had Me At Heads Carolina (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/d4b27fc0827c47c6df4df9e5ad30b10b.1000x1000x1.jpg"
+        }
+    },
+    "local_song_412": {
+        "artist": "Harry Styles",
+        "title": "Aperture",
+        "file_name": "Harry Styles - Aperture (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/305d8d00f583f57d32b1bc0c58348382.1000x1000x1.png"
+        }
+    },
+    "local_song_418": {
+        "artist": "Beyonc",
+        "title": "CUFF IT",
+        "file_name": "Beyonc - CUFF IT (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/2a76ae7f7d284b6b408c855ffb1dc3ae.1000x1000x1.png"
+        }
+    },
+    "local_song_419": {
+        "artist": "Megan Moroney",
+        "title": "Beautiful Things",
+        "file_name": "Megan Moroney - Beautiful Things (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b6d6ab681e85fe52ccd1fd99e59b804e.1000x1000x1.png"
+        }
+    },
+    "local_song_417": {
+        "artist": "Tyler Hubbard",
+        "title": "Dancin In The Country",
+        "file_name": "Tyler Hubbard - Dancin In The Country (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9306406eb80af49d20e2888e32297a8c.1000x1000x1.jpg"
+        }
+    },
+    "local_song_420": {
+        "artist": "Unknown Artist",
+        "title": "white keys",
+        "file_name": "white keys.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/de3f2c60fe91ad86f09df878c9d56d8e.1000x1000x1.png"
+        }
+    },
+    "local_song_421": {
+        "artist": "Luke Combs",
+        "title": "Fast Car",
+        "file_name": "Luke Combs - Fast Car (Official Live Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/aa7216185c2fb1b603e0cdae22d336d1.1000x1000x1.jpg"
+        }
+    },
+    "local_song_422": {
+        "artist": "Bryson Tiller",
+        "title": "Whatever She Wants",
+        "file_name": "Bryson Tiller - Whatever She Wants (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/9fca4cee84b14100687919112c8b33ff.1000x1000x1.png"
+        }
+    },
+    "local_song_423": {
+        "artist": "Ariana Grande",
+        "title": "yes and",
+        "file_name": "Ariana Grande - yes and (official music video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c96f76385524a89fea9f1fa731113c6a.1000x1000x1.png"
+        }
+    },
+    "local_song_425": {
+        "artist": "CKay",
+        "title": "Love Nwantiti Remix",
+        "file_name": "CKay - Love Nwantiti Remix ft. Joeboy  Kuami Eugene [Ah Ah Ah] [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c0c7cc8b8a64e19b7d11ce4e77d5852e.640x640x1.jpg"
+        }
+    },
+    "local_song_426": {
+        "artist": "Tyler Hubbard",
+        "title": "5 Foot 9",
+        "file_name": "Tyler Hubbard - 5 Foot 9 (Unofficial Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/1b353b682aa5329477603c70ad90edb3.1000x1000x1.jpg"
+        }
+    },
+    "local_song_428": {
+        "artist": "Joji",
+        "title": "Glimpse of Us",
+        "file_name": "Joji - Glimpse of Us (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e8b665eb890206ddc0ec46d9c145a284.1000x1000x1.png"
+        }
+    },
+    "local_song_429": {
+        "artist": "Bad Bunny (ft. Rauw Alejandro)",
+        "title": "Party   Un Verano Sin Ti",
+        "file_name": "Bad Bunny (ft. Rauw Alejandro) - Party (360 Visualizer)  Un Verano Sin Ti.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/63ae1eeeb328e5cac95b28ae6ef81dce.1000x1000x1.png"
+        }
+    },
+    "local_song_424": {
+        "artist": "Sam Fender Olivia Dean",
+        "title": "Rein Me In",
+        "file_name": "Sam Fender Olivia Dean - Rein Me In (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/c6e043c4a6464bfd4c4222b9f6c915d2.430x430x1.png"
+        }
+    },
+    "local_song_427": {
+        "artist": "Sabrina Carpenter",
+        "title": "Feather",
+        "file_name": "Sabrina Carpenter - Feather (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/4a9d94a3076313ed166f1a49c118b671.1000x1000x1.png"
+        }
+    },
+    "local_song_430": {
+        "artist": "Gracie Abrams",
+        "title": "Thats So True",
+        "file_name": "Gracie Abrams - Thats So True (Lyrics).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fae66b3340f8b4c5e5aa26919328f4bb.1000x1000x1.png"
+        }
+    },
+    "local_song_432": {
+        "artist": "Walker Hayes",
+        "title": "Fancy Like",
+        "file_name": "Walker Hayes - Fancy Like.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/7f5e7cec1ef88a3e3813e4317939261e.1000x1000x1.jpg"
+        }
+    },
+    "local_song_433": {
+        "artist": "Taylor Swift",
+        "title": "I Can Do It With A Broken Heart",
+        "file_name": "Taylor Swift - I Can Do It With A Broken Heart (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ffbac9cc7a380db1d09d5895dcc63a44.1000x1000x1.png"
+        }
+    },
+    "local_song_435": {
+        "artist": "Brandon Lake Jelly Roll",
+        "title": "Hard Fought Hallelujah",
+        "file_name": "Brandon Lake Jelly Roll - Hard Fought Hallelujah.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/68e04f7dcb1a7538cded003d3cdb9a24.1000x1000x1.png"
+        }
+    },
+    "local_song_431": {
+        "artist": "Ella Langley",
+        "title": "Be Her",
+        "file_name": "Ella Langley - Be Her (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/535437a10bd9e316db4d07ed1cb6ea8c.1000x1000x1.png"
+        }
+    },
+    "local_song_434": {
+        "artist": "Coi Leray",
+        "title": "Players",
+        "file_name": "Coi Leray - Players (Official Music Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/bbfaabc6f47fb797e84af5b9b5d3bd9a.1000x1000x1.png"
+        }
+    },
+    "local_song_437": {
+        "artist": "Drake ft. Sexyy Red  SZA",
+        "title": "Rich Baby Daddy",
+        "file_name": "Drake ft. Sexyy Red  SZA - Rich Baby Daddy (Official Music Video) ft. Sexyy Red SZA.mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/0acbf25e2f5813ae4a0cbd4b10441527.730x730x1.png"
+        }
+    },
+    "local_song_436": {
+        "artist": "Tems",
+        "title": "What You Need",
+        "file_name": "Tems - What You Need (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/81c68d4c0e066818c32cdd7af499cfa9.1000x1000x1.png"
+        }
+    },
+    "local_song_438": {
+        "artist": "Taylor Swift",
+        "title": "All Too Well",
+        "file_name": "Taylor Swift - All Too Well (Taylors Version) (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/73d1cdd8620992686cda0642e463906b.1000x1000x1.png"
+        }
+    },
+    "local_song_439": {
+        "artist": "Ella Langley",
+        "title": "Bottom Of Your Boots",
+        "file_name": "Ella Langley - Bottom Of Your Boots (Official Audio).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/535437a10bd9e316db4d07ed1cb6ea8c.1000x1000x1.png"
+        }
+    },
+    "local_song_440": {
+        "artist": "Tate McRae",
+        "title": "exes",
+        "file_name": "Tate McRae - exes (Official Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/b98900de0f7d0abd3bdf663baa3397dd.1000x1000x1.png"
+        }
+    },
+    "local_song_444": {
+        "artist": "Post Malone",
+        "title": "I Like You  w. Doja Cat",
+        "file_name": "Post Malone - I Like You (A Happier Song) w. Doja Cat [Official Music Video].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/e3528f673512600229b17e6881e2ad53.300x300x1.jpg"
+        }
+    },
+    "local_song_441": {
+        "artist": "Myles Smith",
+        "title": "Stargazing",
+        "file_name": "Myles Smith - Stargazing (Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/fa2fb1788319e1b636b74d8e1b75dc9f.1000x1000x1.png"
+        }
+    },
+    "local_song_445": {
+        "artist": "Shaboozey",
+        "title": "A Bar Song",
+        "file_name": "Shaboozey - A Bar Song (Tipsy) [Official Visualizer].mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/69460859f060839ae351dce785214220.1000x1000x1.png"
+        }
+    },
+    "local_song_442": {
+        "artist": "Jessie Murph",
+        "title": "Blue Strips",
+        "file_name": "Jessie Murph - Blue Strips (Official Visualizer).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/a1a8991020f2e0ce9c175497e9461300.1000x1000x1.png"
+        }
+    },
+    "local_song_443": {
+        "artist": "Noah Kahan",
+        "title": "Porch Light",
+        "file_name": "Noah Kahan - Porch Light (Official Lyric Video).mp3",
+        "metadata": {
+            "cover": "https://images.genius.com/ebf70a5438857a790ae024150073bb59.1000x1000x1.png"
+        }
+    }
+}
