@@ -339,9 +339,11 @@ export default function Dashboard() {
       // Pre-load the static CDN stream if we have it in the database!
       let hasPlayedStatic = false;
       if (currentSong.audioUrl && audioRef.current) {
-        // We proxy it through our audio-proxy to avoid CORS issues if needed, or play directly.
-        // The API route currently proxies it as: `/api/audio-proxy?url=...`
-        audioRef.current.src = `/api/audio-proxy?url=${encodeURIComponent(currentSong.audioUrl)}`;
+        if (currentSong.audioUrl.includes('supabase.co')) {
+          audioRef.current.src = encodeURI(currentSong.audioUrl);
+        } else {
+          audioRef.current.src = `/api/audio-proxy?url=${encodeURIComponent(currentSong.audioUrl)}`;
+        }
         if (playingRef.current) {
           playAudio();
         }
