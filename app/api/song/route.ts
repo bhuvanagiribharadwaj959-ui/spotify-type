@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+// @ts-ignore
 import { getLyrics } from 'genius-lyrics-api';
 
 async function getOfficialJioSaavnStream(artist: string, title: string) {
