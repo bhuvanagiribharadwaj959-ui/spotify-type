@@ -295,7 +295,7 @@ function HeroVisual() {
   return (
     <div className="hero-particle-shell">
       <PixelParticleImage
-        src="/hero-model.jpg"
+        src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/hero-model.jpg"
         width={600}
         height={750}
       />
@@ -329,7 +329,7 @@ export default function FullPage() {
 
       <nav className="navbar">
         <div className="logo" style={{ gap: '10px' }}>
-          <img src="/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+          <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
           <span>Sonic</span>
         </div>
         <div className="nav-links">

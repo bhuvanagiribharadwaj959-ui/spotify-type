@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "SONIC",
   description: "Your music. Your world. Unfiltered.",
   icons: {
-    icon: "/logo.png",
+    icon: "https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png",
   },
 };
 

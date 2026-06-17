@@ -1730,7 +1730,7 @@ export default function CreateMusicPage() {
             <ArrowLeft size={18} />
           </Link>
           <div className="create-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <img src="/logo.png" alt="Sonic" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+            <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
             <span>SONIC</span>
           </div>
           <div className="create-divider" />

@@ -159,7 +159,7 @@ export function Login() {
       {/* Top Navigation */}
       <nav className="sonic-nav">
         <div className="sonic-logo" style={{ gap: '10px' }}>
-          <img src="/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+          <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
           <span>Sonic</span>
         </div>
         <div className="sonic-nav-links">

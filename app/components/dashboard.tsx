@@ -681,7 +681,7 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="dash-sidebar">
         <div className="dash-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img src="/logo.png" alt="Sonic" style={{ width: '36px', height: '36px', borderRadius: '8px' }} />
+          <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '36px', height: '36px', borderRadius: '8px' }} />
           <div className="dash-logo-text">
             SONIC
           </div>
