@@ -9,7 +9,8 @@ import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
 
 import { 
-  signInWithPopup, 
+  signInWithRedirect, 
+  getRedirectResult,
   GoogleAuthProvider, 
   signOut,
   sendEmailVerification,
@@ -84,6 +85,18 @@ export function Login() {
   const [isPlaying, setIsPlaying] = useState(false);
   const router = useRouter();
 
+  React.useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          router.push("/dashboard");
+        }
+      })
+      .catch((err) => {
+        setError(authErrorMessage(err));
+      });
+  }, [router]);
+
   // 1. Core Email & Password Login Handler
   const handle_login = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,8 +131,7 @@ export function Login() {
     setError("");
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      router.push("/dashboard"); 
+      await signInWithRedirect(auth, provider);
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }
@@ -130,8 +142,7 @@ export function Login() {
     setError("");
     const provider = new OAuthProvider("apple.com");
     try {
-      await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      await signInWithRedirect(auth, provider);
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }

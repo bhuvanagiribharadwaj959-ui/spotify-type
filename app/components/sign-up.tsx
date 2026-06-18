@@ -7,7 +7,8 @@ import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
 import { 
   createUserWithEmailAndPassword, 
-  signInWithPopup, 
+  signInWithRedirect, 
+  getRedirectResult,
   GoogleAuthProvider, 
   OAuthProvider,
   updateProfile,
@@ -97,6 +98,18 @@ export function SignUp() {
   
   const router = useRouter();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          router.push("/dashboard");
+        }
+      })
+      .catch((err) => {
+        setError(authErrorMessage(err));
+      });
+  }, [router]);
 
   const verificationEmail = auth.currentUser?.email ?? email;
 
@@ -227,8 +240,7 @@ export function SignUp() {
   const handle_google_signup = async () => {
     setError("");
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-      router.push("/dashboard");
+      await signInWithRedirect(auth, new GoogleAuthProvider());
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }
@@ -238,8 +250,7 @@ export function SignUp() {
   const handle_apple_signup = async () => {
     setError("");
     try {
-      await signInWithPopup(auth, new OAuthProvider("apple.com"));
-      router.push("/dashboard");
+      await signInWithRedirect(auth, new OAuthProvider("apple.com"));
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }
