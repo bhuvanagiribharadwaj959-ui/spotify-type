@@ -222,38 +222,38 @@ export default function Dashboard() {
           }
         };
         fetchLikes();
+        
+        const fetchDbSongs = async () => {
+          try {
+            const q = query(collection(db, "songs"));
+            const snapshot = await getDocs(q);
+            const fetched: DashboardTrack[] = [];
+            snapshot.forEach(docSnap => {
+              const data = docSnap.data();
+              if (data.is_public) {
+                fetched.push({
+                  id: docSnap.id,
+                  img: data.img || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                  title: data.title || "Unknown Title",
+                  artist: data.artist || "Unknown Artist",
+                  language: data.language,
+                  genres: data.genres || [],
+                });
+              }
+            });
+            fetched.sort((a, b) => a.title.localeCompare(b.title));
+            setDbSongs(fetched);
+          } catch (err) {
+            // console.error(err);
+          }
+        };
+        fetchDbSongs();
+
       } else {
         setLikedSongs(new Set());
         router.push("/login");
       }
     });
-
-    const fetchDbSongs = async () => {
-      try {
-        const q = query(collection(db, "songs"));
-        const snapshot = await getDocs(q);
-        const fetched: DashboardTrack[] = [];
-        snapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          if (data.is_public) {
-            fetched.push({
-              id: docSnap.id,
-              img: data.img || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
-              title: data.title || "Unknown Title",
-              artist: data.artist || "Unknown Artist",
-              language: data.language,
-              genres: data.genres || [],
-            });
-          }
-        });
-        
-        fetched.sort((a, b) => a.title.localeCompare(b.title));
-        setDbSongs(fetched);
-      } catch (err) {
-        // console.error(err);
-      }
-    };
-    fetchDbSongs();
 
     return () => unsubscribe();
   }, [router]);
