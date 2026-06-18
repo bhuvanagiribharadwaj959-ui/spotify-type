@@ -9,8 +9,7 @@ import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
 
 import { 
-  signInWithRedirect, 
-  getRedirectResult,
+  signInWithPopup, 
   GoogleAuthProvider, 
   signOut,
   sendEmailVerification,
@@ -96,16 +95,6 @@ export function Login() {
         router.push("/dashboard");
       }
     });
-
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) {
-          router.push("/dashboard");
-        }
-      })
-      .catch((err) => {
-        setError(authErrorMessage(err));
-      });
       
     return () => unsubscribe();
   }, [router]);
@@ -144,7 +133,8 @@ export function Login() {
     setError("");
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithRedirect(auth, provider);
+      await signInWithPopup(auth, provider);
+      router.push("/dashboard");
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }
@@ -155,7 +145,8 @@ export function Login() {
     setError("");
     const provider = new OAuthProvider("apple.com");
     try {
-      await signInWithRedirect(auth, provider);
+      await signInWithPopup(auth, provider);
+      router.push("/dashboard");
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }

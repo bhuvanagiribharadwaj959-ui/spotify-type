@@ -7,8 +7,7 @@ import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
 import { 
   createUserWithEmailAndPassword, 
-  signInWithRedirect, 
-  getRedirectResult,
+  signInWithPopup, 
   GoogleAuthProvider, 
   OAuthProvider,
   updateProfile,
@@ -112,16 +111,6 @@ export function SignUp() {
         setIsVerifying(true);
       }
     });
-
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) {
-          router.push("/dashboard");
-        }
-      })
-      .catch((err) => {
-        setError(authErrorMessage(err));
-      });
       
     return () => unsubscribe();
   }, [router]);
@@ -255,7 +244,8 @@ export function SignUp() {
   const handle_google_signup = async () => {
     setError("");
     try {
-      await signInWithRedirect(auth, new GoogleAuthProvider());
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      router.push("/dashboard");
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }
@@ -265,7 +255,8 @@ export function SignUp() {
   const handle_apple_signup = async () => {
     setError("");
     try {
-      await signInWithRedirect(auth, new OAuthProvider("apple.com"));
+      await signInWithPopup(auth, new OAuthProvider("apple.com"));
+      router.push("/dashboard");
     } catch (err: unknown) {
       setError(authErrorMessage(err));
     }
