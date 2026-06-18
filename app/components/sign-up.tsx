@@ -5,10 +5,10 @@ import { CheckCircle2, Eye, EyeOff, MailCheck, Music, RefreshCw } from "lucide-r
 import "./sign-up.css";
 import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   OAuthProvider,
   updateProfile,
   sendEmailVerification,
@@ -67,7 +67,7 @@ function GoogleIcon() {
 function AppleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-      <path fill="currentColor" d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.5 3 2.4 1.2-.05 1.7-.8 3.1-.8 1.4 0 1.9.8 3.1.7 1.3-.02 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.03-.02-2.6-1-2.6-3.9zM14.2 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/>
+      <path fill="currentColor" d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.5 3 2.4 1.2-.05 1.7-.8 3.1-.8 1.4 0 1.9.8 3.1.7 1.3-.02 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.03-.02-2.6-1-2.6-3.9zM14.2 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z" />
     </svg>
   );
 }
@@ -88,14 +88,14 @@ export function SignUp() {
   const [show, setShow] = useState(false);
   const [agree, setAgree] = useState(false);
   const level = useMemo(() => strengthOf(pw), [pw]);
-  
+
   const [error, setError] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false); 
+  const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [isCheckingVerification, setIsCheckingVerification] = useState(false);
   const [isIframe, setIsIframe] = useState(false);
-  
+
   const router = useRouter();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -111,7 +111,7 @@ export function SignUp() {
         setIsVerifying(true);
       }
     });
-      
+
     return () => unsubscribe();
   }, [router]);
 
@@ -178,21 +178,21 @@ export function SignUp() {
       setError("You must agree to the Terms of Service and Privacy Policy.");
       return;
     }
-    
+
     let createdUser = null;
 
     try {
       // Create the user container in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, pw);
       createdUser = userCredential.user;
-      
+
       if (createdUser) {
         if (name.trim()) {
           await updateProfile(createdUser, { displayName: name.trim() });
         }
 
         await sendVerificationEmail();
-        
+
         setIsVerifying(true);
         setInfoMessage("Verification email sent. Open it to confirm your email address.");
       }
@@ -205,7 +205,7 @@ export function SignUp() {
           console.error("Failed to clean up incomplete user registration:", deleteErr);
         }
       }
-      
+
       if (err instanceof FirebaseError && err.code === "auth/email-already-in-use") {
         setError("This email address is already registered. Try logging in instead.");
       } else {
@@ -223,14 +223,14 @@ export function SignUp() {
     intervalRef.current = setInterval(async () => {
       if (auth.currentUser) {
         await auth.currentUser.reload();
-        
+
         if (auth.currentUser.emailVerified) {
           if (intervalRef.current) {
             clearInterval(intervalRef.current);
           }
           setInfoMessage("Email verified. Redirecting you to log in...");
           await signOut(auth);
-          router.push("/login"); 
+          router.push("/login");
         }
       }
     }, 3000);
@@ -270,12 +270,6 @@ export function SignUp() {
           <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
           <span>Sonic</span>
         </div>
-        <div className="sonic-nav-links">
-          <a href="/discover">Discover</a>
-          <a href="/library">Library</a>
-          <a href="/artists">Artists</a>
-          <a href="/premium">Premium</a>
-        </div>
       </nav>
 
       {/* LEFT COLUMN - Hero Content */}
@@ -294,11 +288,28 @@ export function SignUp() {
           </p>
 
           <div className="sonic-hero-buttons">
-            <button type="button" className="sonic-btn-primary" onClick={() => {
-              const form = document.querySelector('.sonic-form');
-              if (form) form.scrollIntoView({ behavior: 'smooth' });
-            }}>Start Listening Free</button>
-            <button type="button" className="sonic-btn-secondary" onClick={() => router.push('/premium')}>See Plans</button>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "12px 24px",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              borderRadius: "100px",
+              backdropFilter: "blur(10px)",
+              color: "#fff",
+              fontSize: "0.95rem",
+              fontWeight: 500,
+            }}>
+              <span style={{ 
+                width: "8px", 
+                height: "8px", 
+                background: "#1db954", 
+                borderRadius: "50%",
+                boxShadow: "0 0 10px #1db954"
+              }} />
+              Sign up today and get full access
+            </div>
           </div>
 
           <div className="sonic-social-proof">
@@ -318,12 +329,12 @@ export function SignUp() {
         <div className="sonic-form-container">
           {isIframe && (
             <div className="sonic-iframe-banner" style={{
-              color: "#eab308", 
-              backgroundColor: "rgba(234, 179, 8, 0.1)", 
-              padding: "12px 16px", 
-              borderRadius: "8px", 
-              marginBottom: "20px", 
-              fontSize: "14px", 
+              color: "#eab308",
+              backgroundColor: "rgba(234, 179, 8, 0.1)",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              marginBottom: "20px",
+              fontSize: "14px",
               border: "1px solid rgba(234, 179, 8, 0.2)",
               display: "flex",
               flexDirection: "column",
@@ -336,8 +347,8 @@ export function SignUp() {
               <p style={{ margin: 0, color: "#e2e8f0", fontSize: "13px" }}>
                 Firebase Google & Apple login will fail due to iframe cookie restrictions. Please open Sonic directly in a new tab for it to work.
               </p>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => window.open(window.location.origin, "_blank")}
                 style={{
                   background: "#eab308",

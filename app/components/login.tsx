@@ -1,16 +1,16 @@
 "use client";
 "use strict";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import React from "react";
 import { Eye, EyeOff, Music, PlayCircle, PauseCircle, SkipForward, SkipBack } from "lucide-react";
 import "./login.css";
 import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
 
-import { 
-  signInWithPopup, 
-  GoogleAuthProvider, 
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   sendEmailVerification,
   signInWithEmailAndPassword,
@@ -70,7 +70,7 @@ function GoogleIcon() {
 function AppleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-      <path fill="currentColor" d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.5 3 2.4 1.2-.05 1.7-.8 3.1-.8 1.4 0 1.9.8 3.1.7 1.3-.02 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.03-.02-2.6-1-2.6-3.9zM14.2 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/>
+      <path fill="currentColor" d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.5 3 2.4 1.2-.05 1.7-.8 3.1-.8 1.4 0 1.9.8 3.1.7 1.3-.02 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.03-.02-2.6-1-2.6-3.9zM14.2 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z" />
     </svg>
   );
 }
@@ -83,7 +83,18 @@ export function Login() {
   const [resetMessage, setResetMessage] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [isIframe, setIsIframe] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch((e) => console.log("Audio play error:", e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
 
   React.useEffect(() => {
     if (typeof window !== "undefined" && window.self !== window.parent) {
@@ -95,7 +106,7 @@ export function Login() {
         router.push("/dashboard");
       }
     });
-      
+
     return () => unsubscribe();
   }, [router]);
 
@@ -177,10 +188,6 @@ export function Login() {
           <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
           <span>Sonic</span>
         </div>
-        <div className="sonic-nav-links">
-          <a href="/support">Support</a>
-          <a href="/download">Download</a>
-        </div>
       </nav>
 
       {/* LEFT COLUMN - Login Form */}
@@ -188,12 +195,12 @@ export function Login() {
         <div className="sonic-form-container">
           {isIframe && (
             <div className="sonic-iframe-banner" style={{
-              color: "#eab308", 
-              backgroundColor: "rgba(234, 179, 8, 0.1)", 
-              padding: "12px 16px", 
-              borderRadius: "8px", 
-              marginBottom: "20px", 
-              fontSize: "14px", 
+              color: "#eab308",
+              backgroundColor: "rgba(234, 179, 8, 0.1)",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              marginBottom: "20px",
+              fontSize: "14px",
               border: "1px solid rgba(234, 179, 8, 0.2)",
               display: "flex",
               flexDirection: "column",
@@ -206,8 +213,8 @@ export function Login() {
               <p style={{ margin: 0, color: "#e2e8f0", fontSize: "13px" }}>
                 Firebase Google & Apple login will fail due to iframe cookie restrictions. Please open Sonic directly in a new tab for it to work.
               </p>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => window.open(window.location.origin, "_blank")}
                 style={{
                   background: "#eab308",
@@ -273,9 +280,9 @@ export function Login() {
             <div className="sonic-field">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label htmlFor="pw">Password</label>
-                <button 
-                  type="button" 
-                  onClick={handle_reset_password} 
+                <button
+                  type="button"
+                  onClick={handle_reset_password}
                   style={{ background: "none", border: "none", color: "#b3b3b3", fontSize: "12px", cursor: "pointer", textDecoration: "underline", padding: 0 }}
                 >
                   Forgot your password?
@@ -316,16 +323,24 @@ export function Login() {
       <div className="sonic-login-right">
         <div className="sonic-hero-visuals">
           <div className="sonic-player-widget">
+            <audio 
+              ref={audioRef} 
+              src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/Blinding_Lights_Original.mp3" 
+              onEnded={() => setIsPlaying(false)}
+            />
             <div className="sonic-player-art">
-              <img 
-                src="https://images.unsplash.com/photo-1539375665275-f9de415ef9ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW55bCUyMHJlY29yZCUyMHBsYXllciUyMG5lb258ZW58MXx8fHwxNzgwMjk2ODM2fDA&ixlib=rb-4.1.0&q=80&w=400" 
-                alt="Album Art" 
+              <img
+                src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/blinding-lights-cover.jpg"
+                alt="Blinding Lights"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1539375665275-f9de415ef9ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400";
+                }}
               />
             </div>
             <div className="sonic-player-info">
               <div className="sonic-player-text">
-                <h4>Midnight City Vibes</h4>
-                <p>Curated by Sonic • 2.4M Likes</p>
+                <h4>Blinding Lights</h4>
+                <p>The Weeknd • After Hours</p>
               </div>
               <div className="sonic-player-controls">
                 <button type="button" aria-label="Previous" onClick={() => setIsPlaying(false)}><SkipBack size={20} fill="currentColor" /></button>
@@ -336,7 +351,7 @@ export function Login() {
               </div>
             </div>
           </div>
-          
+
           <div className="sonic-floating-chip">
             <Music size={14} /> Resume your playlist
           </div>
