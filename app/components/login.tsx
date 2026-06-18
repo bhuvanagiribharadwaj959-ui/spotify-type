@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Eye, EyeOff, Music, PlayCircle, PauseCircle, SkipForward, SkipBack } from "lucide-react";
+import { Eye, EyeOff, Music, Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import "./login.css";
 import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
@@ -330,7 +330,7 @@ export function Login() {
             />
             <div className="sonic-player-art">
               <img
-                src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/blinding-lights-cover.jpg"
+                src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/a6/6e/bf/a66ebf79-5008-8948-b352-a790fc87446b/19UM1IM04638.rgb.jpg/600x600bb.jpg"
                 alt="Blinding Lights"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1539375665275-f9de415ef9ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400";
@@ -344,8 +344,25 @@ export function Login() {
               </div>
               <div className="sonic-player-controls">
                 <button type="button" aria-label="Previous" onClick={() => setIsPlaying(false)}><SkipBack size={20} fill="currentColor" /></button>
-                <button type="button" aria-label={isPlaying ? "Pause" : "Play"} className="sonic-play-btn" onClick={() => setIsPlaying(!isPlaying)}>
-                  {isPlaying ? <PauseCircle size={42} fill="currentColor" /> : <PlayCircle size={42} fill="currentColor" />}
+                <button 
+                  type="button" 
+                  aria-label={isPlaying ? "Pause" : "Play"} 
+                  className="sonic-play-btn" 
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    backgroundColor: '#1ED760',
+                    color: '#000',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: 'none',
+                    padding: 0
+                  }}
+                >
+                  {isPlaying ? <Pause size={24} fill="currentColor" stroke="none" /> : <Play size={24} fill="currentColor" stroke="none" style={{ marginLeft: '4px' }} />}
                 </button>
                 <button type="button" aria-label="Next" onClick={() => setIsPlaying(false)}><SkipForward size={20} fill="currentColor" /></button>
               </div>
