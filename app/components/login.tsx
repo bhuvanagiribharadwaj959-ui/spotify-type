@@ -86,6 +86,12 @@ export function Login() {
   const router = useRouter();
 
   React.useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        router.push("/dashboard");
+      }
+    });
+
     getRedirectResult(auth)
       .then((result) => {
         if (result) {
@@ -95,6 +101,8 @@ export function Login() {
       .catch((err) => {
         setError(authErrorMessage(err));
       });
+      
+    return () => unsubscribe();
   }, [router]);
 
   // 1. Core Email & Password Login Handler

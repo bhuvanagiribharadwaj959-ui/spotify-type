@@ -100,6 +100,14 @@ export function SignUp() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && user.emailVerified) {
+        router.push("/dashboard");
+      } else if (user && !user.emailVerified) {
+        setIsVerifying(true);
+      }
+    });
+
     getRedirectResult(auth)
       .then((result) => {
         if (result) {
@@ -109,6 +117,8 @@ export function SignUp() {
       .catch((err) => {
         setError(authErrorMessage(err));
       });
+      
+    return () => unsubscribe();
   }, [router]);
 
   const verificationEmail = auth.currentUser?.email ?? email;
