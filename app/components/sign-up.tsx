@@ -9,7 +9,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  OAuthProvider,
   updateProfile,
   sendEmailVerification,
   signOut
@@ -60,14 +59,6 @@ function GoogleIcon() {
       <path fill="#34A853" d="M12 24c2.94 0 5.41-.97 7.22-2.63l-3.71-2.96c-1.03.7-2.34 1.12-3.51 1.12-2.7 0-4.99-1.82-5.81-4.27H2.41v2.68C4.2 21.98 7.85 24 12 24z" />
       <path fill="#FBBC05" d="M6.19 14.26c-.22-.66-.35-1.36-.35-2.08 0-.72.13-1.42.35-2.08V7.42H2.41C1.46 9.14.9 10.99.9 12.18c0 1.19.56 3.04 1.51 4.76l3.78-2.68z" />
       <path fill="#EA4335" d="M12 4.77c1.6 0 3.04.55 4.18 1.63l3.12-3.12C17.38 1.39 14.94 0 12 0 7.85 0 4.2 2.02 2.41 4.77l3.78 2.68C7.01 6.59 9.3 4.77 12 4.77z" />
-    </svg>
-  );
-}
-
-function AppleIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-      <path fill="currentColor" d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.5 3 2.4 1.2-.05 1.7-.8 3.1-.8 1.4 0 1.9.8 3.1.7 1.3-.02 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.03-.02-2.6-1-2.6-3.9zM14.2 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z" />
     </svg>
   );
 }
@@ -251,16 +242,7 @@ export function SignUp() {
     }
   };
 
-  // 4. Apple OAuth Provider Handler
-  const handle_apple_signup = async () => {
-    setError("");
-    try {
-      await signInWithPopup(auth, new OAuthProvider("apple.com"));
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      setError(authErrorMessage(err));
-    }
-  };
+
 
   return (
     <div className="sonic-signup-root">
@@ -411,9 +393,6 @@ export function SignUp() {
           <div className="sonic-social-logins">
             <button type="button" onClick={handle_google_signup} disabled={isVerifying}>
               <GoogleIcon /> Continue with Google
-            </button>
-            <button type="button" onClick={handle_apple_signup} disabled={isVerifying}>
-              <AppleIcon /> Continue with Apple
             </button>
           </div>
 
