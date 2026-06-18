@@ -330,7 +330,7 @@ export function Login() {
             />
             <div className="sonic-player-art">
               <img
-                src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/a6/6e/bf/a66ebf79-5008-8948-b352-a790fc87446b/19UM1IM04638.rgb.jpg/600x600bb.jpg"
+                src="https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png"
                 alt="Blinding Lights"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1539375665275-f9de415ef9ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400";
@@ -353,8 +353,8 @@ export function Login() {
                     width: '48px',
                     height: '48px',
                     borderRadius: '50%',
-                    backgroundColor: '#1ED760',
-                    color: '#000',
+                    backgroundColor: '#000',
+                    color: '#1ED760',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -362,7 +362,7 @@ export function Login() {
                     padding: 0
                   }}
                 >
-                  {isPlaying ? <Pause size={24} fill="currentColor" stroke="none" /> : <Play size={24} fill="currentColor" stroke="none" style={{ marginLeft: '4px' }} />}
+                  {isPlaying ? <Pause size={24} fill="#1ED760" stroke="none" /> : <Play size={24} fill="#1ED760" stroke="none" style={{ marginLeft: '4px' }} />}
                 </button>
                 <button type="button" aria-label="Next" onClick={() => setIsPlaying(false)}><SkipForward size={20} fill="currentColor" /></button>
               </div>
