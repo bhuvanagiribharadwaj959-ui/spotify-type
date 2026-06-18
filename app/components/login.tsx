@@ -83,9 +83,14 @@ export function Login() {
   const [error, setError] = useState("");
   const [resetMessage, setResetMessage] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isIframe, setIsIframe] = useState(false);
   const router = useRouter();
 
   React.useEffect(() => {
+    if (typeof window !== "undefined" && window.self !== window.parent) {
+      setIsIframe(true);
+    }
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         router.push("/dashboard");
@@ -190,6 +195,47 @@ export function Login() {
       {/* LEFT COLUMN - Login Form */}
       <div className="sonic-login-left">
         <div className="sonic-form-container">
+          {isIframe && (
+            <div className="sonic-iframe-banner" style={{
+              color: "#eab308", 
+              backgroundColor: "rgba(234, 179, 8, 0.1)", 
+              padding: "12px 16px", 
+              borderRadius: "8px", 
+              marginBottom: "20px", 
+              fontSize: "14px", 
+              border: "1px solid rgba(234, 179, 8, 0.2)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              lineHeight: "1.4"
+            }}>
+              <p style={{ margin: 0, fontWeight: "600" }}>
+                ⚠️ Running inside a Hugging Face Space iframe
+              </p>
+              <p style={{ margin: 0, color: "#e2e8f0", fontSize: "13px" }}>
+                Firebase Google & Apple login will fail due to iframe cookie restrictions. Please open Sonic directly in a new tab for it to work.
+              </p>
+              <button 
+                type="button" 
+                onClick={() => window.open(window.location.origin, "_blank")}
+                style={{
+                  background: "#eab308",
+                  color: "#000",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  width: "fit-content",
+                  marginTop: "4px"
+                }}
+              >
+                Open Sonic directly
+              </button>
+            </div>
+          )}
+
           <div className="sonic-form-header">
             <h2>Welcome back</h2>
             <p>Log in to pick up right where you left off.</p>

@@ -95,11 +95,16 @@ export function SignUp() {
   const [isVerifying, setIsVerifying] = useState(false); 
   const [isResending, setIsResending] = useState(false);
   const [isCheckingVerification, setIsCheckingVerification] = useState(false);
+  const [isIframe, setIsIframe] = useState(false);
   
   const router = useRouter();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && window.self !== window.parent) {
+      setIsIframe(true);
+    }
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user && user.emailVerified) {
         router.push("/dashboard");
@@ -320,6 +325,47 @@ export function SignUp() {
       <div className="sonic-right">
         <div className="sonic-right-bg" />
         <div className="sonic-form-container">
+          {isIframe && (
+            <div className="sonic-iframe-banner" style={{
+              color: "#eab308", 
+              backgroundColor: "rgba(234, 179, 8, 0.1)", 
+              padding: "12px 16px", 
+              borderRadius: "8px", 
+              marginBottom: "20px", 
+              fontSize: "14px", 
+              border: "1px solid rgba(234, 179, 8, 0.2)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              lineHeight: "1.4"
+            }}>
+              <p style={{ margin: 0, fontWeight: "600" }}>
+                ⚠️ Running inside a Hugging Face Space iframe
+              </p>
+              <p style={{ margin: 0, color: "#e2e8f0", fontSize: "13px" }}>
+                Firebase Google & Apple login will fail due to iframe cookie restrictions. Please open Sonic directly in a new tab for it to work.
+              </p>
+              <button 
+                type="button" 
+                onClick={() => window.open(window.location.origin, "_blank")}
+                style={{
+                  background: "#eab308",
+                  color: "#000",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  width: "fit-content",
+                  marginTop: "4px"
+                }}
+              >
+                Open Sonic directly
+              </button>
+            </div>
+          )}
+
           <div className="sonic-form-header">
             <h2>Create your account</h2>
             <p>Get unlimited access to the world of music.</p>
