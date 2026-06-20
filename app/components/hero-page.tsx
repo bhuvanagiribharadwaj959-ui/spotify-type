@@ -23,35 +23,10 @@ import {
   Settings,
   Activity,
 } from "lucide-react";
-import daliMetadata from "../final_song_list.json";
 import "./hero-page.css";
 import Link from "next/link";
 
 const headingWords = ["Your", "music.", "Your", "world.", "Unfiltered."];
-
-type DaliTrack = {
-  id: string;
-  artist: string;
-  title: string;
-  metadata?: {
-    cover?: string;
-    album?: string;
-    release_date?: string;
-    genres?: string[];
-    language?: string;
-  };
-};
-
-const daliTracks = Object.entries(daliMetadata as Record<string, Omit<DaliTrack, "id">>)
-  .map(([id, track]) => ({ id, ...track }))
-  .filter((track) => track.metadata?.cover);
-
-const featuredTrack = daliTracks[0];
-const miniTracks = daliTracks.slice(1, 3);
-const playlistTracks = daliTracks.slice(3, 8);
-const albumTracks = daliTracks.slice(8, 14);
-const artistTracks = daliTracks.slice(14, 20);
-const releaseTracks = daliTracks.slice(20, 26);
 
 function TiltCard({
   children,
@@ -315,12 +290,6 @@ export default function FullPage() {
     });
     return () => unsubscribe();
   }, []);
-
-  const topArtistTracks = artistTracks.map((track) => ({
-    name: track.artist,
-    song: track.title,
-    cover: track.metadata?.cover ?? "",
-  }));
 
   return (
     <div className="full-page-root">

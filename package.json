@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
     "firebase": "^12.14.0",
     "framer-motion": "^12.40.0",
     "genius-lyrics-api": "^3.2.1",

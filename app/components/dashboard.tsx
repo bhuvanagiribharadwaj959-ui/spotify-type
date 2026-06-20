@@ -24,7 +24,6 @@ import {
   Download,
   ChevronLeft,
 } from "lucide-react";
-import daliMetadata from "../final_song_list.json";
 import "./dashboard.css";
 import Link from "next/link";
 import PlayingOverlay from "./playing";
@@ -32,22 +31,6 @@ import { onAuthStateChanged, User, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
 import { collection, doc, setDoc, getDoc, updateDoc, increment, addDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
-
-type DaliTrack = {
-  id: string;
-  artist: string;
-  title: string;
-  metadata?: {
-    cover?: string;
-    language?: string;
-    genres?: string[];
-  };
-  audio?: {
-    url: string;
-    path: string;
-    working: boolean;
-  };
-};
 
 type DashboardTrack = {
   id: string;
@@ -57,26 +40,10 @@ type DashboardTrack = {
   language?: string;
   genres?: string[];
   audioUrl?: string;
+  lyrics?: string;
 };
 
-const daliTracks = Object.entries(daliMetadata as Record<string, Omit<DaliTrack, "id">>)
-  .map(([id, track]) => ({ id, ...track }))
-  .filter((track): track is DaliTrack & { metadata: { cover: string } } => Boolean(track.metadata?.cover));
-
-const toDashboardTrack = (track: DaliTrack & { metadata: { cover: string } }): DashboardTrack => ({
-  id: track.id,
-  img: track.metadata.cover,
-  title: track.title,
-  artist: track.artist,
-  language: track.metadata.language,
-  genres: track.metadata.genres || [],
-  audioUrl: track.audio?.working ? track.audio.url : undefined,
-});
-
-const dashboardTracks = daliTracks.map(toDashboardTrack);
-const heroSlides = dashboardTracks.slice(0, 8);
-
-const songs = dashboardTracks.slice(8, 14);
+const dashboardTracks: DashboardTrack[] = [];
 
 const playlists: { name: string; cover?: string }[] = [
 
@@ -107,30 +74,20 @@ function useReveal() {
 }
 
 export default function Dashboard() {
-  // Dynamically aggregate all unique languages from JSON metadata
-  const categories = useMemo(() => {
-    const extractedLanguages = daliTracks
-      .map((track) => track.metadata?.language)
-      .filter((lang): lang is string => Boolean(lang));
-
-    const uniqueLanguages = Array.from(new Set(extractedLanguages));
-
-    // Capitalize extracted strings nicely
-    return uniqueLanguages.map(
-      (lang) => lang.charAt(0).toUpperCase() + lang.slice(1)
-    );
-  }, []);
-
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoaded, setAuthLoaded] = useState(false);
   const [active, setActive] = useState("Home");
   const [playlistsOpen, setPlaylistsOpen] = useState(true);
-  const [cat, setCat] = useState(categories[0] || "English");
+  const [cat, setCat] = useState("English");
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [currentSong, setCurrentSong] = useState<DashboardTrack>(heroSlides[1] ?? heroSlides[0]);
+  const [currentSong, setCurrentSong] = useState<DashboardTrack>({
+    id: "dummy",
+    title: "Loading...",
+    artist: "Loading...",
+    img: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [dbSongs, setDbSongs] = useState<DashboardTrack[]>([]);
   const [isShuffle, setIsShuffle] = useState(false);
@@ -143,6 +100,21 @@ export default function Dashboard() {
   const [popupGenre, setPopupGenre] = useState<string | null>(null);
   const [popupArtist, setPopupArtist] = useState<string | null>(null);
   const [volume, setVolume] = useState(1);
+
+  const categories = useMemo(() => {
+    // Collect from dbSongs instead
+    const extractedLanguages = dbSongs
+      .map((track) => track.language)
+      .filter((lang): lang is string => Boolean(lang));
+
+    const uniqueLanguages = Array.from(new Set(extractedLanguages));
+
+    // Capitalize extracted strings nicely
+    return uniqueLanguages.map(
+      (lang) => lang.charAt(0).toUpperCase() + lang.slice(1)
+    );
+  }, [dbSongs]);
+  const [duration, setDuration] = useState(0);
   const playingRef = useRef(playing);
 
   useEffect(() => {
@@ -225,26 +197,46 @@ export default function Dashboard() {
         
         const fetchDbSongs = async () => {
           try {
-            const q = query(collection(db, "songs"));
-            const snapshot = await getDocs(q);
+            // Fetch from local JSON file
+            const jsonRes = await fetch('/songs.json');
+            const data = await jsonRes.json();
             const fetched: DashboardTrack[] = [];
-            snapshot.forEach(docSnap => {
-              const data = docSnap.data();
-              if (data.is_public) {
-                fetched.push({
-                  id: docSnap.id,
-                  img: data.img || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
-                  title: data.title || "Unknown Title",
-                  artist: data.artist || "Unknown Artist",
-                  language: data.language,
-                  genres: data.genres || [],
-                });
-              }
+            data.forEach((item: any) => {
+              fetched.push({
+                id: item.id,
+                title: item.meta?.title || "Unknown Title",
+                artist: item.meta?.artist || "Unknown Artist",
+                img: item.meta?.cover_url || item.assets?.cover_url || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                language: item.meta?.language || "english",
+                genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
+                audioUrl: item.supabase?.audio_storage_url || item.assets?.audio_path,
+                lyrics: item.assets?.lyrics
+              });
             });
-            fetched.sort((a, b) => a.title.localeCompare(b.title));
+
+            // Keep the firebase fetch just in case there are custom songs uploaded by the user
+            try {
+              const q = query(collection(db, "songs"));
+              const snapshot = await getDocs(q);
+              snapshot.forEach(docSnap => {
+                const docData = docSnap.data();
+                if (docData.is_public && !fetched.find(f => f.id === docSnap.id)) {
+                  fetched.push({
+                    id: docSnap.id,
+                    img: docData.img || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                    title: docData.title || "Unknown Title",
+                    artist: docData.artist || "Unknown Artist",
+                    language: docData.language,
+                    genres: docData.genres || [],
+                  });
+                }
+              });
+            } catch (err) {}
+
             setDbSongs(fetched);
+            setCurrentSong((prev) => (prev.id === "dummy" && fetched.length > 0) ? fetched[0] : prev);
           } catch (err) {
-            // console.error(err);
+            console.error("Error fetching songs:", err);
           }
         };
         fetchDbSongs();
@@ -261,7 +253,7 @@ export default function Dashboard() {
   useEffect(() => {
     setMounted(true);
     // Remove randomness, just take top 16 tracks to reduce load
-    const staticSlides = dashboardTracks.slice(0, 16);
+    const staticSlides = dbSongs.slice(0, 16);
     setRandomHeroSlides(staticSlides);
 
     const uniqueArtistsMap = new Map<string, string>();
@@ -272,7 +264,7 @@ export default function Dashboard() {
     });
     const artistList = Array.from(uniqueArtistsMap.entries()).map(([name, img]) => ({ name, img }));
     setPopularArtists(artistList.slice(0, 6));
-  }, []);
+  }, [dbSongs]);
 
   const languageFilteredSongs = useMemo(() => {
     if (!cat) return allTracks.slice(0, 12);
@@ -348,6 +340,15 @@ export default function Dashboard() {
           playAudio();
         }
         hasPlayedStatic = true;
+      }
+
+      if (currentSong.lyrics) {
+        setLyrics(currentSong.lyrics);
+        setAlternatives([]);
+        if (hasPlayedStatic) {
+          setIsLoadingAudio(false);
+          return;
+        }
       }
 
       try {
