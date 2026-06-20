@@ -1,29 +1,27 @@
-FROM node:20-bullseye-slim
-
-# Hugging face runs containers as user 1000 for security.
-# The node image already has a built-in user 'node' with UID 1000.
-USER node
-ENV HOME=/home/node \
-    PATH=/home/node/.local/bin:$PATH
-
-WORKDIR $HOME/app
-
-# Copy package files and install dependencies
-COPY --chown=node package*.json ./
+FROM node:20-bullseye-slim AS deps
+WORKDIR /app
+COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of the app
-COPY --chown=node . .
-
-# Build Next.js
+FROM node:20-bullseye-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 RUN npm run build
 
-EXPOSE 7860
+FROM node:20-bullseye-slim AS runner
+WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=7860
-ENV HOST=0.0.0.0
+ENV HOSTNAME="0.0.0.0"
 
-WORKDIR $HOME/app
+USER node
 
-# Start the Next.js server normally (bypassing standalone mode which might be crashing on HF)
-CMD ["npm", "start"]
+# Copy public assets and static files
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=node /app/.next/standalone ./
+COPY --from=builder --chown=node /app/.next/static ./.next/static
+
+EXPOSE 7860
+
+CMD ["node", "server.js"]
