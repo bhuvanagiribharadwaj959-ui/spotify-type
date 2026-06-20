@@ -29,7 +29,7 @@ ENV NODE_ENV=production
 ENV PORT=7860
 ENV HOST=0.0.0.0
 
-WORKDIR $HOME/app/.next/standalone
+WORKDIR $HOME/app
 
-# Start the standalone Next.js server
-CMD ["node", "server.js"]
+# Start the Next.js server normally (bypassing standalone mode which might be crashing on HF)
+CMD ["npm", "start"]
