@@ -614,14 +614,9 @@ export default function Dashboard() {
   };
 
   const renderSongCard = (song: DashboardTrack, i: number) => (
-    <motion.div
+    <div
       key={`${song.id}-${i}`}
       className="dash-song-card"
-      style={{ background: popularColors[i % popularColors.length] }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ delay: (i % 6) * 0.06, duration: 0.5 }}
       onClick={() => {
         setCurrentSong(song);
         setPlaying(true);
@@ -647,9 +642,9 @@ export default function Dashboard() {
           }}
         >
           {currentSong.id === song.id && playing ? (
-            <Pause size={14} fill="currentColor" />
+            <Pause size={24} fill="currentColor" />
           ) : (
-            <Play size={14} fill="currentColor" />
+            <Play size={24} fill="currentColor" style={{ marginLeft: 3 }} />
           )}
         </button>
       </div>
@@ -657,7 +652,7 @@ export default function Dashboard() {
         <div className="dash-song-title">{song.title}</div>
         <div className="dash-song-artist">{song.artist}</div>
       </div>
-    </motion.div>
+    </div>
   );
 
   useEffect(() => {
@@ -826,82 +821,56 @@ export default function Dashboard() {
             )}
           </div>
           <div className="dash-topbar-spacer" />
-          <div style={{ color: 'white', fontWeight: 600, fontSize: 14 }}>
-            Welcome back, {user?.displayName || "Guest"}! Let's make some noise.
+          <div className="dash-user">
+            <div className="dash-avatar">
+              <img src={user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100"} alt="User" className="dash-avatar-img" />
+            </div>
+            <div className="dash-user-name">{user?.displayName || "Guest"}</div>
           </div>
         </motion.div>
 
         {active === "Home" && !popupGenre && !popupArtist && (
           <>
-            {/* Hero Marquee — infinite scrolling album art */}
-            <div className="dash-marquee-section">
+            {/* Spotify Style Hero Grid */}
+            <div className="dash-content">
+              <h1 className="dash-greeting">
+                {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"}
+              </h1>
               {mounted && randomHeroSlides.length > 0 && (
-                <>
-                  {/* Row 1 — scrolls left */}
-                  <div className="dash-marquee-row">
-                    <div className="dash-marquee-track">
-                      {[...randomHeroSlides.slice(0, 8), ...randomHeroSlides.slice(0, 8)].map((track, i) => (
-                        <div
-                          key={`r1-${track.id}-${i}`}
-                          className="dash-marquee-card"
-                          onClick={() => {
+                <div className="dash-hero-grid">
+                  {randomHeroSlides.slice(0, 6).map((track, i) => (
+                    <div
+                      key={`hero-${track.id}-${i}`}
+                      className="dash-hero-card"
+                      onClick={() => {
+                        setCurrentSong(track);
+                        setPlaying(true);
+                        setIsExpanded(true);
+                      }}
+                    >
+                      <img src={track.img} alt={track.title} className="dash-hero-img" />
+                      <div className="dash-hero-title">{track.title}</div>
+                      <button
+                        className="dash-hero-play"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (currentSong.id === track.id) {
+                            setPlaying((prev) => !prev);
+                          } else {
                             setCurrentSong(track);
                             setPlaying(true);
-                            setIsExpanded(true);
-                          }}
-                        >
-                          <img src={track.img} alt={track.title} className="dash-marquee-img" />
-                          <div className="dash-marquee-overlay">
-                            <div className="dash-marquee-title">{track.title}</div>
-                            <div className="dash-marquee-artist">{track.artist}</div>
-                            <button
-                              className="dash-marquee-play"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentSong(track);
-                                setPlaying(true);
-                              }}
-                            >
-                              <Play size={16} fill="currentColor" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                          }
+                        }}
+                      >
+                        {currentSong.id === track.id && playing ? (
+                          <Pause size={24} fill="currentColor" />
+                        ) : (
+                          <Play size={24} fill="currentColor" style={{ marginLeft: 4 }} />
+                        )}
+                      </button>
                     </div>
-                  </div>
-                  {/* Row 2 — scrolls right */}
-                  <div className="dash-marquee-row reverse">
-                    <div className="dash-marquee-track">
-                      {[...randomHeroSlides.slice(8, 16), ...randomHeroSlides.slice(8, 16)].map((track, i) => (
-                        <div
-                          key={`r2-${track.id}-${i}`}
-                          className="dash-marquee-card"
-                          onClick={() => {
-                            setCurrentSong(track);
-                            setPlaying(true);
-                            setIsExpanded(true);
-                          }}
-                        >
-                          <img src={track.img} alt={track.title} className="dash-marquee-img" />
-                          <div className="dash-marquee-overlay">
-                            <div className="dash-marquee-title">{track.title}</div>
-                            <div className="dash-marquee-artist">{track.artist}</div>
-                            <button
-                              className="dash-marquee-play"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentSong(track);
-                                setPlaying(true);
-                              }}
-                            >
-                              <Play size={16} fill="currentColor" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
+                  ))}
+                </div>
               )}
             </div>
 
@@ -938,48 +907,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="dash-songs">
-                {languageFilteredSongs.map((song, i) => (
-                  <motion.div
-                    key={song.id}
-                    className="dash-song-card"
-                    style={{ background: popularColors[i % popularColors.length] }}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ delay: i * 0.06, duration: 0.5 }}
-                    onClick={() => {
-                      setCurrentSong(song);
-                      setPlaying(true);
-                      setIsExpanded(true);
-                    }}
-                  >
-                    <div className="dash-song-cover-wrapper">
-                      <div
-                        className="dash-song-img"
-                        style={{ backgroundImage: `url(${song.img})` }}
-                      />
-                      <button
-                        className="dash-song-play"
-                        aria-label="Play"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentSong(song);
-                          setPlaying((prev) => !prev);
-                        }}
-                      >
-                        {currentSong.id === song.id && playing ? (
-                          <Pause size={14} fill="currentColor" />
-                        ) : (
-                          <Play size={14} fill="currentColor" />
-                        )}
-                      </button>
-                    </div>
-                    <div className="dash-song-meta">
-                      <div className="dash-song-title">{song.title}</div>
-                      <div className="dash-song-artist">{song.artist}</div>
-                    </div>
-                  </motion.div>
-                ))}
+                {languageFilteredSongs.map((song, i) => renderSongCard(song, i))}
               </div>
             </div>
 
@@ -992,33 +920,19 @@ export default function Dashboard() {
                 </div>
               </div>
               {mounted && popularArtists.length > 0 && (
-                <div className="dash-artists" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 18, paddingBottom: 24 }}>
+                <div className="dash-playlists artists-grid">
                   {popularArtists.map((artist, i) => (
-                    <motion.div
+                    <div
                       key={artist.name}
                       className="dash-artist-card"
-                      style={{
-                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
-                        padding: 16, borderRadius: 20, cursor: 'pointer',
-                        background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--line)',
-                        transition: 'var(--transition)'
-                      }}
-                      whileHover={{ y: -5, background: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' }}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ delay: i * 0.06, duration: 0.5 }}
+                      onClick={() => setPopupArtist(artist.name)}
                     >
-                      <div style={{
-                        width: '100%', aspectRatio: '1/1', borderRadius: '50%',
-                        backgroundImage: `url(${artist.img})`, backgroundSize: 'cover', backgroundPosition: 'center',
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.4)'
-                      }} />
-                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
-                        {artist.name}
+                      <div className="dash-artist-img" style={{ backgroundImage: `url(${artist.img})` }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                        <div className="dash-artist-name">{artist.name}</div>
+                        <div className="dash-artist-label">Artist</div>
                       </div>
-                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Artist</div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               )}
@@ -1110,32 +1024,118 @@ export default function Dashboard() {
 
         {popupArtist && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            style={{ padding: "0 24px 24px", paddingTop: 24 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ width: "100%", height: "100%", overflowY: "auto", paddingBottom: 100 }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <button
-                  onClick={() => setPopupArtist(null)}
-                  style={{
-                    background: "rgba(255,255,255,0.1)", border: "none", color: "white",
-                    width: 40, height: 40, borderRadius: "50%",
-                    display: "flex", justifyContent: "center", alignItems: "center",
-                    cursor: "pointer", transition: "var(--transition)"
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <h2 style={{ fontSize: 32, fontWeight: 800, color: "white", margin: 0 }}>{popupArtist}</h2>
+            {/* Spotify-like Artist Banner */}
+            <div
+              style={{
+                height: 340,
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                padding: "24px 32px",
+                backgroundImage: `linear-gradient(transparent 0%, rgba(0,0,0,0.8) 100%), url(${allTracks.find(t => t.artist === popupArtist)?.img || ''})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center 20%",
+              }}
+            >
+              <button
+                onClick={() => setPopupArtist(null)}
+                style={{
+                  position: "absolute", top: 24, left: 32,
+                  background: "rgba(0,0,0,0.5)", border: "none", color: "white",
+                  width: 32, height: 32, borderRadius: "50%",
+                  display: "flex", justifyContent: "center", alignItems: "center",
+                  cursor: "pointer", transition: "var(--transition)"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(0,0,0,0.8)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(0,0,0,0.5)"}
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, color: "white" }}>
+                <div style={{ background: "#3d91f4", borderRadius: "50%", padding: 2, display: "flex" }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <span style={{ fontSize: 14, fontWeight: 500 }}>Verified Artist</span>
+              </div>
+              <h2 style={{ fontSize: "6rem", fontWeight: 900, color: "white", margin: 0, letterSpacing: "-0.04em", lineHeight: "1" }}>{popupArtist}</h2>
+              <div style={{ marginTop: 16, color: "rgba(255,255,255,0.7)", fontSize: 16 }}>
+                14,528,932 monthly listeners
               </div>
             </div>
-            <div className="dash-section-title" style={{ marginTop: 24, marginBottom: 16 }}>Top Tracks by {popupArtist}</div>
-            <div className="dash-songs">
-              {allTracks.filter(t => t.artist === popupArtist).map((song, i) => renderSongCard(song, i))}
+
+            {/* Artist Controls */}
+            <div style={{ padding: "24px 32px", display: "flex", alignItems: "center", gap: 32, background: "linear-gradient(rgba(0,0,0,0.6) 0%, var(--bg) 100%)" }}>
+              <button 
+                onClick={() => {
+                  const firstSong = allTracks.find(t => t.artist === popupArtist);
+                  if (firstSong) {
+                    setCurrentSong(firstSong);
+                    setPlaying(true);
+                  }
+                }}
+                style={{ 
+                  width: 56, height: 56, borderRadius: "50%", background: "#1db954", 
+                  border: "none", display: "flex", justifyContent: "center", alignItems: "center", 
+                  color: "black", cursor: "pointer", boxShadow: "0 8px 8px rgba(0,0,0,0.3)" 
+                }}
+              >
+                <Play size={28} fill="currentColor" style={{ marginLeft: 4 }} />
+              </button>
+              <button style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.5)", borderRadius: 32, color: "white", padding: "6px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer", letterSpacing: 1, textTransform: "uppercase" }}>
+                Follow
+              </button>
+              <button style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}>
+                <MoreHorizontal size={32} />
+              </button>
+            </div>
+
+            {/* Popular Tracks List */}
+            <div style={{ padding: "0 32px" }}>
+              <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Popular</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {allTracks.filter(t => t.artist === popupArtist).slice(0, 5).map((song, i) => (
+                  <div 
+                    key={song.id} 
+                    onClick={() => {
+                      setCurrentSong(song);
+                      setPlaying(true);
+                    }}
+                    style={{ 
+                      display: "flex", alignItems: "center", padding: "8px 16px", 
+                      borderRadius: 4, cursor: "pointer", transition: "background 0.2s" 
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <div style={{ width: 32, textAlign: "right", marginRight: 16, color: "rgba(255,255,255,0.5)", fontSize: 16 }}>{i + 1}</div>
+                    <img src={song.img} alt={song.title} style={{ width: 40, height: 40, borderRadius: 4, marginRight: 16 }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ color: currentSong.id === song.id ? "#1db954" : "white", fontSize: 16, fontWeight: 500 }}>{song.title}</div>
+                    </div>
+                    <div style={{ width: 120, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+                      {Math.floor(Math.random() * 900) + 100},{Math.floor(Math.random() * 900) + 100},{Math.floor(Math.random() * 900) + 100}
+                    </div>
+                    <div style={{ width: 48, textAlign: "right", color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+                      3:{(Math.floor(Math.random() * 40) + 10)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Discography Grid */}
+            <div style={{ padding: "48px 32px 0 32px" }}>
+              <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Discography</h3>
+              <div className="dash-songs">
+                {allTracks.filter(t => t.artist === popupArtist).map((song, i) => renderSongCard(song, i))}
+              </div>
             </div>
           </motion.div>
         )}
@@ -1205,10 +1205,12 @@ export default function Dashboard() {
           <div className="dash-player-progress">
             <span>{formatTimeReal(audioRef.current?.currentTime || 0)}</span>
             <div className="dash-player-bar" style={{ cursor: 'pointer', position: 'relative' }} onClick={handleProgressClick}>
-              <motion.div
+              <div
                 className="dash-player-fill"
                 style={{ width: `${progress}%` }}
-              />
+              >
+                <div className="dash-player-thumb" />
+              </div>
               {isABLoop && abLoopStart !== null && (
                 <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${(abLoopStart / duration) * 100}%`, width: 2, background: 'var(--accent)' }} />
               )}

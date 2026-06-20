@@ -25,5 +25,5 @@ COPY --from=builder --chown=node /app/.next/static ./.next/static
 EXPOSE 7860
 
 # Override the system-set HOSTNAME environment variable (which is overridden by HF to the container name)
-# to bind to all IPv4 interfaces (0.0.0.0) so loopback and internal health checks succeed.
-CMD ["node", "-e", "process.env.HOSTNAME = '0.0.0.0'; require('./server.js');"]
+# to bind to all IPv4/IPv6 interfaces (::) so loopback and internal health checks succeed in dual-stack pods.
+CMD ["node", "-e", "process.env.HOSTNAME = '::'; require('./server.js');"]

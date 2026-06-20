@@ -77,28 +77,22 @@ export async function POST(req: NextRequest) {
     if (!id || !title || !artist) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
-    
-    // 1. Fetch Lyrics using Genius API
+    // 1. Fetch Lyrics using Lyrica API
     let lyrics = 'No lyrics found';
-    if (!process.env.GENIUS_API) {
-      lyrics = 'No lyrics found (GENIUS_API secret is missing in Hugging Face Settings)';
-    }
     try {
-      if (process.env.GENIUS_API) {
-        const options = {
-          apiKey: process.env.GENIUS_API,
-          title: title,
-          artist: artist,
-          optimizeQuery: true
-        };
-        const fetchedLyrics = await getLyrics(options);
-        if (fetchedLyrics) {
-          lyrics = fetchedLyrics;
+      const isDev = process.env.NODE_ENV === 'development';
+      const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+      const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
+      const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store' });
+      if (lyricaRes.ok) {
+        const lyricaData = await lyricaRes.json();
+        if (lyricaData && lyricaData.data && lyricaData.data.lyrics) {
+          lyrics = lyricaData.data.lyrics;
         }
       }
     } catch (e: any) {
-      console.error("Genius API Error:", e);
-      lyrics = `No lyrics found (Error: ${e.message || 'Blocked by Genius / Unknown Error'})`;
+      console.error("Lyrica API Error:", e);
+      lyrics = `No lyrics found (Error: ${e.message || 'Lyrica server not reachable'})`;
     }
 
     // 2. Fetch Audio URL fallback (Frontend uses static Supabase URLs, so this is just a fallback for older songs)
