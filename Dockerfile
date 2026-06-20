@@ -24,4 +24,6 @@ COPY --from=builder --chown=node /app/.next/static ./.next/static
 
 EXPOSE 7860
 
-CMD ["node", "server.js"]
+# Override the system-set HOSTNAME environment variable (which is overridden by HF to the container name)
+# to bind to all interfaces (0.0.0.0) so loopback health checks succeed.
+CMD ["node", "-e", "process.env.HOSTNAME = '0.0.0.0'; require('./server.js');"]
