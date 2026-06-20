@@ -31,5 +31,5 @@ ENV HOST=0.0.0.0
 
 WORKDIR $HOME/app/.next/standalone
 
-# Start the standalone Next.js server, and if it fails, fallback to a static server so we can read the crash logs!
-CMD ["sh", "-c", "node server.js > crash.log 2>&1 || npx --yes http-server -p 7860 -a 0.0.0.0"]
+# Start the standalone Next.js server
+CMD ["node", "server.js"]
