@@ -149,6 +149,13 @@ export default function Dashboard() {
         unique.push(track);
       }
     }
+    unique.sort((a, b) => {
+      const isBadA = !a.img || a.img.includes('default_cover_image') || a.img.includes('24596bcd24eb0adab57edfd0fa06a5d5');
+      const isBadB = !b.img || b.img.includes('default_cover_image') || b.img.includes('24596bcd24eb0adab57edfd0fa06a5d5');
+      if (isBadA && !isBadB) return 1;
+      if (!isBadA && isBadB) return -1;
+      return 0;
+    });
     return unique;
   }, [dbSongs]);
 

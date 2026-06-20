@@ -86,8 +86,17 @@ export async function POST(req: NextRequest) {
       const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store' });
       if (lyricaRes.ok) {
         const lyricaData = await lyricaRes.json();
-        if (lyricaData && lyricaData.data && lyricaData.data.lyrics) {
-          lyrics = lyricaData.data.lyrics;
+        if (lyricaData && lyricaData.data) {
+          if (lyricaData.data.syncedLyrics && lyricaData.data.syncedLyrics.length > 0) {
+            lyrics = lyricaData.data.syncedLyrics.map((l: any) => {
+              const totalSec = l.start_time / 1000;
+              const mins = Math.floor(totalSec / 60);
+              const secs = (totalSec % 60).toFixed(2).padStart(5, '0');
+              return `[${mins.toString().padStart(2, '0')}:${secs}] ${l.text}`;
+            }).join('\n');
+          } else if (lyricaData.data.lyrics) {
+            lyrics = lyricaData.data.lyrics;
+          }
         }
       }
     } catch (e: any) {
