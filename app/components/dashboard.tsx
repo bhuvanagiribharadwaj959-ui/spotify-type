@@ -1267,6 +1267,7 @@ export default function Dashboard() {
           if (audioRef.current) {
             audioRef.current.currentTime = time;
             setProgress((time / duration) * 100);
+            setPlaying(true);
           }
         }}
         isLiked={currentIsLiked}
