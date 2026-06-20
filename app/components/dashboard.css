@@ -609,6 +609,13 @@ body, html {
 }
 
 /* ===== Artists Cards (Rounded) ===== */
+.dash-playlists, .artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
 .dash-artist-card {
   border-radius: 8px;
   padding: 16px;
