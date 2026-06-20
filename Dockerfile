@@ -18,12 +18,6 @@ COPY --chown=node . .
 # Build Next.js
 RUN npm run build
 
-# Next.js standalone doesn't include public and static folders
-# We need to copy them into the standalone folder
-RUN cp -r public .next/standalone/ && \
-    cp -r .next/static .next/standalone/.next/ && \
-    mkdir -p .next/standalone/public/cache
-
 EXPOSE 7860
 ENV NODE_ENV=production
 ENV PORT=7860
