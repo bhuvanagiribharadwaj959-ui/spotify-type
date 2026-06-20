@@ -23,6 +23,7 @@ import {
   Music,
   Download,
   ChevronLeft,
+  MoreHorizontal,
 } from "lucide-react";
 import "./dashboard.css";
 import Link from "next/link";
