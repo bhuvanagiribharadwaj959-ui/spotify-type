@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     let lyrics = 'No lyrics found';
     try {
       const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
-      const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+      const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
       if (lyricaRes.ok) {
         const lyricaData = await lyricaRes.json();
         if (lyricaData && lyricaData.data) {
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     let alternatives: any[] = [];
     try {
       const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
       
       if (searchRes.ok) {
         const searchData = await searchRes.json();
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
           
           if (songLink) {
              const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-             const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+             const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
              if (playRes.ok) {
                 const playData = await playRes.json();
                 if (playData.status === "success" && playData.data && playData.data.stream_url) {
