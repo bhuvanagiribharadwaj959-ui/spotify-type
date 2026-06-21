@@ -109,6 +109,7 @@ export default function Dashboard() {
   const [popupAlbum, setPopupAlbum] = useState<DashboardTrack | null>(null);
   const [volume, setVolume] = useState(1);
   const [subActive, setSubActive] = useState("Hot & New");
+  const [recentTracks, setRecentTracks] = useState<DashboardTrack[]>([]);
 
   const categories = useMemo(() => {
     // Collect from dbSongs instead
@@ -242,6 +243,11 @@ export default function Dashboard() {
               }
             }
 
+            const cleanImgUrl = (url?: string) => {
+              if (!url) return "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
+              return url.replace("150x150", "500x500").replace("50x50", "500x500");
+            };
+
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
@@ -253,7 +259,7 @@ export default function Dashboard() {
                 id: item.song_id || Math.random().toString(36).substring(7),
                 title: item.title || "Unknown Title",
                 artist: item.artist || "Unknown Artist",
-                img: item.thumbnail || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                img: cleanImgUrl(item.thumbnail),
                 language: "english",
                 genres: item.genre ? [item.genre] : [],
                 audioUrl: undefined,
@@ -274,7 +280,7 @@ export default function Dashboard() {
                       id: item.id,
                       title: item.meta?.title || "Unknown Title",
                       artist: item.meta?.artist || "Unknown Artist",
-                      img: item.meta?.cover_url || item.assets?.cover_url || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                      img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
                       language: item.meta?.language || "english",
                       genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
                       audioUrl: undefined,
@@ -296,7 +302,7 @@ export default function Dashboard() {
                 if (docData.is_public && !fetched.find(f => f.id === docSnap.id)) {
                   fetched.push({
                     id: docSnap.id,
-                    img: docData.img || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                    img: cleanImgUrl(docData.img),
                     title: docData.title || "Unknown Title",
                     artist: docData.artist || "Unknown Artist",
                     language: docData.language,
@@ -325,6 +331,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     setMounted(true);
+    try {
+      const saved = localStorage.getItem("recent_tracks");
+      if (saved) {
+        setRecentTracks(JSON.parse(saved));
+      }
+    } catch (e) {}
+
     // Remove randomness, just take top 16 tracks to reduce load
     const staticSlides = dbSongs.slice(0, 16);
     setRandomHeroSlides(staticSlides);
@@ -363,7 +376,7 @@ export default function Dashboard() {
                 id: r.id || Math.random().toString(36).substring(7),
                 title: r.title || "Unknown Title",
                 artist: r.artist || "Unknown Artist",
-                img: r.thumbnail || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                img: r.thumbnail ? r.thumbnail.replace("150x150", "500x500").replace("50x50", "500x500") : "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
                 language: r.language || "english"
               };
             });
@@ -507,6 +520,17 @@ export default function Dashboard() {
       }
     };
     fetchSongData();
+  }, [currentSong]);
+
+  useEffect(() => {
+    if (currentSong && currentSong.id !== "dummy") {
+      setRecentTracks(prev => {
+        const filtered = prev.filter(t => t.id !== currentSong.id);
+        const updated = [currentSong, ...filtered].slice(0, 30);
+        localStorage.setItem("recent_tracks", JSON.stringify(updated));
+        return updated;
+      });
+    }
   }, [currentSong]);
 
   const handleAlternativeSelect = async (encryptedUrl: string) => {
@@ -1072,9 +1096,23 @@ export default function Dashboard() {
                     <div className="dash-monochrome-grid">
                       {languageFilteredSongs.slice(0, 6).map((song, i) => (
                         <div key={`trending-album-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                          <img src={song.img} alt={song.title} />
+                          <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                            <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                          </div>
                           <div className="dash-album-title">{song.title}</div>
-                          <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                          <div className="dash-album-meta">
+                            <span 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPopupArtist(song.artist);
+                                setPopupAlbum(null);
+                                setPopupGenre(null);
+                              }}
+                              style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                            >
+                              {song.artist}
+                            </span> • {new Date().getFullYear()}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1091,13 +1129,27 @@ export default function Dashboard() {
                           onClick={() => { setCurrentSong(song); setPlaying(true); }}
                         >
                           <div className="dash-track-left">
-                            <img src={song.img} alt={song.title} />
+                            <div style={{ width: 48, height: 48, overflow: 'hidden', borderRadius: 4, marginRight: 16, flexShrink: 0 }}>
+                              <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                            </div>
                             <div className="dash-track-details">
                               <div className="dash-track-title-row">
                                 <span className="dash-track-title">{song.title}</span>
                                 <span className="dash-track-badge">HD</span>
                               </div>
-                              <div className="dash-track-meta">{song.artist} • {new Date().getFullYear()}</div>
+                              <div className="dash-track-meta">
+                                <span 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPopupArtist(song.artist);
+                                    setPopupAlbum(null);
+                                    setPopupGenre(null);
+                                  }}
+                                  style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                >
+                                  {song.artist}
+                                </span> • {new Date().getFullYear()}
+                              </div>
                             </div>
                           </div>
                           <div className="dash-track-duration">3:24</div>
@@ -1112,9 +1164,23 @@ export default function Dashboard() {
                     <div className="dash-monochrome-grid">
                       {languageFilteredSongs.slice(12, 18).map((song, i) => (
                         <div key={`new-album-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                          <img src={song.img} alt={song.title} />
+                          <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                            <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                          </div>
                           <div className="dash-album-title">{song.title}</div>
-                          <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                          <div className="dash-album-meta">
+                            <span 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPopupArtist(song.artist);
+                                setPopupAlbum(null);
+                                setPopupGenre(null);
+                              }}
+                              style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                            >
+                              {song.artist}
+                            </span> • {new Date().getFullYear()}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1128,9 +1194,23 @@ export default function Dashboard() {
                   <div className="dash-monochrome-grid">
                     {languageFilteredSongs.slice(18, 30).map((song, i) => (
                       <div key={`ep-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                        <img src={song.img} alt={song.title} />
+                        <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                          <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                        </div>
                         <div className="dash-album-title">{song.title}</div>
-                        <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                        <div className="dash-album-meta">
+                          <span 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPopupArtist(song.artist);
+                              setPopupAlbum(null);
+                              setPopupGenre(null);
+                            }}
+                            style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                          >
+                            {song.artist}
+                          </span> • {new Date().getFullYear()}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1143,9 +1223,23 @@ export default function Dashboard() {
                   <div className="dash-monochrome-grid">
                     {languageFilteredSongs.slice(30, 42).map((song, i) => (
                       <div key={`aoty-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                        <img src={song.img} alt={song.title} />
+                        <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                          <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                        </div>
                         <div className="dash-album-title">{song.title}</div>
-                        <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                        <div className="dash-album-meta">
+                          <span 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPopupArtist(song.artist);
+                              setPopupAlbum(null);
+                              setPopupGenre(null);
+                            }}
+                            style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                          >
+                            {song.artist}
+                          </span> • {new Date().getFullYear()}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1234,6 +1328,130 @@ export default function Dashboard() {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {active === "Library" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 24px 24px" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "white" }}>Your Library</h2>
+            
+            <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+              {/* Liked Songs Playlist Card */}
+              <div 
+                style={{
+                  background: "linear-gradient(135deg, #450af5 0%, #c4efd9 100%)",
+                  width: "100%",
+                  maxWidth: 400,
+                  height: 240,
+                  borderRadius: 8,
+                  padding: 24,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  position: "relative",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.4)"
+                }}
+              >
+                <div style={{ position: "absolute", top: 24, right: 24, background: "rgba(0,0,0,0.3)", borderRadius: "50%", padding: 12, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <Heart size={32} fill="white" color="white" />
+                </div>
+                <h3 style={{ fontSize: 32, fontWeight: 800, color: "white", margin: 0 }}>Liked Songs</h3>
+                <div style={{ marginTop: 8, color: "white", fontSize: 16 }}>
+                  {likedSongs.size} {likedSongs.size === 1 ? "song" : "songs"}
+                </div>
+              </div>
+            </div>
+
+            {/* Liked Songs Tracks List */}
+            <div style={{ marginTop: 40 }}>
+              <h3 style={{ fontSize: 20, fontWeight: 700, color: "white", marginBottom: 16 }}>Tracks</h3>
+              {Array.from(likedSongs).length === 0 ? (
+                <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>No liked songs yet. Click the heart icon on any song to add it!</div>
+              ) : (
+                <div className="dash-tracks-list">
+                  {Array.from(likedSongs).map((songId, i) => {
+                    const song = allTracks.find(t => t.id === songId);
+                    if (!song) return null;
+                    return (
+                      <div
+                        key={`liked-track-${song.id}-${i}`}
+                        className="dash-track-row"
+                        onClick={() => { setCurrentSong(song); setPlaying(true); }}
+                      >
+                        <div className="dash-track-left">
+                          <div style={{ width: 48, height: 48, overflow: 'hidden', borderRadius: 4, marginRight: 16, flexShrink: 0 }}>
+                            <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                          </div>
+                          <div className="dash-track-details">
+                            <div className="dash-track-title-row">
+                              <span className="dash-track-title">{song.title}</span>
+                            </div>
+                            <div className="dash-track-meta">
+                              <span 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPopupArtist(song.artist);
+                                  setPopupAlbum(null);
+                                  setPopupGenre(null);
+                                }}
+                                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                              >
+                                {song.artist}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleLike(song.id);
+                            }}
+                            style={{ background: "transparent", border: "none", color: "#1db954", cursor: "pointer", display: "flex" }}
+                          >
+                            <Heart size={18} fill="#1db954" />
+                          </button>
+                          <div className="dash-track-duration">3:24</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {active === "Recent" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 24px 24px" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "white" }}>Recently Played</h2>
+            {recentTracks.length === 0 ? (
+              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>No recently played songs yet. Go play some music!</div>
+            ) : (
+              <div className="dash-monochrome-grid">
+                {recentTracks.map((song, i) => (
+                  <div key={`recent-${song.id}-${i}`} className="dash-album-card" onClick={() => { setCurrentSong(song); setPlaying(true); }}>
+                    <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                    </div>
+                    <div className="dash-album-title">{song.title}</div>
+                    <div className="dash-album-meta">
+                      <span 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPopupArtist(song.artist);
+                          setPopupAlbum(null);
+                          setPopupGenre(null);
+                        }}
+                        style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                      >
+                        {song.artist}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1345,11 +1563,26 @@ export default function Dashboard() {
               </div>
             </div>
             
-            {/* Discography Grid */}
+            {/* Albums Section */}
             <div style={{ padding: "48px 32px 0 32px" }}>
-              <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Discography</h3>
-              <div className="dash-songs">
-                {allTracks.filter(t => t.artist === popupArtist).map((song, i) => renderSongCard(song, i))}
+              <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Albums</h3>
+              <div className="dash-monochrome-grid">
+                {allTracks.filter(t => t.artist === popupArtist).map((song, i) => (
+                  <div 
+                    key={`artist-album-${song.id}-${i}`} 
+                    className="dash-album-card" 
+                    onClick={() => {
+                      setPopupAlbum(song);
+                      setPopupArtist(null);
+                    }}
+                  >
+                    <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                    </div>
+                    <div className="dash-album-title">{song.title}</div>
+                    <div className="dash-album-meta">{popupArtist} • Album</div>
+                  </div>
+                ))}
               </div>
             </div>
           </motion.div>
@@ -1396,7 +1629,16 @@ export default function Dashboard() {
                   {new Date().getFullYear()} • 1 track
                 </div>
                 <div className="dash-album-info-copyright">
-                  By <span style={{ fontWeight: 600, color: "white" }}>{popupAlbum.artist}</span> • (P) {new Date().getFullYear()} Records
+                  By <span 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPopupArtist(popupAlbum.artist);
+                      setPopupAlbum(null);
+                    }}
+                    style={{ fontWeight: 600, color: "white", cursor: "pointer", textDecoration: "underline" }}
+                  >
+                    {popupAlbum.artist}
+                  </span> • (P) {new Date().getFullYear()} Records
                 </div>
                 
                 {/* Controls */}

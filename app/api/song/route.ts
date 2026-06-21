@@ -11,58 +11,64 @@ export async function POST(req: NextRequest) {
     const isDev = process.env.NODE_ENV === 'development';
     const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
 
-    // 1. Fetch Lyrics using Lyrica API
-    let lyrics = 'No lyrics found';
-    try {
-      const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
-      const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-      if (lyricaRes.ok) {
-        const lyricaData = await lyricaRes.json();
-        if (lyricaData && lyricaData.data) {
-          if (lyricaData.data.timed_lyrics && lyricaData.data.timed_lyrics.length > 0) {
-            lyrics = lyricaData.data.timed_lyrics.map((l: any) => {
-              const totalSec = l.start_time / 1000;
-              const mins = Math.floor(totalSec / 60);
-              const secs = (totalSec % 60).toFixed(2).padStart(5, '0');
-              return `[${mins.toString().padStart(2, '0')}:${secs}] ${l.text}`;
-            }).join('\n');
-          } else if (lyricaData.data.lyrics) {
-            lyrics = lyricaData.data.lyrics;
+    // Fetch lyrics and audio in parallel to optimize speed
+    const lyricsPromise = (async () => {
+      let lyrics = 'No lyrics found';
+      try {
+        const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
+        const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+        if (lyricaRes.ok) {
+          const lyricaData = await lyricaRes.json();
+          if (lyricaData && lyricaData.data) {
+            if (lyricaData.data.timed_lyrics && lyricaData.data.timed_lyrics.length > 0) {
+              lyrics = lyricaData.data.timed_lyrics.map((l: any) => {
+                const totalSec = l.start_time / 1000;
+                const mins = Math.floor(totalSec / 60);
+                const secs = (totalSec % 60).toFixed(2).padStart(5, '0');
+                return `[${mins.toString().padStart(2, '0')}:${secs}] ${l.text}`;
+              }).join('\n');
+            } else if (lyricaData.data.lyrics) {
+              lyrics = lyricaData.data.lyrics;
+            }
           }
         }
+      } catch (e: any) {
+        console.error("Lyrica API Error:", e);
       }
-    } catch (e: any) {
-      console.error("Lyrica API Error:", e);
-      lyrics = `No lyrics found`;
-    }
+      return lyrics;
+    })();
 
-    // 2. Fetch Audio Stream via Lyrica's JioSaavn API
-    let saavnAudioUrl = null;
-    let alternatives: any[] = [];
-    try {
-      const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-      
-      if (searchRes.ok) {
-        const searchData = await searchRes.json();
-        if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
-          const songLink = searchData.results[0].perma_url || searchData.results[0].url || searchData.results[0].link;
-          
-          if (songLink) {
-             const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-             const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-             if (playRes.ok) {
-                const playData = await playRes.json();
-                if (playData.status === "success" && playData.data && playData.data.stream_url) {
-                   saavnAudioUrl = playData.data.stream_url;
-                }
-             }
+    const audioPromise = (async () => {
+      let saavnAudioUrl = null;
+      try {
+        const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
+        const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+        
+        if (searchRes.ok) {
+          const searchData = await searchRes.json();
+          if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
+            const songLink = searchData.results[0].perma_url || searchData.results[0].url || searchData.results[0].link;
+            
+            if (songLink) {
+               const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
+               const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+               if (playRes.ok) {
+                  const playData = await playRes.json();
+                  if (playData.status === "success" && playData.data && playData.data.stream_url) {
+                     saavnAudioUrl = playData.data.stream_url;
+                  }
+               }
+            }
           }
         }
+      } catch (e) {
+        console.error("Lyrica JioSaavn fetch error:", e);
       }
-    } catch (e) {
-      console.error("Lyrica JioSaavn fetch error:", e);
-    }
+      return saavnAudioUrl;
+    })();
+
+    const [lyrics, saavnAudioUrl] = await Promise.all([lyricsPromise, audioPromise]);
+    const alternatives: any[] = [];
 
     if (!saavnAudioUrl) {
       // Fallback to iTunes API if Lyrica completely fails to find stream
