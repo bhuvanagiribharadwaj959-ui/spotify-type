@@ -229,47 +229,61 @@ export default function Dashboard() {
               }
             } catch (err) {
               if (isDev) {
-                // Fallback to hosted render
-                const res = await fetch(`https://test-0k.onrender.com/trending/?country=in&limit=100`);
-                if (res.ok) {
-                  const data = await res.json();
-                  if (data.data && data.data.trending) {
-                    trendingList = data.data.trending;
+                try {
+                  const res = await fetch(`https://test-0k.onrender.com/trending/?country=in&limit=100`);
+                  if (res.ok) {
+                    const data = await res.json();
+                    if (data.data && data.data.trending) {
+                      trendingList = data.data.trending;
+                    }
                   }
-                }
+                } catch (e) {}
               }
             }
 
             const fetched: DashboardTrack[] = [];
-            if (trendingList.length > 0) {
-              trendingList.forEach((item: any) => {
-                fetched.push({
-                  id: item.song_id || Math.random().toString(36).substring(7),
-                  title: item.title || "Unknown Title",
-                  artist: item.artist || "Unknown Artist",
-                  img: item.thumbnail || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
-                  language: "english", // default fallback
-                  genres: item.genre ? [item.genre] : [],
-                  audioUrl: undefined, // Forces dynamic fetch through Lyrica API
-                  lyrics: undefined // Forces dynamic fetch through Lyrica API
-                });
+            const seenTitles = new Set<string>();
+
+            // Map trending songs first
+            trendingList.forEach((item: any) => {
+              const titleLower = (item.title || "").toLowerCase();
+              if (titleLower) seenTitles.add(titleLower);
+              fetched.push({
+                id: item.song_id || Math.random().toString(36).substring(7),
+                title: item.title || "Unknown Title",
+                artist: item.artist || "Unknown Artist",
+                img: item.thumbnail || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                language: "english",
+                genres: item.genre ? [item.genre] : [],
+                audioUrl: undefined,
+                lyrics: undefined
               });
-            } else {
-              // Fallback to local json if Lyrica fails entirely
+            });
+
+            // Map local attractive/popular songs from songs.json
+            try {
               const jsonRes = await fetch('/songs.json');
-              const data = await jsonRes.json();
-              data.forEach((item: any) => {
-                fetched.push({
-                  id: item.id,
-                  title: item.meta?.title || "Unknown Title",
-                  artist: item.meta?.artist || "Unknown Artist",
-                  img: item.meta?.cover_url || item.assets?.cover_url || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
-                  language: item.meta?.language || "english",
-                  genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
-                  audioUrl: undefined, // Force dynamic fetch
-                  lyrics: undefined
+              if (jsonRes.ok) {
+                const localData = await jsonRes.json();
+                localData.forEach((item: any) => {
+                  const titleLower = (item.meta?.title || "").toLowerCase();
+                  if (!seenTitles.has(titleLower)) {
+                    seenTitles.add(titleLower);
+                    fetched.push({
+                      id: item.id,
+                      title: item.meta?.title || "Unknown Title",
+                      artist: item.meta?.artist || "Unknown Artist",
+                      img: item.meta?.cover_url || item.assets?.cover_url || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                      language: item.meta?.language || "english",
+                      genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
+                      audioUrl: undefined,
+                      lyrics: undefined
+                    });
+                  }
                 });
-              });
+              }
+            } catch (err) {
+              console.error("Local songs load error:", err);
             }
 
             // Keep the firebase fetch just in case there are custom songs uploaded by the user
@@ -344,19 +358,11 @@ export default function Dashboard() {
           const data = await res.json();
           if (data.status === "success" && data.results) {
             const parsedResults = data.results.map((r: any) => {
-              let imgUrl = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
-              if (r.image) {
-                if (Array.isArray(r.image)) {
-                  imgUrl = r.image[r.image.length - 1]?.link || imgUrl;
-                } else if (typeof r.image === "string") {
-                  imgUrl = r.image;
-                }
-              }
               return {
                 id: r.id || Math.random().toString(36).substring(7),
                 title: r.title || "Unknown Title",
-                artist: r.subtitle || r.primary_artists || "Unknown Artist",
-                img: imgUrl,
+                artist: r.artist || "Unknown Artist",
+                img: r.thumbnail || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
                 language: r.language || "english"
               };
             });
@@ -765,8 +771,6 @@ export default function Dashboard() {
     { key: "Home", icon: Home },
     { key: "Library", icon: LibraryIcon },
     { key: "Recent", icon: Clock },
-    { key: "Unreleased", icon: Grid },
-    { key: "Donate", icon: Heart },
     { key: "Settings", icon: Settings },
   ];
 
