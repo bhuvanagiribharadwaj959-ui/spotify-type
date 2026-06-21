@@ -108,6 +108,7 @@ export default function Dashboard() {
   const [popupArtist, setPopupArtist] = useState<string | null>(null);
   const [popupAlbum, setPopupAlbum] = useState<DashboardTrack | null>(null);
   const [volume, setVolume] = useState(1);
+  const [subActive, setSubActive] = useState("Hot & New");
 
   const categories = useMemo(() => {
     // Collect from dbSongs instead
@@ -933,102 +934,223 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {active === "Home" && !popupGenre && !popupArtist && (
+        {active === "Home" && !popupGenre && !popupArtist && !popupAlbum && (
           <>
-            {/* Spotify Style Hero Grid */}
-            <div className="dash-content">
-              <h1 className="dash-greeting">
-                {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"}
-              </h1>
-              {mounted && randomHeroSlides.length > 0 && (
-                <div className="dash-hero-grid">
-                  {randomHeroSlides.slice(0, 6).map((track, i) => (
-                    <div
-                      key={`hero-${track.id}-${i}`}
-                      className="dash-hero-card"
-                      onClick={() => {
-                        setCurrentSong(track);
-                        setPlaying(true);
-                        setIsExpanded(true);
-                      }}
-                    >
-                      <img src={track.img} alt={track.title} className="dash-hero-img" />
-                      <div className="dash-hero-title">{track.title}</div>
-                      <button
-                        className="dash-hero-play"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (currentSong.id === track.id) {
-                            setPlaying((prev) => !prev);
-                          } else {
+            {/* Subnav Tabs */}
+            <div className="dash-subnav">
+              {["Home", "Hot & New", "Editor's Picks", "AOTY"].map((tab) => (
+                <div
+                  key={tab}
+                  className={`dash-subnav-tab ${subActive === tab ? 'active' : ''}`}
+                  onClick={() => setSubActive(tab)}
+                >
+                  {tab}
+                </div>
+              ))}
+            </div>
+
+            {/* Subnav Views Content */}
+            <div className="dash-content" style={{ paddingTop: 0 }}>
+              {subActive === "Home" && (
+                <>
+                  {/* Spotify Style Hero Grid */}
+                  <h1 className="dash-greeting">
+                    {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"}
+                  </h1>
+                  {mounted && randomHeroSlides.length > 0 && (
+                    <div className="dash-hero-grid">
+                      {randomHeroSlides.slice(0, 6).map((track, i) => (
+                        <div
+                          key={`hero-${track.id}-${i}`}
+                          className="dash-hero-card"
+                          onClick={() => {
                             setCurrentSong(track);
                             setPlaying(true);
-                          }
-                        }}
-                      >
-                        {currentSong.id === track.id && playing ? (
-                          <Pause size={24} fill="currentColor" />
-                        ) : (
-                          <Play size={24} fill="currentColor" style={{ marginLeft: 4 }} />
-                        )}
-                      </button>
+                            setIsExpanded(true);
+                          }}
+                        >
+                          <img src={track.img} alt={track.title} className="dash-hero-img" />
+                          <div className="dash-hero-title">{track.title}</div>
+                          <button
+                            className="dash-hero-play"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (currentSong.id === track.id) {
+                                setPlaying((prev) => !prev);
+                              } else {
+                                setCurrentSong(track);
+                                setPlaying(true);
+                              }
+                            }}
+                          >
+                            {currentSong.id === track.id && playing ? (
+                              <Pause size={24} fill="currentColor" />
+                            ) : (
+                              <Play size={24} fill="currentColor" style={{ marginLeft: 4 }} />
+                            )}
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
+
+                  {/* Hot Tracks */}
+                  <div style={{ marginTop: 24 }}>
+                    <div className="dash-section-head">
+                      <div className="dash-section-title">Hot Tracks</div>
+                      <div className="dash-section-nav">
+                        <button className="dash-more-btn">More</button>
+                      </div>
+                    </div>
+                    <div className="dash-songs">
+                      {languageFilteredSongs.slice(0, 24).map((song, i) => renderSongCard(song, i))}
+                    </div>
+                  </div>
+
+                  {/* Trending Albums */}
+                  <div style={{ marginTop: 32 }}>
+                    <div className="dash-section-head">
+                      <div className="dash-section-title">Trending Albums</div>
+                      <div className="dash-section-nav">
+                        <button className="dash-more-btn">More</button>
+                      </div>
+                    </div>
+                    <div className="dash-songs">
+                      {languageFilteredSongs.slice(24, 48).map((song, i) => renderSongCard(song, i))}
+                    </div>
+                  </div>
+
+                  {/* Featured Playlists */}
+                  <div style={{ marginTop: 32 }}>
+                    <div className="dash-section-head">
+                      <div className="dash-section-title">Featured Playlists</div>
+                      <div className="dash-section-nav">
+                        <button className="dash-more-btn">More</button>
+                      </div>
+                    </div>
+                    <div className="dash-songs">
+                      {languageFilteredSongs.slice(48, 72).map((song, i) => renderSongCard(song, i))}
+                    </div>
+                  </div>
+
+                  {/* The Hits */}
+                  <div style={{ marginTop: 32, paddingBottom: 40 }}>
+                    <div className="dash-section-head">
+                      <div className="dash-section-title">The Hits</div>
+                      <div className="dash-section-nav">
+                        <button className="dash-more-btn">More</button>
+                      </div>
+                    </div>
+                    <div className="dash-songs">
+                      {languageFilteredSongs.slice(72, 100).map((song, i) => renderSongCard(song, i))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {subActive === "Hot & New" && (
+                <>
+                  {/* Genres Section */}
+                  <div className="dash-genre-pills-container">
+                    <h2 className="dash-genre-title">Genres</h2>
+                    <div className="dash-genre-pills">
+                      {["Hip-Hop", "R&B / Soul", "Blues", "Classical", "Country", "Dance & Electronic", "Folk / Americana", "Global", "Gospel / Christian", "Jazz", "K-Pop", "Kids", "Latin", "Metal", "Pop", "Reggae / Dancehall", "Legacy", "Rock / Indie"].map((genre) => (
+                        <button
+                          key={genre}
+                          onClick={() => setCat(genre === "Pop" ? "english" : genre)}
+                          className={`dash-genre-pill ${cat?.toLowerCase() === (genre === "Pop" ? "english" : genre.toLowerCase()) ? 'active' : ''}`}
+                        >
+                          {genre}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Trending Albums */}
+                  <div style={{ marginBottom: 32 }}>
+                    <h2 className="dash-genre-title">Trending Albums</h2>
+                    <div className="dash-monochrome-grid">
+                      {languageFilteredSongs.slice(0, 6).map((song, i) => (
+                        <div key={`trending-album-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
+                          <img src={song.img} alt={song.title} />
+                          <div className="dash-album-title">{song.title}</div>
+                          <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* New Tracks */}
+                  <div style={{ marginBottom: 32 }}>
+                    <h2 className="dash-genre-title">New Tracks</h2>
+                    <div className="dash-tracks-list">
+                      {languageFilteredSongs.slice(6, 12).map((song, i) => (
+                        <div
+                          key={`new-track-${song.id}-${i}`}
+                          className="dash-track-row"
+                          onClick={() => { setCurrentSong(song); setPlaying(true); }}
+                        >
+                          <div className="dash-track-left">
+                            <img src={song.img} alt={song.title} />
+                            <div className="dash-track-details">
+                              <div className="dash-track-title-row">
+                                <span className="dash-track-title">{song.title}</span>
+                                <span className="dash-track-badge">HD</span>
+                              </div>
+                              <div className="dash-track-meta">{song.artist} • {new Date().getFullYear()}</div>
+                            </div>
+                          </div>
+                          <div className="dash-track-duration">3:24</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* New Albums */}
+                  <div style={{ marginBottom: 32, paddingBottom: 40 }}>
+                    <h2 className="dash-genre-title">New Albums</h2>
+                    <div className="dash-monochrome-grid">
+                      {languageFilteredSongs.slice(12, 18).map((song, i) => (
+                        <div key={`new-album-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
+                          <img src={song.img} alt={song.title} />
+                          <div className="dash-album-title">{song.title}</div>
+                          <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {subActive === "Editor's Picks" && (
+                <div style={{ paddingBottom: 40 }}>
+                  <h2 className="dash-genre-title">Editor's Picks</h2>
+                  <div className="dash-monochrome-grid">
+                    {languageFilteredSongs.slice(18, 30).map((song, i) => (
+                      <div key={`ep-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
+                        <img src={song.img} alt={song.title} />
+                        <div className="dash-album-title">{song.title}</div>
+                        <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
 
-
-            {/* Hot Tracks */}
-            <div style={{ marginTop: 24 }}>
-              <div className="dash-section-head">
-                <div className="dash-section-title">Hot Tracks</div>
-                <div className="dash-section-nav">
-                  <button className="dash-more-btn">More</button>
+              {subActive === "AOTY" && (
+                <div style={{ paddingBottom: 40 }}>
+                  <h2 className="dash-genre-title">Album of the Year Nominees</h2>
+                  <div className="dash-monochrome-grid">
+                    {languageFilteredSongs.slice(30, 42).map((song, i) => (
+                      <div key={`aoty-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
+                        <img src={song.img} alt={song.title} />
+                        <div className="dash-album-title">{song.title}</div>
+                        <div className="dash-album-meta">{song.artist} • {new Date().getFullYear()}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="dash-songs">
-                {languageFilteredSongs.slice(0, 24).map((song, i) => renderSongCard(song, i))}
-              </div>
-            </div>
-
-            {/* Trending Albums */}
-            <div style={{ marginTop: 32 }}>
-              <div className="dash-section-head">
-                <div className="dash-section-title">Trending Albums</div>
-                <div className="dash-section-nav">
-                  <button className="dash-more-btn">More</button>
-                </div>
-              </div>
-              <div className="dash-songs">
-                {languageFilteredSongs.slice(24, 48).map((song, i) => renderSongCard(song, i))}
-              </div>
-            </div>
-
-            {/* Featured Playlists */}
-            <div style={{ marginTop: 32 }}>
-              <div className="dash-section-head">
-                <div className="dash-section-title">Featured Playlists</div>
-                <div className="dash-section-nav">
-                  <button className="dash-more-btn">More</button>
-                </div>
-              </div>
-              <div className="dash-songs">
-                {languageFilteredSongs.slice(48, 72).map((song, i) => renderSongCard(song, i))}
-              </div>
-            </div>
-
-            {/* The Hits */}
-            <div style={{ marginTop: 32, paddingBottom: 40 }}>
-              <div className="dash-section-head">
-                <div className="dash-section-title">The Hits</div>
-                <div className="dash-section-nav">
-                  <button className="dash-more-btn">More</button>
-                </div>
-              </div>
-              <div className="dash-songs">
-                {languageFilteredSongs.slice(72, 100).map((song, i) => renderSongCard(song, i))}
-              </div>
+              )}
             </div>
           </>
         )}
@@ -1238,18 +1360,43 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ width: "100%", height: "100%", overflowY: "auto", paddingBottom: 100, background: "linear-gradient(135deg, rgba(121, 68, 30, 0.4) 0%, var(--bg) 50%)" }}
+            className="dash-album-view"
           >
+            {/* Back Button */}
+            <div style={{ padding: "24px 32px 0 32px" }}>
+              <button
+                onClick={() => setPopupAlbum(null)}
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "white",
+                  padding: "6px 12px",
+                  borderRadius: 4,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  transition: "var(--transition)"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+              >
+                <ChevronLeft size={16} /> Back
+              </button>
+            </div>
+
             {/* Album Header */}
-            <div style={{ display: "flex", gap: 32, padding: "48px 32px 32px 32px" }}>
-              <img src={popupAlbum.img} alt={popupAlbum.title} style={{ width: 240, height: 240, borderRadius: 8, boxShadow: "0 12px 24px rgba(0,0,0,0.5)", objectFit: "cover" }} />
-              <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-                <h2 style={{ fontSize: "3.5rem", fontWeight: 800, color: "white", margin: 0, lineHeight: 1.1 }}>{popupAlbum.title}</h2>
-                <div style={{ marginTop: 16, color: "rgba(255,255,255,0.7)", fontSize: 14 }}>
+            <div className="dash-album-header">
+              <img src={popupAlbum.img} alt={popupAlbum.title} className="dash-album-cover" />
+              <div className="dash-album-info">
+                <h2>{popupAlbum.title}</h2>
+                <div className="dash-album-info-meta">
                   {new Date().getFullYear()} • 1 track
                 </div>
-                <div style={{ marginTop: 8, color: "rgba(255,255,255,0.9)", fontSize: 14 }}>
-                  By <span style={{ fontWeight: 600 }}>{popupAlbum.artist}</span> • (P) {new Date().getFullYear()} Records
+                <div className="dash-album-info-copyright">
+                  By <span style={{ fontWeight: 600, color: "white" }}>{popupAlbum.artist}</span> • (P) {new Date().getFullYear()} Records
                 </div>
                 
                 {/* Controls */}
@@ -1260,18 +1407,18 @@ export default function Dashboard() {
                       setPlaying(true);
                     }}
                     style={{ 
-                      width: 56, height: 56, borderRadius: "50%", background: "#f5d76e", 
+                      width: 56, height: 56, borderRadius: "50%", background: "#ffffff", 
                       border: "none", display: "flex", justifyContent: "center", alignItems: "center", 
-                      color: "black", cursor: "pointer", boxShadow: "0 4px 12px rgba(245, 215, 110, 0.3)" 
+                      color: "black", cursor: "pointer", boxShadow: "0 4px 12px rgba(255, 255, 255, 0.3)" 
                     }}
                   >
                     <Play size={28} fill="currentColor" style={{ marginLeft: 4 }} />
                   </button>
-                  <button style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "none", color: "white", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}><Shuffle size={20} /></button>
-                  <button style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "none", color: "white", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}><Download size={20} /></button>
+                  <button style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}><Shuffle size={20} /></button>
+                  <button style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}><Download size={20} /></button>
                   <button style={{ background: "transparent", border: "none", color: "white", cursor: "pointer", fontSize: 28, padding: "0 8px" }}>+</button>
                   <button style={{ background: "transparent", border: "none", color: "white", cursor: "pointer", display: "flex" }}><Heart size={24} /></button>
-                  <button style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "none", color: "white", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}><MoreVertical size={20} /></button>
+                  <button style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}><MoreVertical size={20} /></button>
                 </div>
               </div>
             </div>
@@ -1296,14 +1443,14 @@ export default function Dashboard() {
                     style={{ 
                       display: "flex", alignItems: "center", padding: "12px 16px", 
                       borderRadius: 4, cursor: "pointer", transition: "background 0.2s",
-                      background: currentSong.id === song.id ? "rgba(255,255,255,0.1)" : "transparent"
+                      background: currentSong.id === song.id ? "rgba(255,255,255,0.08)" : "transparent"
                     }}
-                    onMouseEnter={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "rgba(255,255,255,0.05)" }}
+                    onMouseEnter={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "rgba(255,255,255,0.04)" }}
                     onMouseLeave={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "transparent" }}
                   >
                     <div style={{ width: 32, marginRight: 16, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>1-{i + 1}</div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ color: currentSong.id === song.id ? "#f5d76e" : "white", fontSize: 16, fontWeight: 500 }}>{song.title}</div>
+                      <div style={{ color: currentSong.id === song.id ? "#ffffff" : "white", fontSize: 16, fontWeight: currentSong.id === song.id ? 600 : 500 }}>{song.title}</div>
                       <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>{song.artist}</div>
                     </div>
                     <div style={{ width: 80, textAlign: "right", marginRight: 32, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
