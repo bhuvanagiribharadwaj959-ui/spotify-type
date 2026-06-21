@@ -95,6 +95,7 @@ export default function Dashboard() {
     img: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300"
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<DashboardTrack[]>([]);
   const [dbSongs, setDbSongs] = useState<DashboardTrack[]>([]);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
@@ -324,18 +325,50 @@ export default function Dashboard() {
   }, [dbSongs]);
 
   const languageFilteredSongs = useMemo(() => {
-    if (!cat) return allTracks.slice(0, 12);
+    if (!cat) return allTracks;
     const filtered = allTracks.filter(s => s.language?.toLowerCase() === cat.toLowerCase());
-    return filtered.length > 0 ? filtered.slice(0, 12) : allTracks.slice(0, 12);
+    return filtered.length > 0 ? filtered : allTracks;
   }, [cat, allTracks]);
 
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const lowerQ = searchQuery.toLowerCase();
-    return allTracks.filter(
-      (s) => s.title.toLowerCase().includes(lowerQ) || s.artist.toLowerCase().includes(lowerQ)
-    );
-  }, [searchQuery, allTracks]);
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const isDev = process.env.NODE_ENV === 'development';
+        const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+        const res = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "success" && data.results) {
+            const parsedResults = data.results.map((r: any) => {
+              let imgUrl = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
+              if (r.image) {
+                if (Array.isArray(r.image)) {
+                  imgUrl = r.image[r.image.length - 1]?.link || imgUrl;
+                } else if (typeof r.image === "string") {
+                  imgUrl = r.image;
+                }
+              }
+              return {
+                id: r.id || Math.random().toString(36).substring(7),
+                title: r.title || "Unknown Title",
+                artist: r.subtitle || r.primary_artists || "Unknown Artist",
+                img: imgUrl,
+                language: r.language || "english"
+              };
+            });
+            setSearchResults(parsedResults);
+          }
+        }
+      } catch (err) {
+        console.error("Open source search failed:", err);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const handleNext = () => {
     const idx = allTracks.findIndex(s => s.id === currentSong.id);
@@ -951,20 +984,46 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="dash-songs">
-                {languageFilteredSongs.slice(0, 10).map((song, i) => renderSongCard(song, i))}
+                {languageFilteredSongs.slice(0, 24).map((song, i) => renderSongCard(song, i))}
               </div>
             </div>
 
-            {/* New Releases */}
+            {/* Trending Albums */}
             <div style={{ marginTop: 32 }}>
               <div className="dash-section-head">
-                <div className="dash-section-title">New Releases</div>
+                <div className="dash-section-title">Trending Albums</div>
                 <div className="dash-section-nav">
                   <button className="dash-more-btn">More</button>
                 </div>
               </div>
               <div className="dash-songs">
-                {languageFilteredSongs.slice(10, 20).map((song, i) => renderSongCard(song, i))}
+                {languageFilteredSongs.slice(24, 48).map((song, i) => renderSongCard(song, i))}
+              </div>
+            </div>
+
+            {/* Featured Playlists */}
+            <div style={{ marginTop: 32 }}>
+              <div className="dash-section-head">
+                <div className="dash-section-title">Featured Playlists</div>
+                <div className="dash-section-nav">
+                  <button className="dash-more-btn">More</button>
+                </div>
+              </div>
+              <div className="dash-songs">
+                {languageFilteredSongs.slice(48, 72).map((song, i) => renderSongCard(song, i))}
+              </div>
+            </div>
+
+            {/* The Hits */}
+            <div style={{ marginTop: 32, paddingBottom: 40 }}>
+              <div className="dash-section-head">
+                <div className="dash-section-title">The Hits</div>
+                <div className="dash-section-nav">
+                  <button className="dash-more-btn">More</button>
+                </div>
+              </div>
+              <div className="dash-songs">
+                {languageFilteredSongs.slice(72, 100).map((song, i) => renderSongCard(song, i))}
               </div>
             </div>
           </>
