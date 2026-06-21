@@ -208,22 +208,62 @@ export default function Dashboard() {
         
         const fetchDbSongs = async () => {
           try {
-            // Fetch from local JSON file
-            const jsonRes = await fetch('/songs.json');
-            const data = await jsonRes.json();
+            const isDev = process.env.NODE_ENV === 'development';
+            const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+            let trendingList: any[] = [];
+            
+            try {
+              const res = await fetch(`${baseUrl}/trending/?country=in&limit=100`);
+              if (res.ok) {
+                const data = await res.json();
+                if (data.data && data.data.trending) {
+                  trendingList = data.data.trending;
+                }
+              }
+            } catch (err) {
+              if (isDev) {
+                // Fallback to hosted render
+                const res = await fetch(`https://test-0k.onrender.com/trending/?country=in&limit=100`);
+                if (res.ok) {
+                  const data = await res.json();
+                  if (data.data && data.data.trending) {
+                    trendingList = data.data.trending;
+                  }
+                }
+              }
+            }
+
             const fetched: DashboardTrack[] = [];
-            data.forEach((item: any) => {
-              fetched.push({
-                id: item.id,
-                title: item.meta?.title || "Unknown Title",
-                artist: item.meta?.artist || "Unknown Artist",
-                img: item.meta?.cover_url || item.assets?.cover_url || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
-                language: item.meta?.language || "english",
-                genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
-                audioUrl: item.supabase?.audio_storage_url || item.assets?.audio_path,
-                lyrics: item.assets?.lyrics
+            if (trendingList.length > 0) {
+              trendingList.forEach((item: any) => {
+                fetched.push({
+                  id: item.song_id || Math.random().toString(36).substring(7),
+                  title: item.title || "Unknown Title",
+                  artist: item.artist || "Unknown Artist",
+                  img: item.thumbnail || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                  language: "english", // default fallback
+                  genres: item.genre ? [item.genre] : [],
+                  audioUrl: null, // Forces dynamic fetch through Lyrica API
+                  lyrics: null // Forces dynamic fetch through Lyrica API
+                });
               });
-            });
+            } else {
+              // Fallback to local json if Lyrica fails entirely
+              const jsonRes = await fetch('/songs.json');
+              const data = await jsonRes.json();
+              data.forEach((item: any) => {
+                fetched.push({
+                  id: item.id,
+                  title: item.meta?.title || "Unknown Title",
+                  artist: item.meta?.artist || "Unknown Artist",
+                  img: item.meta?.cover_url || item.assets?.cover_url || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                  language: item.meta?.language || "english",
+                  genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
+                  audioUrl: null, // Force dynamic fetch
+                  lyrics: null
+                });
+              });
+            }
 
             // Keep the firebase fetch just in case there are custom songs uploaded by the user
             try {

@@ -108,24 +108,53 @@ export default function PlayingOverlay({
     const lines = lyrics.split('\n');
     const parsed: { time: number | null, text: string }[] = [];
     const timeRegex = /\[(\d+):(\d+(?:\.\d+)?)\]/;
+
+    let hasTimestamps = false;
     for (const line of lines) {
-      const match = line.match(timeRegex);
-      if (match) {
-        const mins = parseInt(match[1]);
-        const secs = parseFloat(match[2]);
-        const time = mins * 60 + secs;
-        const text = line.replace(timeRegex, '').trim();
-        if (text) {
-          parsed.push({ time, text });
+      if (timeRegex.test(line)) {
+        hasTimestamps = true;
+        break;
+      }
+    }
+
+    if (hasTimestamps) {
+      for (const line of lines) {
+        const match = line.match(timeRegex);
+        if (match) {
+          const mins = parseInt(match[1]);
+          const secs = parseFloat(match[2]);
+          const time = mins * 60 + secs;
+          const text = line.replace(timeRegex, '').trim();
+          if (text) {
+            parsed.push({ time, text });
+          }
+        } else if (line.trim()) {
+          parsed.push({ time: null, text: line.trim() });
+        } else {
+          parsed.push({ time: null, text: '' });
         }
-      } else if (line.trim()) {
-        parsed.push({ time: null, text: line.trim() });
-      } else {
-        parsed.push({ time: null, text: '' });
+      }
+    } else {
+      const validLines = lines.filter(l => l.trim());
+      const total = validLines.length;
+      let currentIndex = 0;
+      // Estimate start and end times
+      const startOffset = duration * 0.1;
+      const playableDuration = duration * 0.8;
+
+      for (const line of lines) {
+        const text = line.trim();
+        if (text) {
+          const time = total > 1 ? startOffset + (playableDuration * (currentIndex / (total - 1))) : startOffset;
+          parsed.push({ time, text });
+          currentIndex++;
+        } else {
+          parsed.push({ time: null, text: '' });
+        }
       }
     }
     return parsed;
-  }, [lyrics]);
+  }, [lyrics, duration]);
 
   const activeLineIndex = useMemo(() => {
     if (!parsedLyrics.length) return -1;
