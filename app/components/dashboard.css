@@ -16,8 +16,8 @@
   --text-secondary: #b3b3b3;
   --text-muted: #a7a7a7;
 
-  --accent: #1db954;
-  --accent-hover: #1ed760;
+  --accent: #ffffff;
+  --accent-hover: #cccccc;
 
   --font: 'Inter', system-ui, -apple-system, sans-serif;
   --transition: all 0.2s ease;
@@ -596,7 +596,7 @@ body, html {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: background 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
   position: relative;
   min-width: 0;
@@ -604,6 +604,8 @@ body, html {
 
 .dash-song-card:hover {
   background: #282828;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
 }
 
 .dash-song-cover-wrapper {

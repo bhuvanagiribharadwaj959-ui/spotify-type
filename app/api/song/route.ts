@@ -40,7 +40,7 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
     
     const searchRes = await fetch(searchUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      signal: AbortSignal.timeout(2500)
+      signal: AbortSignal.timeout(15000)
     });
     
     if (searchRes.ok) {
@@ -67,7 +67,7 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
           const authUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedMediaUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
           const authRes = await fetch(authUrl, {
             headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-            signal: AbortSignal.timeout(2000)
+            signal: AbortSignal.timeout(12000)
           });
           
           if (authRes.ok) {
@@ -96,7 +96,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
     let songLink = permaUrl;
     if (!songLink) {
       const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(3500) });
+      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(25000) });
       if (searchRes.ok) {
         const searchData = await searchRes.json();
         if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
@@ -122,7 +122,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
 
     if (songLink) {
       const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(3500) });
+      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(25000) });
       if (playRes.ok) {
         const playData = await playRes.json();
         if (playData.status === "success" && playData.data && playData.data.stream_url) {
