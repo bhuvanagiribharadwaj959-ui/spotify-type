@@ -67,6 +67,7 @@ type DashboardTrack = {
   lyrics?: string;
   permaUrl?: string;
   artistPic?: string;
+  playedAt?: number;
 };
 
 const dashboardTracks: DashboardTrack[] = [];
@@ -105,16 +106,37 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
   
   if (items.length === 0) return null;
 
+  const currentImg = items[currentIndex]?.img;
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '460px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#050505', borderRadius: '16px', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.05)' }}>
-      <div style={{ position: 'absolute', top: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {currentImg && (
+         <motion.div
+           key={currentImg}
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1 }}
+           transition={{ duration: 0.5 }}
+           style={{
+             position: 'absolute',
+             inset: '-20%',
+             backgroundImage: `url(${currentImg})`,
+             backgroundSize: 'cover',
+             backgroundPosition: 'center',
+             filter: 'blur(50px)',
+             zIndex: 0
+           }}
+         />
+      )}
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 0 }} />
+
+      <div style={{ position: 'absolute', top: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" />
             <path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" />
          </svg>
       </div>
 
-      <div style={{ position: 'relative', width: '100%', height: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1000, marginTop: '20px' }}>
+      <div style={{ position: 'relative', width: '100%', height: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1000, marginTop: '20px', zIndex: 1 }}>
         {items.map((track, i) => {
           let relativeIndex = i - currentIndex;
           if (items.length === 5) {
@@ -814,7 +836,7 @@ export default function Dashboard() {
     if (currentSong && currentSong.id !== "dummy") {
       setRecentTracks(prev => {
         const filtered = prev.filter(t => t.id !== currentSong.id);
-        const updated = [currentSong, ...filtered].slice(0, 30);
+        const updated = [{ ...currentSong, playedAt: Date.now() }, ...filtered].slice(0, 30);
         localStorage.setItem("recent_tracks", JSON.stringify(updated));
         return updated;
       });
@@ -1921,28 +1943,71 @@ export default function Dashboard() {
             {recentTracks.length === 0 ? (
               <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>No recently played songs yet. Go play some music!</div>
             ) : (
-              <div className="dash-monochrome-grid">
-                {recentTracks.map((song, i) => (
-                  <div key={`recent-${song.id}-${i}`} className="dash-album-card" onClick={() => { setCurrentSong(song); setPlaying(true); }}>
-                    <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "900px" }}>
+                {recentTracks.map((song, i) => {
+                  const timeStr = song.playedAt ? new Date(song.playedAt).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : "Just now";
+                  const bgImage = song.artistPic || song.img;
+                  return (
+                    <div 
+                      key={`recent-${song.id}-${i}`} 
+                      onClick={() => { setCurrentSong(song); setPlaying(true); }}
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '24px',
+                        padding: '16px 24px',
+                        borderRadius: '24px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                        minHeight: '120px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.02)';
+                        e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.5)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                      }}
+                    >
+                      {/* Background Image & Gradient */}
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundImage: `url(${bgImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center 20%',
+                        zIndex: 0
+                      }} />
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.2) 100%)',
+                        zIndex: 0
+                      }} />
+
+                      {/* Content */}
+                      <div style={{ width: '88px', height: '88px', borderRadius: '8px', overflow: 'hidden', zIndex: 1, flexShrink: 0, boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                        <img src={song.img} alt={song.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+
+                      <div style={{ zIndex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div style={{ fontSize: '26px', fontWeight: 800, color: 'white', letterSpacing: '-0.5px' }}>
+                          {song.title}
+                        </div>
+                        <div style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}>
+                          {song.artist}
+                        </div>
+                        <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
+                          Played on {timeStr}
+                        </div>
+                      </div>
                     </div>
-                    <div className="dash-album-title">{song.title}</div>
-                    <div className="dash-album-meta">
-                      <span 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setPopupArtist(song.artist);
-                          setPopupAlbum(null);
-                          setPopupGenre(null);
-                        }}
-                        style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                      >
-                        {song.artist}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

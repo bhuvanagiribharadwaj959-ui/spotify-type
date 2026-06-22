@@ -24,6 +24,7 @@ type DashboardTrack = {
   artist: string;
   language?: string;
   artistPic?: string;
+  playedAt?: number;
 };
 
 type PlayingOverlayProps = {
