@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { Eye, EyeOff, Music, Play, Pause, SkipForward, SkipBack } from "lucide-react";
+import { Eye, EyeOff, Music, Play, Pause, SkipForward, SkipBack, Waves } from "lucide-react";
 import "./login.css";
 import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
@@ -165,9 +165,11 @@ export function Login() {
     <div className="sonic-login-root">
       {/* Top Navigation */}
       <nav className="sonic-nav">
-        <div className="sonic-logo" style={{ gap: '10px' }}>
-          <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-          <span>Sonic</span>
+        <div className="sonic-logo" style={{ gap: '10px', display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 32, height: 32, background: 'white', borderRadius: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Waves size={20} color="black" />
+          </div>
+          <span style={{ fontWeight: 700, color: 'white' }}>SONIC</span>
         </div>
       </nav>
 

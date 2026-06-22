@@ -43,12 +43,14 @@ import {
   Volume1,
   VolumeX,
   Timer,
-  Waves
+  Waves,
+  Mic,
+  User as UserIcon
 } from "lucide-react";
 import "./dashboard.css";
 import Link from "next/link";
 import PlayingOverlay from "./playing";
-import { onAuthStateChanged, User, signOut } from "firebase/auth";
+import { onAuthStateChanged, User, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
 import { collection, doc, setDoc, getDoc, updateDoc, increment, addDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
@@ -146,6 +148,94 @@ export default function Dashboard() {
   const [showUnreleased, setShowUnreleased] = useState(false);
   const [settingsState, setSettingsState] = useState({hiRes: true, privacy: true, scrobbling: false, notifications: true, autoplay: true, crossfade: false});
 
+  const [profileName, setProfileName] = useState("");
+  const [customAvatar, setCustomAvatar] = useState<string | null>(null);
+  const [profileMessage, setProfileMessage] = useState("");
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setCustomAvatar(base64String);
+        localStorage.setItem("sonic_user_avatar", base64String);
+        setProfileMessage("Avatar updated successfully!");
+        
+        if (user) {
+          updateProfile(user, { photoURL: base64String })
+            .then(() => console.log("Firebase profile image updated"))
+            .catch(err => console.error("Firebase profile image update failed", err));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfileMessage("");
+    try {
+      if (user) {
+        await updateProfile(user, { displayName: profileName });
+      }
+      localStorage.setItem("sonic_display_name", profileName);
+      setProfileMessage("Profile updated successfully!");
+    } catch (err: any) {
+      setProfileMessage(`Error updating profile: ${err.message}`);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    setProfileMessage("");
+    if (!user || !user.email) {
+      setProfileMessage("Cannot reset password for guest accounts.");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, user.email);
+      setProfileMessage("Password reset email sent!");
+    } catch (err: any) {
+      setProfileMessage(`Error sending reset email: ${err.message}`);
+    }
+  };
+
+  const renderAvatar = (size: number) => {
+    if (customAvatar) {
+      return (
+        <img
+          src={customAvatar}
+          alt="User"
+          style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover' }}
+        />
+      );
+    }
+    if (user?.photoURL && !user.photoURL.includes("unsplash.com/photo-1535713875002-d1d0cf377fde")) {
+      return (
+        <img
+          src={user.photoURL}
+          alt="User"
+          style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover' }}
+        />
+      );
+    }
+    return (
+      <div style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        background: '#282828',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexShrink: 0
+      }}>
+        <UserIcon size={size * 0.6} color="rgba(255,255,255,0.6)" />
+      </div>
+    );
+  };
+
+
   const categories = useMemo(() => {
     // Collect from dbSongs instead
     const extractedLanguages = dbSongs
@@ -205,6 +295,21 @@ export default function Dashboard() {
     }
     return [...goodTracks, ...badTracks];
   }, [dbSongs]);
+
+  useEffect(() => {
+    const savedName = localStorage.getItem("sonic_display_name");
+    if (savedName) {
+      setProfileName(savedName);
+    } else if (user) {
+      setProfileName(user.displayName || user.email?.split("@")[0] || "User");
+    } else {
+      setProfileName("Guest");
+    }
+    const savedAvatar = localStorage.getItem("sonic_user_avatar");
+    if (savedAvatar) {
+      setCustomAvatar(savedAvatar);
+    }
+  }, [user]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -1011,14 +1116,10 @@ export default function Dashboard() {
           </a>
         </div>
 
-        <div className="dash-user-profile">
-          <img
-            src={user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100"}
-            alt="User"
-            className="dash-user-avatar"
-          />
+        <div className="dash-user-profile" onClick={() => { setActive("Profile"); setPopupAlbum(null); setPopupArtist(null); setPopupGenre(null); }} style={{ cursor: 'pointer' }}>
+          {renderAvatar(36)}
           <div>
-            <div className="dash-user-display">{user?.displayName || "Guest"}</div>
+            <div className="dash-user-display">{profileName || "Guest"}</div>
             <div className="dash-user-handle">@{user?.email?.split("@")[0] || "user"}</div>
           </div>
         </div>
@@ -1047,6 +1148,24 @@ export default function Dashboard() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  padding: 4,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 4
+                }}
+              >
+                <X size={16} />
+              </button>
+            )}
             {searchQuery.trim() && searchResults.length > 0 && (
               <div className="dash-search-dropdown">
                 {searchResults.slice(0, 8).map(s => (
@@ -1071,11 +1190,11 @@ export default function Dashboard() {
             )}
           </div>
           <div className="dash-topbar-spacer" />
-          <div className="dash-user">
+          <div className="dash-user" onClick={() => { setActive("Profile"); setPopupAlbum(null); setPopupArtist(null); setPopupGenre(null); }} style={{ cursor: 'pointer' }}>
             <div className="dash-avatar">
-              <img src={user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100"} alt="User" className="dash-avatar-img" />
+              {renderAvatar(28)}
             </div>
-            <div className="dash-user-name">{user?.displayName || "Guest"}</div>
+            <div className="dash-user-name">{profileName || "Guest"}</div>
           </div>
         </motion.div>
 
@@ -1672,6 +1791,175 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* ===== Profile Page ===== */}
+        {active === "Profile" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 32px 40px", maxWidth: 640 }}>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 32 }}>Profile Settings</h2>
+            
+            {profileMessage && (
+              <div style={{
+                backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                border: '1px solid rgba(29, 185, 84, 0.3)',
+                color: '#1db954',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                fontSize: '14px'
+              }}>
+                {profileMessage}
+              </div>
+            )}
+
+            <div className="settings-section">
+              <div className="settings-title">Avatar Image</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '16px 0' }}>
+                {renderAvatar(80)}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{
+                    background: '#ffffff',
+                    color: '#000000',
+                    padding: '8px 16px',
+                    borderRadius: '500px',
+                    fontWeight: 600,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    display: 'inline-block',
+                    textAlign: 'center',
+                    transition: 'opacity 0.2s'
+                  }}>
+                    Upload New Image
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleAvatarUpload} 
+                      style={{ display: 'none' }} 
+                    />
+                  </label>
+                  {customAvatar && (
+                    <button 
+                      onClick={() => {
+                        setCustomAvatar(null);
+                        localStorage.removeItem("sonic_user_avatar");
+                        setProfileMessage("Avatar reset to default.");
+                        if (user) {
+                          updateProfile(user, { photoURL: "" })
+                            .catch(err => console.error("Failed to clear photoURL", err));
+                        }
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        color: '#ffffff',
+                        padding: '8px 16px',
+                        borderRadius: '500px',
+                        fontWeight: 600,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        transition: 'var(--transition)'
+                      }}
+                    >
+                      Remove Avatar
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="settings-section">
+              <div className="settings-title">Profile Details</div>
+              <form onSubmit={handleUpdateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label htmlFor="profile-email-input" style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>Email Address</label>
+                  <input
+                    id="profile-email-input"
+                    type="text"
+                    value={user?.email || ""}
+                    disabled
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: 'rgba(255,255,255,0.4)',
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      cursor: 'not-allowed'
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label htmlFor="profile-display-name-input" style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>Display Name</label>
+                  <input
+                    id="profile-display-name-input"
+                    type="text"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: '#ffffff',
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    background: '#1db954',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '500px',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    width: 'fit-content',
+                    alignSelf: 'flex-start',
+                    boxShadow: '0 4px 12px rgba(29, 185, 84, 0.3)',
+                    transition: 'var(--transition)'
+                  }}
+                >
+                  Save Changes
+                </button>
+              </form>
+            </div>
+
+            {user?.email && (
+              <div className="settings-section" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px' }}>
+                <div className="settings-title">Security</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
+                  <div>
+                    <div style={{ fontSize: '15px', fontWeight: 600 }}>Reset Password</div>
+                    <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
+                      Send a secure password reset link to your email ({user.email})
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleResetPassword}
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: '#ffffff',
+                      padding: '8px 16px',
+                      borderRadius: '500px',
+                      fontWeight: 600,
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      transition: 'var(--transition)'
+                    }}
+                  >
+                    Reset Password
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* ===== Donate Page ===== */}
         {active === "Donate" && !popupGenre && !popupArtist && !popupAlbum && (
           <div style={{ padding: "0 32px 40px" }}>
@@ -2094,13 +2382,11 @@ export default function Dashboard() {
             onChange={(e) => setVolume(parseFloat(e.target.value))}
             style={{ width: 80, cursor: 'pointer', accentColor: '#1db954' }}
           />
-          <button className="dash-player-btn" onClick={() => setIsShuffle(s => !s)} style={{ color: isShuffle ? 'var(--accent)' : 'inherit' }} title="Shuffle"><Shuffle size={16} /></button>
-          <button className="dash-player-btn" onClick={() => setIsRepeat(r => !r)} style={{ color: isRepeat ? 'var(--accent)' : 'inherit' }} title="Repeat"><Repeat size={16} /></button>
           <button className="dash-player-btn" onClick={() => setShowQueue(q => !q)} style={{ color: showQueue ? 'var(--accent)' : 'inherit' }} title="Queue">
-            <span style={{fontSize: 13, fontWeight: 700}}>Q</span>
+            <ListMusic size={16} />
           </button>
-          <button className="dash-player-btn" onClick={() => setIsExpanded(true)} title="Lyrics">
-            <span style={{fontSize: 13, fontWeight: 700}}>L</span>
+          <button className="dash-player-btn" onClick={() => setIsExpanded(true)} style={{ color: isExpanded ? 'var(--accent)' : 'inherit' }} title="Lyrics">
+            <Mic size={16} />
           </button>
           <button className="dash-player-btn" title="Visualizer"><Waves size={16} /></button>
           <button className="dash-player-btn" title="Sleep Timer"><Timer size={16} /></button>

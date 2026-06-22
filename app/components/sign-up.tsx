@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import { CheckCircle2, Eye, EyeOff, MailCheck, Music, RefreshCw } from "lucide-react";
+import { CheckCircle2, Eye, EyeOff, MailCheck, Music, RefreshCw, Waves } from "lucide-react";
 import "./sign-up.css";
 import { auth } from "../lib/firebase";
 import { FirebaseError } from "firebase/app";
@@ -248,9 +248,11 @@ export function SignUp() {
     <div className="sonic-signup-root">
       {/* Top Navigation */}
       <nav className="sonic-nav">
-        <div className="sonic-logo" style={{ gap: '10px' }}>
-          <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-          <span>Sonic</span>
+        <div className="sonic-logo" style={{ gap: '10px', display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 32, height: 32, background: 'white', borderRadius: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Waves size={20} color="black" />
+          </div>
+          <span style={{ fontWeight: 700, color: 'white' }}>SONIC</span>
         </div>
       </nav>
 

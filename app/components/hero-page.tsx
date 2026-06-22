@@ -22,6 +22,7 @@ import {
   Layers,
   Settings,
   Activity,
+  Waves,
 } from "lucide-react";
 import "./hero-page.css";
 import Link from "next/link";
@@ -297,9 +298,11 @@ export default function FullPage() {
       <div className="aurora-secondary" />
 
       <nav className="navbar">
-        <div className="logo" style={{ gap: '10px' }}>
-          <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-          <span>Sonic</span>
+        <div className="logo" style={{ gap: '10px', display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 32, height: 32, background: 'white', borderRadius: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Waves size={20} color="black" />
+          </div>
+          <span style={{ fontWeight: 700 }}>SONIC</span>
         </div>
         <div className="nav-links">
           <Link href="/dashboard" className="nav-link" style={{ textDecoration: 'none' }}>Dashboard</Link>
