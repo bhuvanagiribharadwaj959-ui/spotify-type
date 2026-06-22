@@ -599,16 +599,34 @@ export default function Dashboard() {
       }
     } catch (e) {}
 
-    // Remove randomness, just take top 16 tracks to reduce load
-    const staticSlides = dbSongs.slice(0, 16);
-    setRandomHeroSlides(staticSlides);
+    // Ensure unique artists in the Hero Carousel to avoid repeated album covers
+    const seenArtists = new Set<string>();
+    const uniqueArtistSlides = [];
+    for (const song of dbSongs) {
+      if (!seenArtists.has(song.artist)) {
+        seenArtists.add(song.artist);
+        uniqueArtistSlides.push(song);
+      }
+      if (uniqueArtistSlides.length >= 16) break;
+    }
+    // Fallback padding if there aren't enough unique artists
+    if (uniqueArtistSlides.length < 16) {
+      for (const song of dbSongs) {
+        if (!uniqueArtistSlides.find(s => s.id === song.id)) {
+          uniqueArtistSlides.push(song);
+        }
+        if (uniqueArtistSlides.length >= 16) break;
+      }
+    }
+
+    setRandomHeroSlides(uniqueArtistSlides);
 
     // Initial random picks for discovery section
     const shuffled = [...dbSongs].sort(() => 0.5 - Math.random());
     setRandomPicks(shuffled.slice(0, 12));
 
     const uniqueArtistsMap = new Map<string, string>();
-    staticSlides.forEach(t => {
+    uniqueArtistSlides.forEach(t => {
       if (!uniqueArtistsMap.has(t.artist)) {
         uniqueArtistsMap.set(t.artist, t.img);
       }
