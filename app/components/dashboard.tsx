@@ -1090,11 +1090,13 @@ export default function Dashboard() {
           </div>
           <span style={{ fontSize: 26, fontWeight: 900, color: 'white', letterSpacing: '-0.75px' }}>SONIC</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', height: '40px', marginTop: '24px' }}>
-          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "30px", "10px"] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
-          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "40px", "10px"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.1 }} />
-          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "20px", "10px"] }} transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut", delay: 0.2 }} />
-          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "35px", "10px"] }} transition={{ repeat: Infinity, duration: 1.1, ease: "easeInOut", delay: 0.3 }} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', marginTop: '40px' }}>
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+            <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ x: [3, -3, 3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+            <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+          </svg>
+          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', fontWeight: 500, letterSpacing: '2px' }}>LOADING</div>
         </div>
       </div>
     );
@@ -1318,20 +1320,44 @@ export default function Dashboard() {
             <div className="dash-content" style={{ paddingTop: 0 }}>
               {subActive === "Home" && (
                 <>
-                  {/* Spotify Style Hero Grid with Animated Greeting Container */}
-                  <div className="dash-greeting-container">
-                    <div className="dash-greeting-wave">
-                      <span className="wave-bar bar-1"></span>
-                      <span className="wave-bar bar-2"></span>
-                      <span className="wave-bar bar-3"></span>
-                      <span className="wave-bar bar-4"></span>
-                      <span className="wave-bar bar-5"></span>
+                  {/* Creative Animated Hero Banner */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '40px',
+                    marginBottom: '40px',
+                    borderRadius: '16px',
+                    background: 'linear-gradient(135deg, rgba(29,185,84,0.1) 0%, rgba(0,0,0,0) 100%)',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
+                    <motion.div 
+                      style={{ position: 'absolute', top: -50, right: -50, width: 250, height: 250, background: 'var(--accent)', borderRadius: '50%', filter: 'blur(100px)', opacity: 0.2 }}
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+                      transition={{ repeat: Infinity, duration: 4 }}
+                    />
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+                          <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ x: [3, -3, 3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+                          <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+                        </svg>
+                        <h1 style={{ fontSize: '48px', fontWeight: 900, margin: 0, letterSpacing: '-2px', color: '#fff' }}>
+                          SONIC
+                        </h1>
+                      </div>
+                      <div style={{ fontSize: '18px', color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>
+                        Your personalized music experience
+                      </div>
                     </div>
-                    <h1 className="dash-greeting">
-                      {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"}
-                    </h1>
-                    <div className="dash-greeting-subtitle">
-                      Welcome back, {profileName}
+
+                    <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '14px 28px', borderRadius: '30px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }} />
+                      <span style={{ fontSize: '15px', fontWeight: 600, color: '#fff' }}>Welcome back, {profileName}</span>
                     </div>
                   </div>
 

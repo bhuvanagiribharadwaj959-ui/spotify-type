@@ -97,10 +97,10 @@
 .lyric-line {
   font-size: 2.5rem;
   font-weight: 800;
-  line-height: 1.35;
+  line-height: 1.25;
   margin: 0;
-  color: rgba(255, 255, 255, 0.28);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  color: rgba(255, 255, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
   letter-spacing: -1.2px;
   text-align: left;
@@ -108,13 +108,13 @@
 }
 
 .lyric-line:hover {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .lyric-line.active {
-  color: #1ed760; /* Vibrant Spotify Green for the current lyric line */
+  color: #ffffff !important;
   transform: scale(1.03);
-  text-shadow: 0 0 30px rgba(30, 215, 96, 0.35);
+  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8), -1px -1px 4px rgba(0, 0, 0, 0.5) !important;
 }
 
 .playing-cover-wrapper {
@@ -153,59 +153,5 @@
   .lyric-line {
     font-size: 1.8rem;
     letter-spacing: -0.5px;
-  }
-}
-
-/* Dynamic Floating Aurora Blobs */
-.playing-aurora-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-  filter: blur(120px);
-  opacity: 0.15;
-  mix-blend-mode: screen;
-}
-
-.aurora-blob {
-  position: absolute;
-  width: 45vw;
-  height: 45vw;
-  border-radius: 50%;
-  animation: float-blob 22s infinite alternate ease-in-out;
-}
-
-.blob-1 {
-  top: -15%;
-  left: -10%;
-  animation-duration: 25s;
-}
-
-.blob-2 {
-  bottom: -15%;
-  right: -10%;
-  animation-duration: 20s;
-  animation-delay: -5s;
-}
-
-.blob-3 {
-  top: 30%;
-  left: 25%;
-  width: 35vw;
-  height: 35vw;
-  animation-duration: 28s;
-  animation-delay: -8s;
-}
-
-@keyframes float-blob {
-  0% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
-  }
-  50% {
-    transform: translate(12%, -10%) scale(1.1) rotate(180deg);
-  }
-  100% {
-    transform: translate(-8%, 8%) scale(0.95) rotate(360deg);
   }
 }
