@@ -65,6 +65,7 @@ type DashboardTrack = {
   genres?: string[];
   audioUrl?: string;
   lyrics?: string;
+  permaUrl?: string;
 };
 
 const dashboardTracks: DashboardTrack[] = [];
@@ -388,47 +389,48 @@ export default function Dashboard() {
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-            // Map trending songs first
-            trendingList.forEach((item: any) => {
-              const titleLower = (item.title || "").toLowerCase();
-              if (titleLower) seenTitles.add(titleLower);
-              fetched.push({
-                id: item.song_id || Math.random().toString(36).substring(7),
-                title: item.title || "Unknown Title",
-                artist: item.artist || "Unknown Artist",
-                img: cleanImgUrl(item.thumbnail),
-                language: "english",
-                genres: item.genre ? [item.genre] : [],
-                audioUrl: undefined,
-                lyrics: undefined
-              });
-            });
-
-            // Map local attractive/popular songs from songs.json
-            try {
-              const jsonRes = await fetch('/songs.json');
-              if (jsonRes.ok) {
-                const localData = await jsonRes.json();
-                localData.forEach((item: any) => {
-                  const titleLower = (item.meta?.title || "").toLowerCase();
-                  if (!seenTitles.has(titleLower)) {
-                    seenTitles.add(titleLower);
-                    fetched.push({
-                      id: item.id,
-                      title: item.meta?.title || "Unknown Title",
-                      artist: item.meta?.artist || "Unknown Artist",
-                      img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
-                      language: item.meta?.language || "english",
-                      genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
-                      audioUrl: undefined,
-                      lyrics: undefined
-                    });
-                  }
-                });
-              }
-            } catch (err) {
-              console.error("Local songs load error:", err);
-            }
+             // Map trending songs first
+             trendingList.forEach((item: any) => {
+               const titleLower = (item.title || "").toLowerCase();
+               if (titleLower) seenTitles.add(titleLower);
+               fetched.push({
+                 id: item.song_id || item.id || Math.random().toString(36).substring(7),
+                 title: item.title || "Unknown Title",
+                 artist: item.artist || "Unknown Artist",
+                 img: cleanImgUrl(item.thumbnail),
+                 language: "english",
+                 genres: item.genre ? [item.genre] : [],
+                 audioUrl: undefined,
+                 lyrics: undefined,
+                 permaUrl: item.perma_url || item.url || item.link
+               });
+             });
+ 
+             // Map local attractive/popular songs from songs.json
+             try {
+               const jsonRes = await fetch('/songs.json');
+               if (jsonRes.ok) {
+                 const localData = await jsonRes.json();
+                 localData.forEach((item: any) => {
+                   const titleLower = (item.meta?.title || "").toLowerCase();
+                   if (!seenTitles.has(titleLower)) {
+                     seenTitles.add(titleLower);
+                     fetched.push({
+                       id: item.id,
+                       title: item.meta?.title || "Unknown Title",
+                       artist: item.meta?.artist || "Unknown Artist",
+                       img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
+                       language: item.meta?.language || "english",
+                       genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
+                       audioUrl: item.supabase?.audio_storage_url || undefined,
+                       lyrics: item.assets?.lyrics || undefined
+                     });
+                   }
+                 });
+               }
+             } catch (err) {
+               console.error("Local songs load error:", err);
+             }
 
             // Keep the firebase fetch just in case there are custom songs uploaded by the user
             try {
@@ -532,15 +534,16 @@ export default function Dashboard() {
         if (res.ok) {
           const data = await res.json();
           if (data.status === "success" && data.results) {
-            const parsedResults = data.results.map((r: any) => {
-              return {
-                id: r.id || Math.random().toString(36).substring(7),
-                title: r.title || "Unknown Title",
-                artist: r.artist || "Unknown Artist",
-                img: cleanImgUrl(r.thumbnail),
-                language: r.language || "english"
-              };
-            });
+             const parsedResults = data.results.map((r: any) => {
+               return {
+                 id: r.id || Math.random().toString(36).substring(7),
+                 title: r.title || "Unknown Title",
+                 artist: r.artist || "Unknown Artist",
+                 img: cleanImgUrl(r.thumbnail),
+                 language: r.language || "english",
+                 permaUrl: r.perma_url || r.url || r.link
+               };
+             });
             setSearchResults(parsedResults);
           }
         }
@@ -632,7 +635,7 @@ export default function Dashboard() {
         const res = await fetch('/api/song', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: currentSong.id, title: currentSong.title, artist: currentSong.artist })
+          body: JSON.stringify({ id: currentSong.id, title: currentSong.title, artist: currentSong.artist, permaUrl: currentSong.permaUrl })
         });
         if (!res.ok) {
           const errData = await res.json();
@@ -863,7 +866,7 @@ export default function Dashboard() {
       const res = await fetch('/api/song', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: song.id, title: song.title, artist: song.artist })
+        body: JSON.stringify({ id: song.id, title: song.title, artist: song.artist, permaUrl: song.permaUrl })
       });
       const data = await res.json();
       if (data.audioUrl) {
@@ -979,7 +982,8 @@ export default function Dashboard() {
               title: r.title || "Unknown",
               artist: r.artist || "Unknown",
               img: cleanImgUrl(r.thumbnail),
-              language: r.language || "english"
+              language: r.language || "english",
+              permaUrl: r.perma_url || r.url || r.link
             })));
           }
         }
@@ -997,7 +1001,53 @@ export default function Dashboard() {
     { key: "Settings", icon: Settings },
   ];
 
-  if (!authLoaded || !user) return null;
+  if (!authLoaded || !user) {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: '#090909',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '24px',
+        zIndex: 9999
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: 44,
+            height: 44,
+            background: 'white',
+            borderRadius: '10px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0 4px 20px rgba(255,255,255,0.15)'
+          }}>
+            <Waves size={26} color="black" />
+          </div>
+          <span style={{ fontSize: 26, fontWeight: 900, color: 'white', letterSpacing: '-0.75px' }}>SONIC</span>
+        </div>
+        <div className="sonic-spinner" style={{
+          width: '32px',
+          height: '32px',
+          border: '3px solid rgba(255, 255, 255, 0.05)',
+          borderTopColor: '#ffffff',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}} />
+      </div>
+    );
+  }
 
   return (
     <div className="dash-root">
@@ -1179,7 +1229,7 @@ export default function Dashboard() {
                       setSearchQuery("");
                     }}
                   >
-                    <img src={s.img} alt={s.title} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                    <img src={s.img} alt={s.title} style={{ objectFit: 'cover', width: 40, height: 40, borderRadius: 4, flexShrink: 0 }} />
                     <div className="dash-search-item-info">
                       <div className="dash-search-item-title">{s.title}</div>
                       <div className="dash-search-item-artist">{s.artist}</div>

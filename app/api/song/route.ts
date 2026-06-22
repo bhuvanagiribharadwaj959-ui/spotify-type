@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { id, title, artist } = await req.json();
+    const { id, title, artist, permaUrl } = await req.json();
 
     if (!id || !title || !artist) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -73,23 +73,52 @@ export async function POST(req: NextRequest) {
     const audioPromise = (async () => {
       let saavnAudioUrl = null;
       try {
-        const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-        const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-        
-        if (searchRes.ok) {
-          const searchData = await searchRes.json();
-          if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
-            const songLink = searchData.results[0].perma_url || searchData.results[0].url || searchData.results[0].link;
-            
-            if (songLink) {
-               const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-               const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-               if (playRes.ok) {
-                  const playData = await playRes.json();
-                  if (playData.status === "success" && playData.data && playData.data.stream_url) {
-                     saavnAudioUrl = playData.data.stream_url;
-                  }
-               }
+        if (permaUrl) {
+          const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(permaUrl)}`;
+          const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+          if (playRes.ok) {
+            const playData = await playRes.json();
+            if (playData.status === "success" && playData.data && playData.data.stream_url) {
+              saavnAudioUrl = playData.data.stream_url;
+            }
+          }
+        }
+
+        if (!saavnAudioUrl) {
+          const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
+          const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+          
+          if (searchRes.ok) {
+            const searchData = await searchRes.json();
+            if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
+              const results = searchData.results;
+              let bestMatch = results[0];
+              const targetTitle = title.toLowerCase();
+              const targetArtist = artist.toLowerCase();
+              
+              for (const r of results) {
+                const rTitle = (r.title || "").toLowerCase();
+                const rArtist = (r.artist || "").toLowerCase();
+                if (rTitle.includes(targetTitle) && rArtist.includes(targetArtist)) {
+                  bestMatch = r;
+                  break;
+                }
+                if (rTitle === targetTitle) {
+                  bestMatch = r;
+                }
+              }
+
+              const songLink = bestMatch.perma_url || bestMatch.url || bestMatch.link;
+              if (songLink) {
+                 const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
+                 const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+                 if (playRes.ok) {
+                    const playData = await playRes.json();
+                    if (playData.status === "success" && playData.data && playData.data.stream_url) {
+                       saavnAudioUrl = playData.data.stream_url;
+                    }
+                 }
+              }
             }
           }
         }
