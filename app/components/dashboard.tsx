@@ -643,7 +643,13 @@ export default function Dashboard() {
         const res = await fetch('/api/song', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: currentSong.id, title: currentSong.title, artist: currentSong.artist, permaUrl: currentSong.permaUrl })
+          body: JSON.stringify({
+            id: currentSong.id,
+            title: currentSong.title,
+            artist: currentSong.artist,
+            permaUrl: currentSong.permaUrl,
+            language: currentSong.language
+          })
         });
         if (!res.ok) {
           const errData = await res.json();

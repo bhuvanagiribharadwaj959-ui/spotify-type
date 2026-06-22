@@ -1,10 +1,148 @@
 import { NextRequest, NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
+
+// Caching local songs.json in memory for sub-millisecond lookups
+let songsData: any[] = [];
+try {
+  const pathsToTry = [
+    path.join(process.cwd(), 'public', 'songs.json'),
+    path.join(process.cwd(), 'songs.json'),
+    path.join(process.cwd(), '.next', 'standalone', 'public', 'songs.json'),
+  ];
+  for (const p of pathsToTry) {
+    if (fs.existsSync(p)) {
+      songsData = JSON.parse(fs.readFileSync(p, 'utf-8'));
+      console.log(`Successfully loaded ${songsData.length} tracks from ${p}`);
+      break;
+    }
+  }
+} catch (err) {
+  console.error("Failed to load local songs.json in API route:", err);
+}
+
+// Helper to check if a string is a 30s preview URL
+function isPreviewUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  return lower.includes('mp3-preview') || 
+         lower.includes('preview.dzcdn.net') || 
+         lower.includes('itunes.apple.com') ||
+         lower.includes('preview');
+}
+
+// Direct search and decryption using official JioSaavn API to avoid Render startup latency
+async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
+  try {
+    const queryStr = `${artist} ${title}`;
+    const encodedQuery = encodeURIComponent(queryStr);
+    const searchUrl = `https://www.jiosaavn.com/api.php?p=1&q=${encodedQuery}&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=10&__call=search.getResults`;
+    
+    const searchRes = await fetch(searchUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+      signal: AbortSignal.timeout(5000)
+    });
+    
+    if (searchRes.ok) {
+      const searchData = await searchRes.json();
+      if (searchData.results && searchData.results.length > 0) {
+        // Try to match best title + artist combination
+        let song = searchData.results[0];
+        const targetTitle = title.toLowerCase().trim();
+        const targetArtist = artist.toLowerCase().trim();
+        
+        for (const res of searchData.results) {
+          const resTitle = (res.title || '').toLowerCase().trim();
+          const subtitle = (res.subtitle || '').toLowerCase().trim();
+          if (resTitle.includes(targetTitle) && subtitle.includes(targetArtist)) {
+            song = res;
+            break;
+          }
+          if (resTitle === targetTitle) {
+            song = res;
+          }
+        }
+        
+        const encryptedMediaUrl = song.more_info?.encrypted_media_url;
+        if (encryptedMediaUrl) {
+          const authUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedMediaUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
+          const authRes = await fetch(authUrl, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            signal: AbortSignal.timeout(5000)
+          });
+          
+          if (authRes.ok) {
+            const authData = await authRes.json();
+            if (authData.status === 'success' && authData.auth_url) {
+              const proxiedUrl = `/api/audio-proxy?url=${encodeURIComponent(authData.auth_url)}`;
+              let cover = null;
+              if (song.image) {
+                // Upscale to 500x500 for HD cover art
+                cover = song.image.replace("150x150", "500x500").replace("50x50", "500x500");
+              }
+              return { audioUrl: proxiedUrl, coverUrl: cover };
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Direct JioSaavn fetch failed:", err);
+  }
+  return { audioUrl: null, coverUrl: null };
+}
+
+// Fallback search using Render API backend
+async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: string, baseUrl?: string): Promise<string | null> {
+  try {
+    let songLink = permaUrl;
+    if (!songLink) {
+      const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
+      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      if (searchRes.ok) {
+        const searchData = await searchRes.json();
+        if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
+          const results = searchData.results;
+          let bestMatch = results[0];
+          const targetTitle = title.toLowerCase().trim();
+          const targetArtist = artist.toLowerCase().trim();
+          for (const r of results) {
+            const rTitle = (r.title || "").toLowerCase().trim();
+            const rArtist = (r.artist || "").toLowerCase().trim();
+            if (rTitle.includes(targetTitle) && rArtist.includes(targetArtist)) {
+              bestMatch = r;
+              break;
+            }
+            if (rTitle === targetTitle) {
+              bestMatch = r;
+            }
+          }
+          songLink = bestMatch.perma_url || bestMatch.url || bestMatch.link;
+        }
+      }
+    }
+
+    if (songLink) {
+      const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
+      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      if (playRes.ok) {
+        const playData = await playRes.json();
+        if (playData.status === "success" && playData.data && playData.data.stream_url) {
+          return `/api/audio-proxy?url=${encodeURIComponent(playData.data.stream_url)}`;
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Render proxy fetch failed:", err);
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   try {
     const { id, title, artist, permaUrl, language } = await req.json();
 
-    if (!id || !title || !artist) {
+    if (!title || !artist) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -13,12 +151,52 @@ export async function POST(req: NextRequest) {
 
     const cleanLanguage = (language || '').toLowerCase();
     const isIndian = ["hindi", "punjabi", "tamil", "telugu", "bhojpuri", "malayalam", "kannada", "marathi", "bengali", "gujarati", "urdu", "indian"].includes(cleanLanguage) ||
-                     (artist + " " + title).toLowerCase().match(/(arijit|nehha|badshah|diljit|shreya|arman|rahman|udit|kishore|rafi|lata|alkas|kumarsanu|jio|saavn|bollywood)/i);
+                     (artist + " " + title).toLowerCase().match(/(arijit|nehha|badshah|diljit|shreya|arman|rahman|udit|kishore|rafi|lata|alkas|kumarsanu|jio|saavn|bollywood|playback)/i);
 
-    // Fetch lyrics and audio in parallel
+    // 1. Try to find the song inside our local 1000-song library
+    let localSong = null;
+    if (id && id !== 'dummy' && typeof id === 'string') {
+      localSong = songsData.find(s => s.id === id);
+    }
+    if (!localSong) {
+      const cleanTitle = title.toLowerCase().trim();
+      const cleanArtist = artist.toLowerCase().trim();
+      localSong = songsData.find(s => {
+        const sTitle = (s.meta?.title || '').toLowerCase().trim();
+        const sArtist = (s.meta?.artist || '').toLowerCase().trim();
+        return sTitle === cleanTitle && sArtist === cleanArtist;
+      });
+    }
+
+    let localAudioUrl = null;
+    let localLyrics = null;
+    let localCoverUrl = null;
+    let localArtistPic = null;
+
+    if (localSong) {
+      const storageUrl = localSong.supabase?.audio_storage_url;
+      const isNightChanges = title.toLowerCase().includes("night changes") || artist.toLowerCase().includes("one direction");
+      const isFallbackUrl = storageUrl && storageUrl.includes("song_1019.mp3");
+      const isPreview = isPreviewUrl(storageUrl);
+
+      // Only use the database audio URL if it's not a placeholder (song_1019.mp3) and not a short preview
+      if (storageUrl && (!isFallbackUrl || isNightChanges) && !isPreview) {
+        localAudioUrl = storageUrl;
+      }
+      
+      if (localSong.assets?.lyrics && localSong.assets.lyrics !== "No lyrics found") {
+        localLyrics = localSong.assets.lyrics;
+      }
+      
+      localCoverUrl = localSong.meta?.cover_url || localSong.assets?.cover_url || null;
+      localArtistPic = localSong.meta?.artist_cover_url || localSong.assets?.artist_cover_url || null;
+    }
+
+    // Parallel processing for lyrics and audio resolution to keep reaction time low
     const lyricsPromise = (async () => {
-      let lyrics = 'No lyrics found';
-      // Try LRCLIB first (extremely fast)
+      if (localLyrics) return localLyrics;
+
+      // Try LRCLIB get first (extremely fast direct lookup)
       try {
         const getUrl = `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`;
         const getRes = await fetch(getUrl, {
@@ -33,6 +211,7 @@ export async function POST(req: NextRequest) {
         }
       } catch (err) {}
 
+      // Try LRCLIB search
       try {
         const searchUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(title + " " + artist)}`;
         const searchRes = await fetch(searchUrl, {
@@ -50,7 +229,7 @@ export async function POST(req: NextRequest) {
         }
       } catch (err) {}
 
-      // Fallback to slow Lyrica API if LRCLIB doesn't have it
+      // Try Lyrica API from render proxy as a fallback
       try {
         const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
         const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(4000) });
@@ -58,94 +237,78 @@ export async function POST(req: NextRequest) {
           const lyricaData = await lyricaRes.json();
           if (lyricaData && lyricaData.data) {
             if (lyricaData.data.timed_lyrics && lyricaData.data.timed_lyrics.length > 0) {
-              lyrics = lyricaData.data.timed_lyrics.map((l: any) => {
+              return lyricaData.data.timed_lyrics.map((l: any) => {
                 const totalSec = l.start_time / 1000;
                 const mins = Math.floor(totalSec / 60);
                 const secs = (totalSec % 60).toFixed(2).padStart(5, '0');
                 return `[${mins.toString().padStart(2, '0')}:${secs}] ${l.text}`;
               }).join('\n');
             } else if (lyricaData.data.lyrics) {
-              lyrics = lyricaData.data.lyrics;
+              return lyricaData.data.lyrics;
             }
           }
         }
       } catch (e) {}
 
-      return lyrics;
+      return 'No lyrics found';
     })();
 
-    // Fetch Audio
     const audioPromise = (async () => {
-      let audioUrl = null;
-      let coverUrl = null;
-      let artistPic = null;
+      let audioUrl = localAudioUrl;
+      let coverUrl = localCoverUrl;
+      let artistPic = localArtistPic;
 
-      // 1. If not Indian, try Deezer API first for instant preview and HD assets
-      if (!isIndian) {
-        try {
-          const deezerRes = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(artist + " " + title)}`, { signal: AbortSignal.timeout(3000) });
-          if (deezerRes.ok) {
-            const deezerData = await deezerRes.json();
-            if (deezerData && deezerData.data && deezerData.data.length > 0) {
-              const trackMatch = deezerData.data[0];
-              audioUrl = trackMatch.preview;
-              coverUrl = trackMatch.album?.cover_xl || trackMatch.album?.cover_big;
-              artistPic = trackMatch.artist?.picture_big || trackMatch.artist?.picture_medium;
-            }
+      // Parallel lookup to Deezer for HD assets and optional preview
+      let deezerAudioPreview = null;
+      let deezerCover = null;
+      let deezerArtistPic = null;
+
+      try {
+        const deezerRes = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(artist + " " + title)}`, { signal: AbortSignal.timeout(3000) });
+        if (deezerRes.ok) {
+          const deezerData = await deezerRes.json();
+          if (deezerData && deezerData.data && deezerData.data.length > 0) {
+            const trackMatch = deezerData.data[0];
+            deezerAudioPreview = trackMatch.preview;
+            deezerCover = trackMatch.album?.cover_xl || trackMatch.album?.cover_big;
+            deezerArtistPic = trackMatch.artist?.picture_big || trackMatch.artist?.picture_medium;
           }
-        } catch (err) {
-          console.error("Deezer fetch error:", err);
+        }
+      } catch (err) {
+        console.error("Deezer fetch error:", err);
+      }
+
+      // Merge HD assets
+      if (!coverUrl) coverUrl = deezerCover;
+      if (!artistPic) artistPic = deezerArtistPic;
+
+      // Resolve audio stream (prioritizing full length streams)
+      if (!audioUrl) {
+        // 1. Try direct JioSaavn search (Full-length high quality stream)
+        const directJio = await fetchJioSaavnAudioDirect(title, artist);
+        if (directJio.audioUrl) {
+          audioUrl = directJio.audioUrl;
+          if (!coverUrl) coverUrl = directJio.coverUrl;
         }
       }
 
-      // 2. Fallback to JioSaavn if Deezer didn't find anything or if it is Indian
       if (!audioUrl) {
-        try {
-          let songLink = permaUrl;
-          if (!songLink) {
-            const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-            const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-            if (searchRes.ok) {
-              const searchData = await searchRes.json();
-              if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
-                const results = searchData.results;
-                let bestMatch = results[0];
-                const targetTitle = title.toLowerCase();
-                const targetArtist = artist.toLowerCase();
-                for (const r of results) {
-                  const rTitle = (r.title || "").toLowerCase();
-                  const rArtist = (r.artist || "").toLowerCase();
-                  if (rTitle.includes(targetTitle) && rArtist.includes(targetArtist)) {
-                    bestMatch = r;
-                    break;
-                  }
-                  if (rTitle === targetTitle) {
-                    bestMatch = r;
-                  }
-                }
-                songLink = bestMatch.perma_url || bestMatch.url || bestMatch.link;
-              }
-            }
-          }
-
-          if (songLink) {
-            const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-            const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
-            if (playRes.ok) {
-              const playData = await playRes.json();
-              if (playData.status === "success" && playData.data && playData.data.stream_url) {
-                const rawUrl = playData.data.stream_url;
-                audioUrl = `/api/audio-proxy?url=${encodeURIComponent(rawUrl)}`;
-              }
-            }
-          }
-        } catch (e) {
-          console.error("JioSaavn fetch fallback error:", e);
+        // 2. Try Render proxy JioSaavn search
+        const proxyJio = await fetchRenderProxyAudio(title, artist, permaUrl, baseUrl);
+        if (proxyJio) {
+          audioUrl = proxyJio;
         }
       }
 
-      // 3. Fallback to iTunes search preview if still nothing
       if (!audioUrl) {
+        // 3. Fall back to Deezer preview if no full-length streams could be resolved
+        if (deezerAudioPreview) {
+          audioUrl = deezerAudioPreview;
+        }
+      }
+
+      if (!audioUrl) {
+        // 4. Fall back to iTunes preview as absolute last resort
         try {
           const encodedQuery = encodeURIComponent(`${artist} ${title}`);
           const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodedQuery}&media=music&limit=1`, { signal: AbortSignal.timeout(3000) });
@@ -161,13 +324,13 @@ export async function POST(req: NextRequest) {
       return { audioUrl, coverUrl, artistPic };
     })();
 
-    const [lyrics, audioDetails] = await Promise.all([lyricsPromise, audioPromise]);
+    const [lyricsResult, audioResult] = await Promise.all([lyricsPromise, audioPromise]);
 
     return NextResponse.json({
-      audioUrl: audioDetails.audioUrl,
-      lyrics: lyrics,
-      coverUrl: audioDetails.coverUrl,
-      artistPic: audioDetails.artistPic,
+      audioUrl: audioResult.audioUrl,
+      lyrics: lyricsResult,
+      coverUrl: audioResult.coverUrl,
+      artistPic: audioResult.artistPic,
       alternatives: []
     });
 
