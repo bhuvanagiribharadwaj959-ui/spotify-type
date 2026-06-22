@@ -157,12 +157,13 @@ export async function POST(req: NextRequest) {
       localSong = songsData.find(s => s.id === id);
     }
     if (!localSong) {
-      const cleanTitle = title.toLowerCase().trim();
-      const cleanArtist = artist.toLowerCase().trim();
+      const cleanTitle = title.toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
+      const cleanArtist = artist.toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
       localSong = songsData.find(s => {
-        const sTitle = (s.meta?.title || '').toLowerCase().trim();
-        const sArtist = (s.meta?.artist || '').toLowerCase().trim();
-        return sTitle === cleanTitle && sArtist === cleanArtist;
+        const sTitle = (s.meta?.title || '').toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
+        const sArtist = (s.meta?.artist || '').toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
+        return (sTitle === cleanTitle || sTitle.includes(cleanTitle) || cleanTitle.includes(sTitle)) && 
+               (sArtist === cleanArtist || sArtist.includes(cleanArtist) || cleanArtist.includes(sArtist) || cleanArtist.split(',')[0].trim() === sArtist);
       });
     }
 
@@ -196,10 +197,10 @@ export async function POST(req: NextRequest) {
 
       // Try LRCLIB get first (extremely fast direct lookup)
       try {
-        const getUrl = `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`;
+        const getUrl = `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist.split(',')[0].trim())}&track_name=${encodeURIComponent(title.replace(/\s*\(.*?\)\s*/g, '').trim())}`;
         const getRes = await fetch(getUrl, {
           headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
-          signal: AbortSignal.timeout(2000)
+          signal: AbortSignal.timeout(4000)
         });
         if (getRes.ok) {
           const getData = await getRes.json();
@@ -211,16 +212,16 @@ export async function POST(req: NextRequest) {
 
       // Try LRCLIB search
       try {
-        const searchUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(title + " " + artist)}`;
+        const searchUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(title.replace(/\s*\(.*?\)\s*/g, '').trim() + " " + artist.split(',')[0].trim())}`;
         const searchRes = await fetch(searchUrl, {
           headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
-          signal: AbortSignal.timeout(2000)
+          signal: AbortSignal.timeout(5000)
         });
         if (searchRes.ok) {
           const searchData = await searchRes.json();
           if (searchData && searchData.length > 0) {
-            const match = searchData[0];
-            if (match.syncedLyrics || match.plainLyrics) {
+            const match = searchData.find((m: any) => m.syncedLyrics) || searchData.find((m: any) => m.plainLyrics) || searchData[0];
+            if (match && (match.syncedLyrics || match.plainLyrics)) {
               return match.syncedLyrics || match.plainLyrics;
             }
           }

@@ -315,11 +315,13 @@ export default function PlayingOverlay({
               <div className="playing-lyrics" style={{ padding: '100px 20px 180px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 {isLoading ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '300px', gap: '24px' }}>
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ y: [-4, 4, -4] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                      <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ y: [4, -4, 4] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                      <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ y: [-4, 4, -4] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                    </svg>
+                    <div style={{ width: '64px', overflow: 'hidden' }}>
+                      <motion.div style={{ display: 'flex' }} animate={{ x: [-64, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}>
+                        <svg width="128" height="32" viewBox="0 0 128 32" fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M0 16 C 10.66 0, 21.33 0, 32 16 C 42.66 32, 53.33 32, 64 16 C 74.66 0, 85.33 0, 96 16 C 106.66 32, 117.33 32, 128 16" />
+                        </svg>
+                      </motion.div>
+                    </div>
                     <motion.h1 
                       className="lyric-line active" 
                       style={{ fontSize: '28px', margin: 0, textAlign: 'center' }}
