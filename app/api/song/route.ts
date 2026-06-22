@@ -31,7 +31,7 @@ function isPreviewUrl(url: string | null | undefined): boolean {
          lower.includes('preview');
 }
 
-// Direct search and decryption using official JioSaavn API to avoid Render startup latency
+// Direct search and decryption using official JioSaavn API with strict timeouts
 async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
   try {
     const queryStr = `${artist} ${title}`;
@@ -40,13 +40,12 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
     
     const searchRes = await fetch(searchUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      signal: AbortSignal.timeout(5000)
+      signal: AbortSignal.timeout(2500)
     });
     
     if (searchRes.ok) {
       const searchData = await searchRes.json();
       if (searchData.results && searchData.results.length > 0) {
-        // Try to match best title + artist combination
         let song = searchData.results[0];
         const targetTitle = title.toLowerCase().trim();
         const targetArtist = artist.toLowerCase().trim();
@@ -68,7 +67,7 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
           const authUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedMediaUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
           const authRes = await fetch(authUrl, {
             headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-            signal: AbortSignal.timeout(5000)
+            signal: AbortSignal.timeout(2000)
           });
           
           if (authRes.ok) {
@@ -77,7 +76,6 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
               const proxiedUrl = `/api/audio-proxy?url=${encodeURIComponent(authData.auth_url)}`;
               let cover = null;
               if (song.image) {
-                // Upscale to 500x500 for HD cover art
                 cover = song.image.replace("150x150", "500x500").replace("50x50", "500x500");
               }
               return { audioUrl: proxiedUrl, coverUrl: cover };
@@ -92,13 +90,13 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
   return { audioUrl: null, coverUrl: null };
 }
 
-// Fallback search using Render API backend
+// Fallback search using Render API backend with strict timeouts
 async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: string, baseUrl?: string): Promise<string | null> {
   try {
     let songLink = permaUrl;
     if (!songLink) {
       const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(2500) });
       if (searchRes.ok) {
         const searchData = await searchRes.json();
         if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
@@ -124,7 +122,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
 
     if (songLink) {
       const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(2500) });
       if (playRes.ok) {
         const playData = await playRes.json();
         if (playData.status === "success" && playData.data && playData.data.stream_url) {
@@ -201,7 +199,7 @@ export async function POST(req: NextRequest) {
         const getUrl = `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`;
         const getRes = await fetch(getUrl, {
           headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
-          signal: AbortSignal.timeout(3000)
+          signal: AbortSignal.timeout(2000)
         });
         if (getRes.ok) {
           const getData = await getRes.json();
@@ -216,7 +214,7 @@ export async function POST(req: NextRequest) {
         const searchUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(title + " " + artist)}`;
         const searchRes = await fetch(searchUrl, {
           headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
-          signal: AbortSignal.timeout(3000)
+          signal: AbortSignal.timeout(2000)
         });
         if (searchRes.ok) {
           const searchData = await searchRes.json();
@@ -232,7 +230,7 @@ export async function POST(req: NextRequest) {
       // Try Lyrica API from render proxy as a fallback
       try {
         const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
-        const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(4000) });
+        const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(3000) });
         if (lyricaRes.ok) {
           const lyricaData = await lyricaRes.json();
           if (lyricaData && lyricaData.data) {
@@ -258,60 +256,63 @@ export async function POST(req: NextRequest) {
       let coverUrl = localCoverUrl;
       let artistPic = localArtistPic;
 
-      // Parallel lookup to Deezer for HD assets and optional preview
-      let deezerAudioPreview = null;
-      let deezerCover = null;
-      let deezerArtistPic = null;
+      const needsSearch = !audioUrl;
+      const needsDeezer = !coverUrl || !artistPic;
 
-      try {
-        const deezerRes = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(artist + " " + title)}`, { signal: AbortSignal.timeout(3000) });
-        if (deezerRes.ok) {
-          const deezerData = await deezerRes.json();
-          if (deezerData && deezerData.data && deezerData.data.length > 0) {
-            const trackMatch = deezerData.data[0];
-            deezerAudioPreview = trackMatch.preview;
-            deezerCover = trackMatch.album?.cover_xl || trackMatch.album?.cover_big;
-            deezerArtistPic = trackMatch.artist?.picture_big || trackMatch.artist?.picture_medium;
+      // 1. Run all external fetches in parallel to minimize response latency
+      const deezerPromise = (needsDeezer || !isIndian) ? (async () => {
+        try {
+          const res = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(artist + " " + title)}`, { signal: AbortSignal.timeout(2000) });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.data && data.data.length > 0) {
+              const track = data.data[0];
+              return {
+                preview: track.preview,
+                cover: track.album?.cover_xl || track.album?.cover_big,
+                artistPic: track.artist?.picture_big || track.artist?.picture_medium
+              };
+            }
           }
+        } catch (e) {
+          console.error("Parallel Deezer fetch failed/timed out:", e);
         }
-      } catch (err) {
-        console.error("Deezer fetch error:", err);
+        return null;
+      })() : Promise.resolve(null);
+
+      const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(title, artist) : Promise.resolve(null);
+      const proxyJioPromise = (needsSearch && !isIndian) ? Promise.resolve(null) : (needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null));
+
+      // Wait for all three requests in parallel
+      const [deezerRes, directJioRes, proxyJioRes] = await Promise.all([
+        deezerPromise,
+        directJioPromise,
+        proxyJioPromise
+      ]);
+
+      // 2. Merge retrieved HD assets
+      if (!coverUrl && deezerRes?.cover) coverUrl = deezerRes.cover;
+      if (!artistPic && deezerRes?.artistPic) artistPic = deezerRes.artistPic;
+
+      // 3. Resolve the audio stream URL based on priority
+      if (!audioUrl && directJioRes?.audioUrl) {
+        audioUrl = directJioRes.audioUrl;
+        if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
+      }
+      
+      if (!audioUrl && proxyJioRes) {
+        audioUrl = proxyJioRes;
+      }
+      
+      if (!audioUrl && deezerRes?.preview) {
+        audioUrl = deezerRes.preview;
       }
 
-      // Merge HD assets
-      if (!coverUrl) coverUrl = deezerCover;
-      if (!artistPic) artistPic = deezerArtistPic;
-
-      // Resolve audio stream (prioritizing full length streams)
+      // Final fallback to iTunes preview
       if (!audioUrl) {
-        // 1. Try direct JioSaavn search (Full-length high quality stream)
-        const directJio = await fetchJioSaavnAudioDirect(title, artist);
-        if (directJio.audioUrl) {
-          audioUrl = directJio.audioUrl;
-          if (!coverUrl) coverUrl = directJio.coverUrl;
-        }
-      }
-
-      if (!audioUrl) {
-        // 2. Try Render proxy JioSaavn search
-        const proxyJio = await fetchRenderProxyAudio(title, artist, permaUrl, baseUrl);
-        if (proxyJio) {
-          audioUrl = proxyJio;
-        }
-      }
-
-      if (!audioUrl) {
-        // 3. Fall back to Deezer preview if no full-length streams could be resolved
-        if (deezerAudioPreview) {
-          audioUrl = deezerAudioPreview;
-        }
-      }
-
-      if (!audioUrl) {
-        // 4. Fall back to iTunes preview as absolute last resort
         try {
           const encodedQuery = encodeURIComponent(`${artist} ${title}`);
-          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodedQuery}&media=music&limit=1`, { signal: AbortSignal.timeout(3000) });
+          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodedQuery}&media=music&limit=1`, { signal: AbortSignal.timeout(2000) });
           if (itunesRes.ok) {
             const itunesData = await itunesRes.json();
             if (itunesData.results && itunesData.results.length > 0) {

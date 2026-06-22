@@ -298,33 +298,7 @@ export default function PlayingOverlay({
                 </div>
               </div>
 
-              {/* Native player controls for overlay view */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '24px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(10px)',
-                padding: '16px 32px',
-                borderRadius: '50px',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
-                width: '100%',
-                maxWidth: '400px'
-              }}>
-                <button className="dash-player-btn" onClick={onToggleShuffle} style={{ color: isShuffle ? 'var(--accent)' : 'rgba(255,255,255,0.6)' }}><Shuffle size={18} /></button>
-                <button className="dash-player-btn" onClick={onPrev} style={{ color: 'rgba(255,255,255,0.8)' }}><SkipBack size={20} /></button>
-                <motion.button
-                  className="dash-player-main"
-                  whileTap={{ scale: 0.9 }}
-                  onClick={onTogglePlay}
-                  style={{ background: 'white', color: 'black', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  {playing ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" style={{ marginLeft: '3px' }} />}
-                </motion.button>
-                <button className="dash-player-btn" onClick={onNext} style={{ color: 'rgba(255,255,255,0.8)' }}><SkipForward size={20} /></button>
-                <button className="dash-player-btn" onClick={onToggleRepeat} style={{ color: isRepeat ? 'var(--accent)' : 'rgba(255,255,255,0.6)' }}><Repeat size={18} /></button>
-              </div>
+              {/* Left Column contains only Cover Art and Details. Duplicate player controls are removed since the bottom player is fully active and visible below. */}
             </div>
 
             {/* Right Column: Synced Lyrics Scrolling View */}

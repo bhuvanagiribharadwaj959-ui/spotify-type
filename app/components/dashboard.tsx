@@ -2372,20 +2372,55 @@ export default function Dashboard() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
       >
-        <div className="dash-player-now" style={{ cursor: 'pointer' }} onClick={() => setIsExpanded(true)}>
+        <div className="dash-player-now" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div
-            className="dash-player-cover"
-            style={{ backgroundImage: `url(${currentSong.img})`, backgroundSize: "cover", backgroundPosition: "center", width: 56, height: 56, borderRadius: 8 }}
-          />
-          <div>
-            <div className="dash-player-name">{currentSong.title}</div>
-            <div className="dash-player-artist">{currentSong.artist}</div>
-          </div>
-          {playing && (
-            <div className="eq" aria-hidden>
-              <span /><span /><span /><span />
+            style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }}
+            onClick={() => setIsExpanded(true)}
+          >
+            <div
+              className="dash-player-cover"
+              style={{ backgroundImage: `url(${currentSong.img})`, backgroundSize: "cover", backgroundPosition: "center", width: 56, height: 56, borderRadius: 8 }}
+            />
+            <div>
+              <div className="dash-player-name">{currentSong.title}</div>
+              <div className="dash-player-artist">{currentSong.artist}</div>
             </div>
-          )}
+            {playing && (
+              <div className="eq" aria-hidden>
+                <span /><span /><span /><span />
+              </div>
+            )}
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '8px' }}>
+            <motion.button
+              className="dash-player-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleLike();
+              }}
+              whileTap={{ scale: 0.8 }}
+              animate={currentIsLiked ? { scale: [1, 1.2, 1], color: "#e1306c" } : { color: "rgba(255,255,255,0.7)" }}
+              transition={{ duration: 0.3 }}
+              aria-label="like"
+              title={currentIsLiked ? "Unlike" : "Like"}
+            >
+              <Heart size={16} fill={currentIsLiked ? 'currentColor' : 'none'} />
+            </motion.button>
+            <motion.button
+              className="dash-player-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadTrack(e, currentSong);
+              }}
+              whileTap={{ scale: 0.8 }}
+              style={{ color: "rgba(255,255,255,0.7)" }}
+              aria-label="download"
+              title="Download Current Track"
+            >
+              <Download size={16} />
+            </motion.button>
+          </div>
         </div>
 
         <div className="dash-player-controls">
@@ -2402,29 +2437,6 @@ export default function Dashboard() {
             </motion.button>
             <button className="dash-player-btn" aria-label="next" onClick={handleNext}><SkipForward size={18} /></button>
             <button className="dash-player-btn" aria-label="repeat" onClick={() => setIsRepeat(r => !r)} style={{ color: isRepeat ? 'var(--accent)' : 'inherit' }}><Repeat size={16} /></button>
-            <button className="dash-player-btn" aria-label="ab-loop" onClick={handleToggleABLoop} style={{ color: isABLoop ? 'var(--accent)' : 'inherit', display: 'flex', alignItems: 'center', gap: '2px', fontSize: '12px', fontWeight: 600 }}>
-              -<Repeat size={14} />-
-            </button>
-            <motion.button
-              className="dash-player-btn"
-              onClick={() => toggleLike()}
-              whileTap={{ scale: 0.8 }}
-              animate={currentIsLiked ? { scale: [1, 1.2, 1], color: "#e1306c" } : { color: "rgba(255,255,255,0.7)" }}
-              transition={{ duration: 0.3 }}
-              aria-label="like"
-            >
-              <Heart size={16} fill={currentIsLiked ? 'currentColor' : 'none'} />
-            </motion.button>
-            <motion.button
-              className="dash-player-btn"
-              onClick={(e) => downloadTrack(e, currentSong)}
-              whileTap={{ scale: 0.8 }}
-              style={{ color: "rgba(255,255,255,0.7)" }}
-              aria-label="download"
-              title="Download Current Track"
-            >
-              <Download size={16} />
-            </motion.button>
           </div>
           <div className="dash-player-progress">
             <span>{formatTimeReal(audioRef.current?.currentTime || 0)}</span>
@@ -2447,6 +2459,15 @@ export default function Dashboard() {
         </div>
 
         <div className="dash-player-right">
+          <button
+            className="dash-player-btn"
+            aria-label="ab-loop"
+            onClick={handleToggleABLoop}
+            style={{ color: isABLoop ? 'var(--accent)' : 'inherit', fontSize: '11px', fontWeight: 'bold', padding: '2px 6px', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px' }}
+            title="A-B Loop"
+          >
+            A-B
+          </button>
           <button className="dash-player-btn" aria-label="volume" onClick={() => setVolume(v => v === 0 ? 1 : 0)}>
             {volume === 0 ? <VolumeX size={16} /> : volume < 0.5 ? <Volume1 size={16} /> : <Volume2 size={16} />}
           </button>
