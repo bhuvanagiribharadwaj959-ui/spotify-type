@@ -191,8 +191,8 @@ export async function POST(req: NextRequest) {
       localArtistPic = localSong.meta?.artist_cover_url || localSong.assets?.artist_cover_url || null;
     }
 
-    // Parallel processing for lyrics and audio resolution to keep reaction time low
-    const lyricsPromise = (async () => {
+    // Sequential processing for lyrics and audio resolution to keep proxy load low
+    const fetchLyrics = async () => {
       if (localLyrics) return localLyrics;
 
       // Try LRCLIB get first (extremely fast direct lookup)
@@ -250,9 +250,9 @@ export async function POST(req: NextRequest) {
       } catch (e) {}
 
       return 'No lyrics found';
-    })();
+    };
 
-    const audioPromise = (async () => {
+    const fetchAudio = async () => {
       let audioUrl = localAudioUrl;
       let coverUrl = localCoverUrl;
       let artistPic = localArtistPic;
@@ -324,12 +324,12 @@ export async function POST(req: NextRequest) {
       }
 
       return { audioUrl, coverUrl, artistPic };
-    })();
+    };
 
-    const lyricsResult = await lyricsPromise;
+    const lyricsResult = await fetchLyrics();
     // As requested: wait for a few milliseconds to avoid router/proxy problems
     await new Promise(resolve => setTimeout(resolve, 300));
-    const audioResult = await audioPromise;
+    const audioResult = await fetchAudio();
 
     return NextResponse.json({
       audioUrl: audioResult.audioUrl,
