@@ -99,6 +99,91 @@ function useReveal() {
   return [ref, `reveal${shown ? " in" : ""}`] as const;
 }
 
+const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (track: DashboardTrack) => void }) => {
+  const [currentIndex, setCurrentIndex] = useState(2);
+  const items = tracks.length >= 5 ? tracks.slice(0, 5) : tracks;
+  
+  if (items.length === 0) return null;
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '460px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#050505', borderRadius: '16px', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      {/* Top sonic symbol */}
+      <div style={{ position: 'absolute', top: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ y: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
+            <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ y: [2, -2, 2] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
+         </svg>
+      </div>
+
+      <div style={{ position: 'relative', width: '100%', height: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1000, marginTop: '20px' }}>
+        {items.map((track, i) => {
+          let relativeIndex = i - currentIndex;
+          if (items.length === 5) {
+             if (relativeIndex > 2) relativeIndex -= 5;
+             if (relativeIndex < -2) relativeIndex += 5;
+          }
+          const isCenter = relativeIndex === 0;
+          const zIndex = 10 - Math.abs(relativeIndex);
+          const xOffset = relativeIndex * 130; 
+          const rotateY = relativeIndex * -25;
+          const scale = isCenter ? 1.1 : 0.85 - Math.abs(relativeIndex) * 0.1;
+          const opacity = Math.abs(relativeIndex) > 2 ? 0 : 1;
+
+          return (
+            <motion.div
+              key={track.id}
+              onClick={() => {
+                if (isCenter) onPlay(track);
+                else setCurrentIndex(i);
+              }}
+              animate={{
+                x: xOffset,
+                rotateY: rotateY,
+                scale: scale,
+                opacity: opacity,
+                zIndex: zIndex,
+              }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              style={{
+                position: 'absolute',
+                width: '180px',
+                height: '180px',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                boxShadow: isCenter ? '0 20px 40px rgba(0,0,0,0.8)' : '0 10px 20px rgba(0,0,0,0.5)',
+                border: isCenter ? '2px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.05)',
+                transformOrigin: 'center center'
+              }}
+            >
+              <img src={track.img} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {isCenter && (
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%)', display: 'flex', alignItems: 'flex-end', padding: '16px', justifyContent: 'center' }}>
+                  <div style={{ color: '#fff', fontSize: '15px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center' }}>{track.title}</div>
+                </div>
+              )}
+              {!isCenter && <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)' }} />}
+            </motion.div>
+          );
+        })}
+      </div>
+      
+      <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 10 }}>
+        <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 400, margin: '0 0 16px 0', letterSpacing: '0.5px' }}>Music That Stands Out</h2>
+        <button 
+          onClick={() => onPlay(items[currentIndex])}
+          style={{ background: '#fff', color: '#000', padding: '10px 28px', borderRadius: '30px', fontSize: '14px', fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'transform 0.2s' }}
+          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          Start Listening
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3v18l15-9L5 3z"/></svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export default function Dashboard() {
   const cleanImgUrl = (url?: string) => {
     if (!url) return "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
@@ -1320,84 +1405,16 @@ export default function Dashboard() {
             <div className="dash-content" style={{ paddingTop: 0 }}>
               {subActive === "Home" && (
                 <>
-                  {/* Creative Animated Hero Banner */}
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '40px',
-                    marginBottom: '40px',
-                    borderRadius: '16px',
-                    background: 'linear-gradient(135deg, rgba(29,185,84,0.1) 0%, rgba(0,0,0,0) 100%)',
-                    border: '1px solid rgba(255,255,255,0.05)',
-                    position: 'relative',
-                    overflow: 'hidden'
-                  }}>
-                    <motion.div 
-                      style={{ position: 'absolute', top: -50, right: -50, width: 250, height: 250, background: 'var(--accent)', borderRadius: '50%', filter: 'blur(100px)', opacity: 0.2 }}
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-                      transition={{ repeat: Infinity, duration: 4 }}
-                    />
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ y: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                          <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ y: [3, -3, 3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                          <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ y: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                        </svg>
-                        <h1 style={{ fontSize: '48px', fontWeight: 900, margin: 0, letterSpacing: '-2px', color: '#fff' }}>
-                          SONIC
-                        </h1>
-                      </div>
-                      <div style={{ fontSize: '18px', color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>
-                        Your personalized music experience
-                      </div>
-                    </div>
-
-                    <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '14px 28px', borderRadius: '30px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }} />
-                      <span style={{ fontSize: '15px', fontWeight: 600, color: '#fff' }}>Welcome back, {profileName}</span>
-                    </div>
-                  </div>
-
+                  {/* Creative Animated Hero Carousel */}
                   {mounted && randomHeroSlides.length > 0 && (
-                    <div className="dash-hero-grid">
-                      {randomHeroSlides.slice(0, 6).map((track, i) => (
-                        <div
-                          key={`hero-${track.id}-${i}`}
-                          className="dash-hero-card"
-                          onClick={() => {
-                            setCurrentSong(track);
-                            setPlaying(true);
-                            setIsExpanded(true);
-                          }}
-                        >
-                          <img src={track.img} alt={track.title} className="dash-hero-img" />
-                          <div className="dash-hero-title">{track.title}</div>
-                          <button
-                            className="dash-hero-play"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (currentSong.id === track.id) {
-                                setPlaying((prev) => !prev);
-                                setIsExpanded(true);
-                              } else {
-                                setCurrentSong(track);
-                                setPlaying(true);
-                                setIsExpanded(true);
-                              }
-                            }}
-                          >
-                            {currentSong.id === track.id && playing ? (
-                              <Pause size={24} fill="currentColor" />
-                            ) : (
-                              <Play size={24} fill="currentColor" style={{ marginLeft: 4 }} />
-                            )}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                    <HeroCarousel 
+                      tracks={randomHeroSlides} 
+                      onPlay={(track) => {
+                        setCurrentSong(track);
+                        setPlaying(true);
+                        setIsExpanded(true);
+                      }} 
+                    />
                   )}
 
                   {/* Lucky Shuffles - Discover Random Songs Section */}
