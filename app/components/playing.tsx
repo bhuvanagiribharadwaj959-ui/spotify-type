@@ -234,6 +234,13 @@ export default function PlayingOverlay({
             pointerEvents: 'none'
           }} />
 
+          {/* Dynamic Floating Aurora Blobs for Premium Glassmorphism Look */}
+          <div className="playing-aurora-bg">
+            <div className="aurora-blob blob-1" style={{ backgroundColor: 'var(--accent, #1db954)' }} />
+            <div className="aurora-blob blob-2" style={{ backgroundColor: '#2563eb' }} />
+            <div className="aurora-blob blob-3" style={{ backgroundColor: '#7c3aed' }} />
+          </div>
+
           {/* Top Navigation Bar */}
           <div className="playing-topbar" style={{ zIndex: 1 }}>
             <button className="playing-icon-btn" onClick={onClose} aria-label="Minimize">
@@ -319,7 +326,7 @@ export default function PlayingOverlay({
                 left: 0,
                 right: 0,
                 height: '80px',
-                background: 'linear-gradient(to bottom, #000000 0%, transparent 100%)',
+                background: 'linear-gradient(to bottom, #050505 0%, transparent 100%)',
                 pointerEvents: 'none',
                 zIndex: 2
               }} />
@@ -330,7 +337,7 @@ export default function PlayingOverlay({
                 left: 0,
                 right: 0,
                 height: '120px',
-                background: 'linear-gradient(to top, #000000 0%, transparent 100%)',
+                background: 'linear-gradient(to top, #050505 0%, transparent 100%)',
                 pointerEvents: 'none',
                 zIndex: 2
               }} />
