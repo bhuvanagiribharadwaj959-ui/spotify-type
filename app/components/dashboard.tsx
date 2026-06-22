@@ -66,6 +66,7 @@ type DashboardTrack = {
   audioUrl?: string;
   lyrics?: string;
   permaUrl?: string;
+  artistPic?: string;
 };
 
 const dashboardTracks: DashboardTrack[] = [];
@@ -148,6 +149,13 @@ export default function Dashboard() {
   const [showPopularAll, setShowPopularAll] = useState(false);
   const [showUnreleased, setShowUnreleased] = useState(false);
   const [settingsState, setSettingsState] = useState({hiRes: true, privacy: true, scrobbling: false, notifications: true, autoplay: true, crossfade: false});
+
+  const matchArtist = (trackArtist: string, targetArtist: string | null): boolean => {
+    if (!targetArtist) return false;
+    const a = trackArtist.toLowerCase();
+    const b = targetArtist.toLowerCase();
+    return a.includes(b) || b.includes(a);
+  };
 
   const [profileName, setProfileName] = useState("");
   const [customAvatar, setCustomAvatar] = useState<string | null>(null);
@@ -648,6 +656,17 @@ export default function Dashboard() {
           setAlternatives(data.alternatives);
         } else {
           setAlternatives([]);
+        }
+
+        if (data.coverUrl || data.artistPic) {
+          setCurrentSong(prev => {
+            if (!prev || prev.id !== currentSong.id) return prev;
+            return {
+              ...prev,
+              img: data.coverUrl || prev.img,
+              artistPic: data.artistPic || prev.artistPic
+            };
+          });
         }
 
         // Only use the fetched audio URL if we didn't already play the pre-calculated one
@@ -2088,7 +2107,7 @@ export default function Dashboard() {
                 flexDirection: "column",
                 justifyContent: "flex-end",
                 padding: "24px 32px",
-                backgroundImage: `linear-gradient(transparent 0%, rgba(0,0,0,0.8) 100%), url(${allTracks.find(t => t.artist === popupArtist)?.img || ''})`,
+                backgroundImage: `linear-gradient(transparent 0%, rgba(0,0,0,0.8) 100%), url(${allTracks.find(t => matchArtist(t.artist, popupArtist))?.img || ''})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center 20%",
               }}
@@ -2124,7 +2143,7 @@ export default function Dashboard() {
             <div style={{ padding: "24px 32px", display: "flex", alignItems: "center", gap: 32, background: "linear-gradient(rgba(0,0,0,0.6) 0%, var(--bg) 100%)" }}>
               <button 
                 onClick={() => {
-                  const firstSong = allTracks.find(t => t.artist === popupArtist);
+                  const firstSong = allTracks.find(t => matchArtist(t.artist, popupArtist));
                   if (firstSong) {
                     setCurrentSong(firstSong);
                     setPlaying(true);
@@ -2150,7 +2169,7 @@ export default function Dashboard() {
             <div style={{ padding: "0 32px" }}>
               <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Popular</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {allTracks.filter(t => t.artist === popupArtist).slice(0, showPopularAll ? 20 : 5).map((song, i) => (
+                {allTracks.filter(t => matchArtist(t.artist, popupArtist)).slice(0, showPopularAll ? 20 : 5).map((song, i) => (
                   <div 
                     key={song.id} 
                     onClick={() => {
@@ -2198,7 +2217,7 @@ export default function Dashboard() {
             <div style={{ padding: "48px 32px 0 32px" }}>
               <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Albums</h3>
               <div className="dash-monochrome-grid">
-                {allTracks.filter(t => t.artist === popupArtist).map((song, i) => (
+                {allTracks.filter(t => matchArtist(t.artist, popupArtist)).map((song, i) => (
                   <div 
                     key={`artist-album-${song.id}-${i}`} 
                     className="dash-album-card" 

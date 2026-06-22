@@ -23,6 +23,7 @@ type DashboardTrack = {
   title: string;
   artist: string;
   language?: string;
+  artistPic?: string;
 };
 
 type PlayingOverlayProps = {
@@ -53,6 +54,7 @@ type PlayingOverlayProps = {
   onDownload?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   alternatives?: any[];
   onAlternativeSelect?: (url: string) => void;
+  onSelectArtist?: (artistName: string) => void;
 };
 
 export default function PlayingOverlay({
@@ -82,9 +84,13 @@ export default function PlayingOverlay({
   onProgressClick,
   onDownload,
   alternatives = [],
-  onAlternativeSelect
+  onAlternativeSelect,
+  onSelectArtist
 }: PlayingOverlayProps) {
-  
+
+  const activeLineIndexRef = useRef<number>(-1);
+  const lyricsContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isExpanded) {
@@ -103,6 +109,7 @@ export default function PlayingOverlay({
     return `${m}:${s}`;
   };
 
+  // Robust LRC Parsing Engine
   const parsedLyrics = useMemo(() => {
     if (!lyrics) return [];
     const lines = lyrics.split('\n');
@@ -125,63 +132,84 @@ export default function PlayingOverlay({
           const secs = parseFloat(match[2]);
           const time = mins * 60 + secs;
           const text = line.replace(timeRegex, '').trim();
-          if (text) {
-            parsed.push({ time, text });
-          }
+          parsed.push({ time, text });
         } else if (line.trim()) {
           parsed.push({ time: null, text: line.trim() });
-        } else {
-          parsed.push({ time: null, text: '' });
         }
       }
     } else {
-      const validLines = lines.filter(l => l.trim());
-      const total = validLines.length;
-      let currentIndex = 0;
-      // Estimate start and end times
-      const startOffset = duration * 0.1;
-      const playableDuration = duration * 0.8;
-
       for (const line of lines) {
-        const text = line.trim();
-        if (text) {
-          const time = total > 1 ? startOffset + (playableDuration * (currentIndex / (total - 1))) : startOffset;
-          parsed.push({ time, text });
-          currentIndex++;
-        } else {
-          parsed.push({ time: null, text: '' });
-        }
+        parsed.push({ time: null, text: line.trim() });
       }
     }
     return parsed;
-  }, [lyrics, duration]);
+  }, [lyrics]);
 
-  const activeLineIndex = useMemo(() => {
-    if (!parsedLyrics.length) return -1;
-    let activeIdx = -1;
-    for (let i = 0; i < parsedLyrics.length; i++) {
-      if (parsedLyrics[i].time !== null) {
-        if (currentTime >= parsedLyrics[i].time!) {
-          activeIdx = i;
-        } else {
-          break;
+  // Performance-First Direct DOM Synchronization loop
+  useEffect(() => {
+    const audio = document.querySelector('audio');
+    if (!audio || !isExpanded) return;
+
+    // Reset active index tracking on song or lyrics change
+    activeLineIndexRef.current = -1;
+
+    const updateLyricsSync = () => {
+      if (!parsedLyrics.length) return;
+      const currTime = audio.currentTime;
+      
+      let activeIdx = -1;
+      for (let i = 0; i < parsedLyrics.length; i++) {
+        if (parsedLyrics[i].time !== null) {
+          if (currTime >= parsedLyrics[i].time!) {
+            activeIdx = i;
+          } else {
+            break;
+          }
         }
       }
-    }
-    return activeIdx;
-  }, [currentTime, parsedLyrics]);
 
-  const lyricsContainerRef = useRef<HTMLDivElement>(null);
-  const activeLineRef = useRef<HTMLHeadingElement>(null);
+      if (activeIdx !== activeLineIndexRef.current) {
+        // Remove active class from old lyric line
+        if (activeLineIndexRef.current !== -1) {
+          const oldEl = document.getElementById(`lyric-line-${activeLineIndexRef.current}`);
+          if (oldEl) oldEl.classList.remove('active');
+        }
+        
+        // Add active class to new lyric line
+        if (activeIdx !== -1) {
+          const newEl = document.getElementById(`lyric-line-${activeIdx}`);
+          if (newEl) {
+            newEl.classList.add('active');
+            newEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+        activeLineIndexRef.current = activeIdx;
+      }
 
-  useEffect(() => {
-    if (activeLineRef.current && lyricsContainerRef.current) {
-      activeLineRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  }, [activeLineIndex]);
+      // Also update progress bar inside PlayingOverlay directly via DOM!
+      const dur = audio.duration || 0;
+      const percent = dur ? (currTime / dur) * 100 : 0;
+      const fillEl = document.getElementById('playing-progress-fill');
+      if (fillEl) {
+        fillEl.style.width = `${percent}%`;
+      }
+      const timeTextEl = document.getElementById('playing-current-time');
+      if (timeTextEl) {
+        timeTextEl.innerText = formatTimeReal(currTime);
+      }
+    };
+
+    audio.addEventListener('timeupdate', updateLyricsSync);
+    // Initial sync call
+    updateLyricsSync();
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateLyricsSync);
+    };
+  }, [parsedLyrics, isExpanded]);
 
   return (
     <AnimatePresence>
@@ -193,23 +221,147 @@ export default function PlayingOverlay({
           exit={{ y: "100%", opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          {/* Top Navigation */}
-          <div className="playing-topbar">
+          {/* Ambient blurred reflection background */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url(${track.img})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(80px) opacity(0.35)',
+            transform: 'scale(1.2)',
+            zIndex: 0,
+            pointerEvents: 'none'
+          }} />
+
+          {/* Top Navigation Bar */}
+          <div className="playing-topbar" style={{ zIndex: 1 }}>
             <button className="playing-icon-btn" onClick={onClose} aria-label="Minimize">
               <ChevronDown size={32} />
             </button>
             <div className="playing-topbar-title">
-              {track.artist} - {track.title}
+              <span 
+                style={{ cursor: 'pointer', textDecoration: 'underline' }} 
+                onClick={() => onSelectArtist?.(track.artist)}
+              >
+                {track.artist}
+              </span>
+              {" - "}{track.title}
             </div>
             <button className="playing-icon-btn">
               <MoreHorizontal size={24} />
             </button>
           </div>
 
-          <div className="playing-content">
-            {/* Left Side: Lyrics */}
-            <div className="playing-lyrics-container" ref={lyricsContainerRef}>
-              <div className="playing-lyrics">
+          {/* Split Screen Container */}
+          <div className="playing-content" style={{ zIndex: 1, display: 'flex', flex: 1, overflow: 'hidden' }}>
+            
+            {/* Left Column: Cover Art, Details & Controls */}
+            <div className="playing-left-column" style={{
+              flex: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '0 40px',
+              gap: '32px'
+            }}>
+              {/* Cover Art Box */}
+              <div className="playing-cover-wrapper" style={{ 
+                width: '100%', 
+                maxWidth: '400px', 
+                aspectRatio: '1/1', 
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.7)'
+              }}>
+                <img src={track.img} alt={track.title} className="playing-cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+
+              {/* Title & Artist details */}
+              <div style={{ width: '100%', maxWidth: '400px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#ffffff', margin: 0, letterSpacing: '-1px', lineHeight: 1.2 }}>{track.title}</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  {track.artistPic ? (
+                    <img src={track.artistPic} alt="" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }} />
+                  ) : (
+                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Volume2 size={16} color="white" />
+                    </div>
+                  )}
+                  <span 
+                    style={{ fontSize: '1.25rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
+                    onClick={() => onSelectArtist?.(track.artist)}
+                  >
+                    {track.artist}
+                  </span>
+                </div>
+              </div>
+
+              {/* Native player controls for overlay view */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '24px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(10px)',
+                padding: '16px 32px',
+                borderRadius: '50px',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                width: '100%',
+                maxWidth: '400px'
+              }}>
+                <button className="dash-player-btn" onClick={onToggleShuffle} style={{ color: isShuffle ? 'var(--accent)' : 'rgba(255,255,255,0.6)' }}><Shuffle size={18} /></button>
+                <button className="dash-player-btn" onClick={onPrev} style={{ color: 'rgba(255,255,255,0.8)' }}><SkipBack size={20} /></button>
+                <motion.button
+                  className="dash-player-main"
+                  whileTap={{ scale: 0.9 }}
+                  onClick={onTogglePlay}
+                  style={{ background: 'white', color: 'black', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {playing ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" style={{ marginLeft: '3px' }} />}
+                </motion.button>
+                <button className="dash-player-btn" onClick={onNext} style={{ color: 'rgba(255,255,255,0.8)' }}><SkipForward size={20} /></button>
+                <button className="dash-player-btn" onClick={onToggleRepeat} style={{ color: isRepeat ? 'var(--accent)' : 'rgba(255,255,255,0.6)' }}><Repeat size={18} /></button>
+              </div>
+            </div>
+
+            {/* Right Column: Synced Lyrics Scrolling View */}
+            <div className="playing-lyrics-container" ref={lyricsContainerRef} style={{
+              flex: 6,
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              overflowY: 'auto',
+              height: '100%',
+              paddingRight: '24px'
+            }}>
+              
+              {/* Fade Masks */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '80px',
+                background: 'linear-gradient(to bottom, #000000 0%, transparent 100%)',
+                pointerEvents: 'none',
+                zIndex: 2
+              }} />
+              
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '120px',
+                background: 'linear-gradient(to top, #000000 0%, transparent 100%)',
+                pointerEvents: 'none',
+                zIndex: 2
+              }} />
+
+              <div className="playing-lyrics" style={{ padding: '80px 20px 180px 20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 {isLoading ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '300px', gap: '24px' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', height: '60px' }}>
@@ -232,12 +384,11 @@ export default function PlayingOverlay({
                   </div>
                 ) : parsedLyrics.length > 0 ? (
                   parsedLyrics.map((line, i) => {
-                    const isActive = i === activeLineIndex;
                     return line.text ? (
                       <h1
                         key={i}
-                        ref={isActive ? activeLineRef : null}
-                        className={`lyric-line ${isActive ? "active" : ""}`}
+                        id={`lyric-line-${i}`}
+                        className="lyric-line"
                         onClick={() => {
                           if (line.time !== null && onSeek) {
                             onSeek(line.time);
@@ -255,86 +406,6 @@ export default function PlayingOverlay({
                   <h1 className="lyric-line">No lyrics found</h1>
                 )}
               </div>
-            </div>
-
-            {/* Right Side: Info & Cover */}
-            <div className="playing-info-container" style={{ justifyContent: 'center', flexDirection: 'column', gap: '2rem' }}>
-              <div className="playing-cover-wrapper" style={{ width: '100%', maxWidth: '400px', height: 'auto', aspectRatio: '1/1', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
-                <img src={track.img} alt={track.title} className="playing-cover" />
-              </div>
-
-
-            </div>
-          </div>
-
-          {/* Player Bottom Bar */}
-          <div className="playing-player">
-            <div className="dash-player-left" style={{ cursor: 'pointer' }} onClick={onClose}>
-              <img src={track.img} alt="" className="dash-player-img" />
-              <div className="dash-player-info">
-                <div className="dash-player-title">{track.title}</div>
-                <div className="dash-player-artist">{track.artist}</div>
-              </div>
-            </div>
-
-            <div className="dash-player-controls">
-              <div className="dash-player-buttons">
-                <button className="dash-player-btn" onClick={onToggleShuffle} style={{ color: isShuffle ? 'var(--accent)' : 'inherit' }}><Shuffle size={16} /></button>
-                <button className="dash-player-btn" onClick={onPrev}><SkipBack size={18} /></button>
-                <motion.button
-                  className="dash-player-main"
-                  whileTap={{ scale: 0.9 }}
-                  onClick={onTogglePlay}
-                >
-                  {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
-                </motion.button>
-                <button className="dash-player-btn" onClick={onNext}><SkipForward size={18} /></button>
-                <button className="dash-player-btn" onClick={onToggleRepeat} style={{ color: isRepeat ? 'var(--accent)' : 'inherit' }}><Repeat size={16} /></button>
-                <button className="dash-player-btn" aria-label="ab-loop" onClick={onToggleABLoop} style={{ color: isABLoop ? 'var(--accent)' : 'inherit', display: 'flex', alignItems: 'center', gap: '2px', fontSize: '12px', fontWeight: 600 }}>
-                  -<Repeat size={14} />-
-                </button>
-                <motion.button
-                  className="dash-player-btn"
-                  onClick={onToggleLike}
-                  whileTap={{ scale: 0.8 }}
-                  animate={isLiked ? { scale: [1, 1.2, 1], color: "#e1306c" } : { color: "rgba(255,255,255,0.7)" }}
-                  transition={{ duration: 0.3 }}
-                  aria-label="like"
-                >
-                  <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} />
-                </motion.button>
-                <motion.button
-                  className="dash-player-btn"
-                  onClick={onDownload}
-                  whileTap={{ scale: 0.8 }}
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                  aria-label="download"
-                  title="Download Current Track"
-                >
-                  <Download size={16} />
-                </motion.button>
-              </div>
-              <div className="dash-player-progress">
-                <span>{formatTimeReal(currentTime)}</span>
-                <div className="dash-player-bar" style={{ cursor: 'pointer', position: 'relative' }} onClick={onProgressClick}>
-                  <motion.div
-                    className="dash-player-fill"
-                    style={{ width: `${progress}%` }}
-                    layout
-                  />
-                  {isABLoop && abLoopStart !== null && (
-                    <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${(abLoopStart / duration) * 100}%`, width: 2, background: 'var(--accent)' }} />
-                  )}
-                  {isABLoop && abLoopEnd !== null && (
-                    <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${(abLoopEnd / duration) * 100}%`, width: 2, background: 'var(--accent)' }} />
-                  )}
-                </div>
-                <span>{formatTimeReal(duration)}</span>
-              </div>
-            </div>
-
-            <div className="dash-player-right">
-              <button className="dash-player-btn"><Volume2 size={16} /></button>
             </div>
           </div>
         </motion.div>
