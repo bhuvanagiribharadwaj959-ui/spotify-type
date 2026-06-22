@@ -96,6 +96,15 @@ function useReveal() {
 }
 
 export default function Dashboard() {
+  const cleanImgUrl = (url?: string) => {
+    if (!url) return "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
+    let clean = url;
+    clean = clean.replace(/\/\d+x\d+bb\.jpg$/, '/600x600bb.jpg');
+    clean = clean.replace(/\/\d+x\d+\.jpg$/, '/600x600.jpg');
+    clean = clean.replace("150x150", "500x500").replace("50x50", "500x500");
+    return clean;
+  };
+
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoaded, setAuthLoaded] = useState(false);
@@ -248,7 +257,7 @@ export default function Dashboard() {
             let trendingList: any[] = [];
             
             try {
-              const res = await fetch(`${baseUrl}/trending/?country=in&limit=100`);
+              const res = await fetch(`${baseUrl}/trending/?country=us&limit=100`);
               if (res.ok) {
                 const data = await res.json();
                 if (data.data && data.data.trending) {
@@ -258,7 +267,7 @@ export default function Dashboard() {
             } catch (err) {
               if (isDev) {
                 try {
-                  const res = await fetch(`https://test-0k.onrender.com/trending/?country=in&limit=100`);
+                  const res = await fetch(`https://test-0k.onrender.com/trending/?country=us&limit=100`);
                   if (res.ok) {
                     const data = await res.json();
                     if (data.data && data.data.trending) {
@@ -269,10 +278,7 @@ export default function Dashboard() {
               }
             }
 
-            const cleanImgUrl = (url?: string) => {
-              if (!url) return "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
-              return url.replace("150x150", "500x500").replace("50x50", "500x500");
-            };
+            // using outer cleanImgUrl
 
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
@@ -387,8 +393,25 @@ export default function Dashboard() {
 
   const languageFilteredSongs = useMemo(() => {
     if (!cat) return allTracks;
-    const filtered = allTracks.filter(s => s.language?.toLowerCase() === cat.toLowerCase());
-    return filtered.length > 0 ? filtered : allTracks;
+    const catLower = cat.toLowerCase();
+    
+    // Check if the cat is a language
+    const languages = ["english", "hindi", "punjabi", "tamil", "telugu", "marathi", "kannada", "bhojpuri", "gujarati", "bengali", "urdu", "spanish", "korean"];
+    if (languages.includes(catLower)) {
+      const filtered = allTracks.filter(s => s.language?.toLowerCase() === catLower);
+      return filtered.length > 0 ? filtered : allTracks;
+    }
+    
+    // If not a language, filter by genre!
+    const filteredByGenre = allTracks.filter(s => {
+      if (!s.genres || s.genres.length === 0) return false;
+      const filterParts = catLower.split(/[\s/&,-]+/).filter(Boolean);
+      return s.genres.some(g => {
+        const gLower = g.toLowerCase();
+        return filterParts.some(part => gLower.includes(part));
+      });
+    });
+    return filteredByGenre.length > 0 ? filteredByGenre : allTracks;
   }, [cat, allTracks]);
 
   useEffect(() => {
@@ -409,7 +432,7 @@ export default function Dashboard() {
                 id: r.id || Math.random().toString(36).substring(7),
                 title: r.title || "Unknown Title",
                 artist: r.artist || "Unknown Artist",
-                img: r.thumbnail ? r.thumbnail.replace("150x150", "500x500").replace("50x50", "500x500") : "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+                img: cleanImgUrl(r.thumbnail),
                 language: r.language || "english"
               };
             });
@@ -864,7 +887,7 @@ export default function Dashboard() {
               id: r.id || Math.random().toString(36).substring(7),
               title: r.title || "Unknown",
               artist: r.artist || "Unknown",
-              img: r.thumbnail ? r.thumbnail.replace("150x150", "500x500").replace("50x50", "500x500") : "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+              img: cleanImgUrl(r.thumbnail),
               language: r.language || "english"
             })));
           }
@@ -899,10 +922,10 @@ export default function Dashboard() {
       <aside className="dash-sidebar">
         <div className="dash-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ width: 32, height: 32, background: 'white', borderRadius: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ width: 16, height: 16, background: 'black', borderRadius: 2 }} />
+            <Waves size={20} color="black" />
           </div>
           <div className="dash-logo-text" style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px' }}>
-            Monochrome
+            SONIC
           </div>
         </div>
 
@@ -1277,9 +1300,7 @@ export default function Dashboard() {
                     <div className="dash-monochrome-grid">
                       {languageFilteredSongs.slice(0, 6).map((song, i) => (
                         <div key={`trending-album-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                          <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                            <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                          </div>
+                          <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                           <div className="dash-album-title">{song.title}</div>
                           <div className="dash-album-meta">
                             <span 
@@ -1310,9 +1331,7 @@ export default function Dashboard() {
                           onClick={() => { setCurrentSong(song); setPlaying(true); }}
                         >
                           <div className="dash-track-left">
-                            <div style={{ width: 48, height: 48, overflow: 'hidden', borderRadius: 4, marginRight: 16, flexShrink: 0 }}>
-                              <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                            </div>
+                            <img src={song.img} alt={song.title} style={{ width: 48, height: 48, borderRadius: 4, marginRight: 16, flexShrink: 0, objectFit: 'cover' }} />
                             <div className="dash-track-details">
                               <div className="dash-track-title-row">
                                 <span className="dash-track-title">{song.title}</span>
@@ -1345,9 +1364,7 @@ export default function Dashboard() {
                     <div className="dash-monochrome-grid">
                       {languageFilteredSongs.slice(12, 18).map((song, i) => (
                         <div key={`new-album-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                          <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                            <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                          </div>
+                          <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                           <div className="dash-album-title">{song.title}</div>
                           <div className="dash-album-meta">
                             <span 
@@ -1375,9 +1392,7 @@ export default function Dashboard() {
                   <div className="dash-monochrome-grid">
                     {languageFilteredSongs.slice(18, 30).map((song, i) => (
                       <div key={`ep-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                        <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                          <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                        </div>
+                        <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                         <div className="dash-album-title">{song.title}</div>
                         <div className="dash-album-meta">
                           <span 
@@ -1404,9 +1419,7 @@ export default function Dashboard() {
                   <div className="dash-monochrome-grid">
                     {languageFilteredSongs.slice(30, 42).map((song, i) => (
                       <div key={`aoty-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
-                        <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                          <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                        </div>
+                        <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                         <div className="dash-album-title">{song.title}</div>
                         <div className="dash-album-meta">
                           <span 
@@ -1676,9 +1689,9 @@ export default function Dashboard() {
         {/* ===== Donate Page ===== */}
         {active === "Donate" && !popupGenre && !popupArtist && !popupAlbum && (
           <div style={{ padding: "0 32px 40px" }}>
-            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>Support Monochrome</h2>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>Support SONIC</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: 16, lineHeight: 1.6, maxWidth: 600, marginBottom: 32 }}>
-              If Monochrome has been useful to you and you&apos;re able to, consider making a donation. It helps pay for the server and domain, and you get to support us :)
+              If SONIC has been useful to you and you&apos;re able to, consider making a donation. It helps pay for the server and domain, and you get to support us :)
             </p>
             <a href="https://ko-fi.com/monochrometf" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--accent)', color: '#000', padding: '12px 24px', borderRadius: 32, fontWeight: 700, fontSize: 16, textDecoration: 'none', marginBottom: 16 }}>
               <Gift size={20} /> Donate on Ko-fi
@@ -1706,7 +1719,7 @@ export default function Dashboard() {
                 {languageFilteredSongs.slice(50, 62).map((song, i) => (
                   <div key={`unreleased-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)} style={{ opacity: 0.7 }}>
                     <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)', position: 'relative' }}>
-                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.7)' }} />
+                      <img src={song.img} alt={song.title} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
                       <span style={{ position: 'absolute', top: 8, right: 8, background: '#e74c3c', color: 'white', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>UNRELEASED</span>
                     </div>
                     <div className="dash-album-title">{song.title}</div>
@@ -1721,9 +1734,9 @@ export default function Dashboard() {
         {/* ===== About Page ===== */}
         {active === "About" && !popupGenre && !popupArtist && !popupAlbum && (
           <div style={{ padding: "0 32px 40px", maxWidth: 700 }}>
-            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>About Monochrome</h2>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>About SONIC</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: 16, lineHeight: 1.8, marginBottom: 24 }}>
-              Monochrome is a lightweight, privacy-focused music streaming client designed for high-fidelity audio playback. Built with modern web technologies, it provides a clean, distraction-free listening experience.
+              SONIC is a lightweight, privacy-focused music streaming client designed for high-fidelity audio playback. Built with modern web technologies, it provides a clean, distraction-free listening experience.
             </p>
             <div style={{ background: '#181818', borderRadius: 8, padding: 24, marginBottom: 24 }}>
               <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8 }}>Version</div>

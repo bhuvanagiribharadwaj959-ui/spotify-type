@@ -241,7 +241,7 @@ body, html {
   align-items: center;
   gap: 12px;
   padding: 0 16px;
-  height: 48px;
+  height: 40px;
   background: #242424;
   border-radius: 500px;
   border: 2px solid transparent;
@@ -530,6 +530,7 @@ body, html {
   transition: background 0.3s ease;
   cursor: pointer;
   position: relative;
+  min-width: 0;
 }
 
 .dash-song-card:hover {
@@ -854,16 +855,16 @@ input[type=range]::-webkit-slider-thumb {
 
 /* Responsive Grid */
 @media (max-width: 1400px) {
-  .dash-songs { grid-template-columns: repeat(5, 1fr); }
+  .dash-songs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
 @media (max-width: 1200px) {
-  .dash-songs { grid-template-columns: repeat(4, 1fr); }
-  .dash-hero-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-songs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .dash-hero-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 900px) {
-  .dash-songs { grid-template-columns: repeat(3, 1fr); }
+  .dash-songs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .dash-player { grid-template-columns: 1fr; gap: 16px; height: auto; padding: 16px; }
   .dash-player-right { display: none; }
 }
@@ -952,7 +953,7 @@ input[type=range]::-webkit-slider-thumb {
 /* 6-Column Grid */
 .dash-monochrome-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 20px;
   margin-bottom: 32px;
 }
@@ -962,6 +963,7 @@ input[type=range]::-webkit-slider-thumb {
   flex-direction: column;
   cursor: pointer;
   transition: transform 0.2s ease;
+  min-width: 0;
 }
 
 .dash-album-card:hover {
@@ -1121,13 +1123,13 @@ input[type=range]::-webkit-slider-thumb {
 
 /* Responsive adjustments for 6-columns grid */
 @media (max-width: 1400px) {
-  .dash-monochrome-grid { grid-template-columns: repeat(5, 1fr); }
+  .dash-monochrome-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 @media (max-width: 1200px) {
-  .dash-monochrome-grid { grid-template-columns: repeat(4, 1fr); }
+  .dash-monochrome-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
-  .dash-monochrome-grid { grid-template-columns: repeat(3, 1fr); }
+  .dash-monochrome-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* ===== Context Menu ===== */
