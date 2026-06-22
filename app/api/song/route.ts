@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       let lyrics = 'No lyrics found';
       try {
         const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
-        const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(60000) });
+        const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(15000) });
         if (lyricaRes.ok) {
           const lyricaData = await lyricaRes.json();
           if (lyricaData && lyricaData.data) {
@@ -35,6 +35,38 @@ export async function POST(req: NextRequest) {
       } catch (e: any) {
         console.error("Lyrica API Error:", e);
       }
+
+      // Open-source server-side fallback to LRCLIB
+      if (lyrics === 'No lyrics found' || !lyrics || lyrics.trim() === '') {
+        try {
+          // 1. Try exact get endpoint
+          const getUrl = `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`;
+          const getRes = await fetch(getUrl, {
+            headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
+            signal: AbortSignal.timeout(5000)
+          });
+          if (getRes.ok) {
+            const getData = await getRes.json();
+            lyrics = getData.syncedLyrics || getData.plainLyrics || lyrics;
+          } else {
+            // 2. Try search endpoint if exact match get fails
+            const searchUrl = `https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`;
+            const searchRes = await fetch(searchUrl, {
+              headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
+              signal: AbortSignal.timeout(5000)
+            });
+            if (searchRes.ok) {
+              const searchData = await searchRes.json();
+              if (searchData && searchData.length > 0) {
+                lyrics = searchData[0].syncedLyrics || searchData[0].plainLyrics || lyrics;
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Server-side LRCLIB fallback error:", err);
+        }
+      }
+
       return lyrics;
     })();
 

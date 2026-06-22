@@ -553,21 +553,7 @@ export default function Dashboard() {
           setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
           return;
         }
-        let finalLyrics = data.lyrics || "No lyrics found";
-        if (finalLyrics.includes("No lyrics found") || finalLyrics.includes("Error:")) {
-          try {
-            const lrcRes = await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(currentSong.title)}&artist_name=${encodeURIComponent(currentSong.artist)}`);
-            if (lrcRes.ok) {
-              const lrcData = await lrcRes.json();
-              if (lrcData && lrcData.length > 0) {
-                finalLyrics = lrcData[0].syncedLyrics || lrcData[0].plainLyrics || finalLyrics;
-              }
-            }
-          } catch (e) {
-            console.error("LRCLIB fallback failed", e);
-          }
-        }
-        setLyrics(finalLyrics);
+        setLyrics(data.lyrics || "No lyrics found");
       } catch (e: any) {
         console.error("Error fetching song", e);
         setLyrics(`Network error: ${e.message}`);
