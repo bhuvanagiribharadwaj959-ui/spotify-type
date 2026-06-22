@@ -27,7 +27,23 @@ import {
   Library as LibraryIcon,
   Grid,
   MoreVertical,
-  MoreHorizontal
+  MoreHorizontal,
+  Pin,
+  Globe,
+  MessageCircle,
+  X,
+  Radio,
+  Disc3,
+  ExternalLink,
+  Copy,
+  Ban,
+  Info,
+  Gift,
+  PartyPopper,
+  Volume1,
+  VolumeX,
+  Timer,
+  Waves
 } from "lucide-react";
 import "./dashboard.css";
 import Link from "next/link";
@@ -110,6 +126,16 @@ export default function Dashboard() {
   const [volume, setVolume] = useState(1);
   const [subActive, setSubActive] = useState("Hot & New");
   const [recentTracks, setRecentTracks] = useState<DashboardTrack[]>([]);
+  const [showQueue, setShowQueue] = useState(false);
+  const [queue, setQueue] = useState<DashboardTrack[]>([]);
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+  const [searchOverlayQuery, setSearchOverlayQuery] = useState("");
+  const [searchOverlayResults, setSearchOverlayResults] = useState<DashboardTrack[]>([]);
+  const [searchTab, setSearchTab] = useState("Tracks");
+  const [ctxMenu, setCtxMenu] = useState<{show: boolean, x: number, y: number, track: DashboardTrack | null}>({show: false, x: 0, y: 0, track: null});
+  const [showPopularAll, setShowPopularAll] = useState(false);
+  const [showUnreleased, setShowUnreleased] = useState(false);
+  const [settingsState, setSettingsState] = useState({hiRes: true, privacy: true, scrobbling: false, notifications: true, autoplay: true, crossfade: false});
 
   const categories = useMemo(() => {
     // Collect from dbSongs instead
@@ -747,6 +773,7 @@ export default function Dashboard() {
       onClick={() => {
         setPopupAlbum(song);
       }}
+      onContextMenu={(e) => handleContextMenu(e, song)}
     >
       <div className="dash-song-cover-wrapper">
         <div
@@ -786,16 +813,66 @@ export default function Dashboard() {
         setPopupGenre(null);
         setPopupArtist(null);
         setPopupAlbum(null);
+        setShowSearchOverlay(false);
+        setCtxMenu(prev => ({...prev, show: false}));
+        setShowQueue(false);
+      }
+      if (e.key === "/" && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
+        e.preventDefault();
+        setShowSearchOverlay(true);
       }
     };
-    if (popupGenre || popupArtist || popupAlbum) window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [popupGenre, popupArtist]);
+  }, [popupGenre, popupArtist, popupAlbum]);
+
+  const handleContextMenu = (e: React.MouseEvent, track: DashboardTrack) => {
+    e.preventDefault();
+    setCtxMenu({show: true, x: Math.min(e.clientX, window.innerWidth - 240), y: Math.min(e.clientY, window.innerHeight - 400), track});
+  };
+
+  const addToQueue = (track: DashboardTrack) => {
+    setQueue(prev => [...prev, track]);
+  };
+
+  const removeFromQueue = (idx: number) => {
+    setQueue(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const playNext = (track: DashboardTrack) => {
+    setQueue(prev => [track, ...prev]);
+  };
+
+  useEffect(() => {
+    if (!searchOverlayQuery.trim()) { setSearchOverlayResults([]); return; }
+    const timer = setTimeout(async () => {
+      try {
+        const isDev = process.env.NODE_ENV === 'development';
+        const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+        const res = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(searchOverlayQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "success" && data.results) {
+            setSearchOverlayResults(data.results.map((r: any) => ({
+              id: r.id || Math.random().toString(36).substring(7),
+              title: r.title || "Unknown",
+              artist: r.artist || "Unknown",
+              img: r.thumbnail ? r.thumbnail.replace("150x150", "500x500").replace("50x50", "500x500") : "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300",
+              language: r.language || "english"
+            })));
+          }
+        }
+      } catch (err) { console.error("Search overlay error:", err); }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchOverlayQuery]);
 
   const navItems = [
     { key: "Home", icon: Home },
     { key: "Library", icon: LibraryIcon },
     { key: "Recent", icon: Clock },
+    { key: "Unreleased", icon: Disc3 },
+    { key: "Donate", icon: Gift },
     { key: "Settings", icon: Settings },
   ];
 
@@ -901,6 +978,34 @@ export default function Dashboard() {
             )}
           </AnimatePresence>
         </nav>
+
+        <div className="dash-sidebar-sep" />
+        <div className="dash-pinned-links">
+          <div className="dash-pinned-link" onClick={() => setActive("About")}>
+            <Info size={16} /> About
+          </div>
+          <a className="dash-pinned-link" href="https://discord.gg/monochrome" target="_blank" rel="noreferrer">
+            <MessageCircle size={16} /> Discord
+          </a>
+          <div className="dash-pinned-link" onClick={() => setActive("Home")}>
+            <PartyPopper size={16} /> Parties
+          </div>
+          <a className="dash-pinned-link" href="https://github.com/monochrome-music/monochrome" target="_blank" rel="noreferrer">
+            <ExternalLink size={16} /> GitHub
+          </a>
+        </div>
+
+        <div className="dash-user-profile">
+          <img
+            src={user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100"}
+            alt="User"
+            className="dash-user-avatar"
+          />
+          <div>
+            <div className="dash-user-display">{user?.displayName || "Guest"}</div>
+            <div className="dash-user-handle">@{user?.email?.split("@")[0] || "user"}</div>
+          </div>
+        </div>
 
         <div className="dash-logout" onClick={() => signOut(auth)} style={{ cursor: "pointer" }}>
           <div className="dash-nav-item">
@@ -1058,7 +1163,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* The Hits */}
-                  <div style={{ marginTop: 32, paddingBottom: 40 }}>
+                  <div style={{ marginTop: 32 }}>
                     <div className="dash-section-head">
                       <div className="dash-section-title">The Hits</div>
                       <div className="dash-section-nav">
@@ -1067,6 +1172,75 @@ export default function Dashboard() {
                     </div>
                     <div className="dash-songs">
                       {languageFilteredSongs.slice(72, 100).map((song, i) => renderSongCard(song, i))}
+                    </div>
+                  </div>
+
+                  {/* Recommended Artists */}
+                  <div style={{ marginTop: 32 }}>
+                    <div className="dash-section-head">
+                      <div className="dash-section-title">Recommended Artists</div>
+                      <div className="dash-section-nav">
+                        <button className="dash-more-btn">See all</button>
+                      </div>
+                    </div>
+                    <div className="shelf-scroll">
+                      {popularArtists.slice(0, 6).map((artist, i) => (
+                        <div key={`ra-${i}`} className="dash-artist-card" style={{minWidth: 180}} onClick={() => { setPopupArtist(artist.name); setPopupAlbum(null); }}>
+                          <div className="dash-artist-img" style={{backgroundImage: `url(${artist.img})`, width: 120, height: 120}} />
+                          <div className="dash-artist-name">{artist.name}</div>
+                          <div className="dash-artist-label">Artist</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Jump Back In */}
+                  {recentTracks.length > 0 && (
+                    <div style={{ marginTop: 32 }}>
+                      <div className="dash-section-head">
+                        <div className="dash-section-title">Jump Back In</div>
+                        <div className="dash-section-nav">
+                          <button className="dash-more-btn">See all</button>
+                        </div>
+                      </div>
+                      <div className="shelf-scroll">
+                        {recentTracks.slice(0, 5).map((song, i) => (
+                          <div key={`jb-${song.id}-${i}`} className="dash-song-card" style={{minWidth: 180}} onClick={() => { setCurrentSong(song); setPlaying(true); }}>
+                            <div className="dash-song-cover-wrapper">
+                              <div className="dash-song-img" style={{backgroundImage: `url(${song.img})`}} />
+                            </div>
+                            <div className="dash-song-meta">
+                              <div className="dash-song-title">{song.title}</div>
+                              <div className="dash-song-artist">{song.artist}</div>
+                              <div className="resume-bar"><div className="resume-fill" style={{width: `${30 + Math.random() * 60}%`}} /></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Listening Parties */}
+                  <div style={{ marginTop: 32, paddingBottom: 40 }}>
+                    <div className="dash-section-head">
+                      <div className="dash-section-title">Listening Parties</div>
+                      <div className="dash-section-nav">
+                        <button className="dash-more-btn">See all</button>
+                      </div>
+                    </div>
+                    <div className="shelf-scroll">
+                      {[
+                        {name: "Chill Vibes Room", host: "DJ_Aurora", listeners: 234, color: "#1a1a2e"},
+                        {name: "Late Night R&B", host: "SoulSeeker", listeners: 89, color: "#16213e"},
+                        {name: "Indie Discovery", host: "VinylHunter", listeners: 156, color: "#1a1a2e"},
+                      ].map((party, i) => (
+                        <div key={`party-${i}`} className="party-card" style={{background: party.color}}>
+                          <div className="party-live-badge"><div className="party-live-dot" /> LIVE</div>
+                          <div style={{fontSize: 18, fontWeight: 700}}>{party.name}</div>
+                          <div className="party-listeners">Hosted by {party.host} · {party.listeners} listening</div>
+                          <button className="party-join">Join</button>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </>
@@ -1455,6 +1629,105 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* ===== Settings Page ===== */}
+        {active === "Settings" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 32px 40px" }}>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 32 }}>Settings</h2>
+            <div className="settings-section">
+              <div className="settings-title">Audio</div>
+              <div className="settings-item">
+                <div><div className="settings-label">Hi-Res Audio</div><div className="settings-desc">Enable lossless FLAC streaming when available</div></div>
+                <button className={`settings-toggle ${settingsState.hiRes ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, hiRes: !s.hiRes}))} />
+              </div>
+              <div className="settings-item">
+                <div><div className="settings-label">Autoplay</div><div className="settings-desc">Keep playing similar tracks when your queue ends</div></div>
+                <button className={`settings-toggle ${settingsState.autoplay ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, autoplay: !s.autoplay}))} />
+              </div>
+              <div className="settings-item">
+                <div><div className="settings-label">Crossfade</div><div className="settings-desc">Smooth transition between tracks</div></div>
+                <button className={`settings-toggle ${settingsState.crossfade ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, crossfade: !s.crossfade}))} />
+              </div>
+            </div>
+            <div className="settings-section">
+              <div className="settings-title">Privacy</div>
+              <div className="settings-item">
+                <div><div className="settings-label">Private Session</div><div className="settings-desc">Your activity won&apos;t appear in listening history</div></div>
+                <button className={`settings-toggle ${settingsState.privacy ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, privacy: !s.privacy}))} />
+              </div>
+              <div className="settings-item">
+                <div><div className="settings-label">Last.fm Scrobbling</div><div className="settings-desc">Share your listening activity with Last.fm</div></div>
+                <button className={`settings-toggle ${settingsState.scrobbling ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, scrobbling: !s.scrobbling}))} />
+              </div>
+              <div className="settings-item">
+                <div><div className="settings-label">Notifications</div><div className="settings-desc">Get notified about new releases from artists you follow</div></div>
+                <button className={`settings-toggle ${settingsState.notifications ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, notifications: !s.notifications}))} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ===== Donate Page ===== */}
+        {active === "Donate" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 32px 40px" }}>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>Support Monochrome</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 16, lineHeight: 1.6, maxWidth: 600, marginBottom: 32 }}>
+              If Monochrome has been useful to you and you&apos;re able to, consider making a donation. It helps pay for the server and domain, and you get to support us :)
+            </p>
+            <a href="https://ko-fi.com/monochrometf" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--accent)', color: '#000', padding: '12px 24px', borderRadius: 32, fontWeight: 700, fontSize: 16, textDecoration: 'none', marginBottom: 16 }}>
+              <Gift size={20} /> Donate on Ko-fi
+            </a>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 24 }}>
+              If you cannot financially support us, please consider starring the project on GitHub and sharing with friends!
+            </p>
+            <a href="https://github.com/monochrome-music/monochrome" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '10px 20px', borderRadius: 32, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginTop: 12 }}>
+              <ExternalLink size={18} /> Star on GitHub
+            </a>
+          </div>
+        )}
+
+        {/* ===== Unreleased Page ===== */}
+        {active === "Unreleased" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 32px 40px" }}>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>Unreleased</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24 }}>Leaked and unreleased tracks from your favorite artists. These may be removed at any time.</p>
+            {!showUnreleased ? (
+              <button onClick={() => setShowUnreleased(true)} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '12px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                Load Unreleased Projects
+              </button>
+            ) : (
+              <div className="dash-monochrome-grid">
+                {languageFilteredSongs.slice(50, 62).map((song, i) => (
+                  <div key={`unreleased-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)} style={{ opacity: 0.7 }}>
+                    <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)', position: 'relative' }}>
+                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.7)' }} />
+                      <span style={{ position: 'absolute', top: 8, right: 8, background: '#e74c3c', color: 'white', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>UNRELEASED</span>
+                    </div>
+                    <div className="dash-album-title">{song.title}</div>
+                    <div className="dash-album-meta">{song.artist}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===== About Page ===== */}
+        {active === "About" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 32px 40px", maxWidth: 700 }}>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>About Monochrome</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 16, lineHeight: 1.8, marginBottom: 24 }}>
+              Monochrome is a lightweight, privacy-focused music streaming client designed for high-fidelity audio playback. Built with modern web technologies, it provides a clean, distraction-free listening experience.
+            </p>
+            <div style={{ background: '#181818', borderRadius: 8, padding: 24, marginBottom: 24 }}>
+              <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8 }}>Version</div>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>2.5.0</div>
+            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: 12, lineHeight: 1.8 }}>
+              This is an independent client and is not affiliated with or endorsed by TIDAL or any music streaming service. This application does not host, store, or distribute any media files.
+            </p>
+          </div>
+        )}
+
         {popupArtist && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -1533,13 +1806,14 @@ export default function Dashboard() {
             <div style={{ padding: "0 32px" }}>
               <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Popular</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {allTracks.filter(t => t.artist === popupArtist).slice(0, 5).map((song, i) => (
+                {allTracks.filter(t => t.artist === popupArtist).slice(0, showPopularAll ? 20 : 5).map((song, i) => (
                   <div 
                     key={song.id} 
                     onClick={() => {
                       setCurrentSong(song);
                       setPlaying(true);
                     }}
+                    onContextMenu={(e) => handleContextMenu(e, song)}
                     style={{ 
                       display: "flex", alignItems: "center", padding: "8px 16px", 
                       borderRadius: 4, cursor: "pointer", transition: "background 0.2s" 
@@ -1552,8 +1826,13 @@ export default function Dashboard() {
                     <div style={{ flex: 1 }}>
                       <div style={{ color: currentSong.id === song.id ? "#1db954" : "white", fontSize: 16, fontWeight: 500 }}>{song.title}</div>
                     </div>
-                    <div style={{ width: 120, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
-                      {Math.floor(Math.random() * 900) + 100},{Math.floor(Math.random() * 900) + 100},{Math.floor(Math.random() * 900) + 100}
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                      <button onClick={(e) => { e.stopPropagation(); toggleLike(song.id); }} style={{ background: "transparent", border: "none", color: likedSongs.has(song.id) ? "#1db954" : "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}>
+                        <Heart size={16} fill={likedSongs.has(song.id) ? "currentColor" : "none"} />
+                      </button>
+                      <button onClick={(e) => { e.stopPropagation(); handleContextMenu(e, song); }} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}>
+                        <MoreHorizontal size={16} />
+                      </button>
                     </div>
                     <div style={{ width: 48, textAlign: "right", color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
                       3:{(Math.floor(Math.random() * 40) + 10)}
@@ -1561,6 +1840,14 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
+              <button 
+                onClick={() => setShowPopularAll(prev => !prev)} 
+                style={{ background: "transparent", border: "none", color: "var(--text-secondary)", fontSize: 14, fontWeight: 700, cursor: "pointer", padding: "12px 0", transition: "color 0.2s" }}
+                onMouseEnter={(e) => e.currentTarget.style.color = "#fff"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-secondary)"}
+              >
+                {showPopularAll ? "Show less" : "Show more"}
+              </button>
             </div>
             
             {/* Albums Section */}
@@ -1791,23 +2078,26 @@ export default function Dashboard() {
         </div>
 
         <div className="dash-player-right">
-          <button className="dash-player-btn" aria-label="shuffle" onClick={() => setIsShuffle(s => !s)} style={{ color: isShuffle ? 'var(--accent)' : 'inherit' }}><Shuffle size={16} /></button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button className="dash-player-btn" aria-label="volume" onClick={() => setVolume(v => v === 0 ? 1 : 0)}>
-              <Volume2 size={16} color={volume === 0 ? 'rgba(255,255,255,0.5)' : 'white'} />
-            </button>
-            <input
-              type="range"
-              min="0" max="1" step="0.01"
-              value={volume}
-              onChange={(e) => setVolume(parseFloat(e.target.value))}
-              style={{
-                width: 80,
-                cursor: 'pointer',
-                accentColor: '#1db954'
-              }}
-            />
-          </div>
+          <button className="dash-player-btn" aria-label="volume" onClick={() => setVolume(v => v === 0 ? 1 : 0)}>
+            {volume === 0 ? <VolumeX size={16} /> : volume < 0.5 ? <Volume1 size={16} /> : <Volume2 size={16} />}
+          </button>
+          <input
+            type="range"
+            min="0" max="1" step="0.01"
+            value={volume}
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
+            style={{ width: 80, cursor: 'pointer', accentColor: '#1db954' }}
+          />
+          <button className="dash-player-btn" onClick={() => setIsShuffle(s => !s)} style={{ color: isShuffle ? 'var(--accent)' : 'inherit' }} title="Shuffle"><Shuffle size={16} /></button>
+          <button className="dash-player-btn" onClick={() => setIsRepeat(r => !r)} style={{ color: isRepeat ? 'var(--accent)' : 'inherit' }} title="Repeat"><Repeat size={16} /></button>
+          <button className="dash-player-btn" onClick={() => setShowQueue(q => !q)} style={{ color: showQueue ? 'var(--accent)' : 'inherit' }} title="Queue">
+            <span style={{fontSize: 13, fontWeight: 700}}>Q</span>
+          </button>
+          <button className="dash-player-btn" onClick={() => setIsExpanded(true)} title="Lyrics">
+            <span style={{fontSize: 13, fontWeight: 700}}>L</span>
+          </button>
+          <button className="dash-player-btn" title="Visualizer"><Waves size={16} /></button>
+          <button className="dash-player-btn" title="Sleep Timer"><Timer size={16} /></button>
         </div>
       </motion.div>
 
@@ -1848,6 +2138,175 @@ export default function Dashboard() {
         alternatives={alternatives}
         onAlternativeSelect={handleAlternativeSelect}
       />
+
+      {/* ===== Context Menu ===== */}
+      {ctxMenu.show && (
+        <>
+          <div className="ctx-menu-overlay" onClick={() => setCtxMenu(prev => ({...prev, show: false}))} />
+          <div className="ctx-menu" style={{left: ctxMenu.x, top: ctxMenu.y}}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setCurrentSong(ctxMenu.track); setPlaying(true); setIsShuffle(true); } setCtxMenu(prev => ({...prev, show: false})); }}>
+              <Shuffle size={16} /> Shuffle play
+            </div>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <Radio size={16} /> Infinite Radio
+            </div>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <Disc3 size={16} /> Start Mix
+            </div>
+            <div className="ctx-menu-sep" />
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) playNext(ctxMenu.track); setCtxMenu(prev => ({...prev, show: false})); }}>
+              <SkipForward size={16} /> Play next
+            </div>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) addToQueue(ctxMenu.track); setCtxMenu(prev => ({...prev, show: false})); }}>
+              <ListMusic size={16} /> Add to queue
+            </div>
+            <div className="ctx-menu-sep" />
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) toggleLike(ctxMenu.track.id); setCtxMenu(prev => ({...prev, show: false})); }}>
+              <Heart size={16} fill={ctxMenu.track && likedSongs.has(ctxMenu.track.id) ? '#1db954' : 'none'} color={ctxMenu.track && likedSongs.has(ctxMenu.track.id) ? '#1db954' : 'currentColor'} /> {ctxMenu.track && likedSongs.has(ctxMenu.track.id) ? 'Unlike' : 'Like'}
+            </div>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <Pin size={16} /> Pin
+            </div>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <ListMusic size={16} /> Add to playlist
+            </div>
+            <div className="ctx-menu-sep" />
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <Music size={16} /> Request song
+            </div>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setPopupArtist(ctxMenu.track.artist); setPopupAlbum(null); } setCtxMenu(prev => ({...prev, show: false})); }}>
+              <Users size={16} /> Go to artist
+            </div>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setPopupAlbum(ctxMenu.track); } setCtxMenu(prev => ({...prev, show: false})); }}>
+              <Disc3 size={16} /> Go to album
+            </div>
+            <div className="ctx-menu-sep" />
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) navigator.clipboard.writeText(`${window.location.origin}/track/${ctxMenu.track.id}`); setCtxMenu(prev => ({...prev, show: false})); }}>
+              <Copy size={16} /> Copy link
+            </div>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) downloadTrack(null, ctxMenu.track); setCtxMenu(prev => ({...prev, show: false})); }}>
+              <Download size={16} /> Download
+            </div>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <Info size={16} /> Track info
+            </div>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+              <ExternalLink size={16} /> Open original URL
+            </div>
+            <div className="ctx-menu-sep" />
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))} style={{color: '#e74c3c'}}>
+              <Ban size={16} /> Block track / album / artist
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ===== Queue Panel ===== */}
+      {showQueue && (
+        <div className="queue-panel">
+          <div className="queue-header">
+            <h3>Up Next</h3>
+            <button className="queue-close" onClick={() => setShowQueue(false)}><X size={20} /></button>
+          </div>
+          <div className="queue-list">
+            {/* Currently Playing */}
+            <div className="queue-track active" onClick={() => {}}>
+              <img src={currentSong.img} alt="" className="queue-track-img" />
+              <div className="queue-track-info">
+                <div className="queue-track-title" style={{color: 'var(--accent)'}}>{currentSong.title}</div>
+                <div className="queue-track-artist">{currentSong.artist}</div>
+              </div>
+              <div className="queue-track-duration" style={{color: 'var(--accent)'}}>Now</div>
+            </div>
+            {/* Queued tracks */}
+            {queue.length === 0 ? (
+              <div style={{padding: 24, textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14}}>
+                Queue is empty. Right-click a track to add it.
+              </div>
+            ) : queue.map((t, i) => (
+              <div key={`q-${t.id}-${i}`} className="queue-track" onClick={() => { setCurrentSong(t); setPlaying(true); setQueue(prev => prev.filter((_, idx) => idx !== i)); }}>
+                <img src={t.img} alt="" className="queue-track-img" />
+                <div className="queue-track-info">
+                  <div className="queue-track-title">{t.title}</div>
+                  <div className="queue-track-artist">{t.artist}</div>
+                </div>
+                <div className="queue-track-duration">3:24</div>
+                <button className="queue-track-remove" onClick={(e) => { e.stopPropagation(); removeFromQueue(i); }}><X size={16} /></button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== Search Overlay ===== */}
+      {showSearchOverlay && (
+        <div className="search-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowSearchOverlay(false); }}>
+          <input
+            className="search-overlay-input"
+            placeholder="Search songs, artists, albums... (press Esc to close)"
+            value={searchOverlayQuery}
+            onChange={(e) => setSearchOverlayQuery(e.target.value)}
+            autoFocus
+          />
+          <div className="search-tabs">
+            {["Tracks", "Albums", "Artists", "Playlists", "Podcasts"].map(tab => (
+              <button key={tab} className={`search-tab ${searchTab === tab ? 'active' : ''}`} onClick={() => setSearchTab(tab)}>{tab}</button>
+            ))}
+          </div>
+          <div className="search-results">
+            {searchOverlayResults.length === 0 && searchOverlayQuery.trim() && (
+              <div style={{textAlign: 'center', color: 'var(--text-secondary)', padding: 40, fontSize: 16}}>Searching...</div>
+            )}
+            {searchTab === "Tracks" && searchOverlayResults.map((s, i) => (
+              <div key={`sr-${s.id}-${i}`} className="dash-track-row" onClick={() => { setCurrentSong(s); setPlaying(true); setShowSearchOverlay(false); setSearchOverlayQuery(""); }} onContextMenu={(e) => handleContextMenu(e, s)}>
+                <div className="dash-track-left">
+                  <div style={{width: 32, textAlign: 'right', marginRight: 16, color: 'rgba(255,255,255,0.5)', fontSize: 14}}>{i + 1}</div>
+                  <div style={{width: 40, height: 40, overflow: 'hidden', borderRadius: 4, marginRight: 12, flexShrink: 0}}>
+                    <div style={{width: '100%', height: '100%', backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
+                  </div>
+                  <div className="dash-track-details">
+                    <div className="dash-track-title">{s.title}</div>
+                    <div className="dash-track-meta">{s.artist}</div>
+                  </div>
+                </div>
+                <div className="dash-track-duration">3:24</div>
+              </div>
+            ))}
+            {searchTab === "Albums" && (
+              <div className="dash-monochrome-grid" style={{marginTop: 16}}>
+                {searchOverlayResults.slice(0, 12).map((s, i) => (
+                  <div key={`sa-${s.id}-${i}`} className="dash-album-card" onClick={() => { setPopupAlbum(s); setShowSearchOverlay(false); }}>
+                    <div style={{width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)'}}>
+                      <div style={{width: '100%', height: '100%', backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
+                    </div>
+                    <div className="dash-album-title">{s.title}</div>
+                    <div className="dash-album-meta">{s.artist}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {searchTab === "Artists" && (
+              <div className="dash-playlists artists-grid" style={{marginTop: 16}}>
+                {Array.from(new Set(searchOverlayResults.map(s => s.artist))).slice(0, 12).map((artist, i) => {
+                  const song = searchOverlayResults.find(s => s.artist === artist);
+                  return (
+                    <div key={`artist-search-${i}`} className="dash-artist-card" onClick={() => { setPopupArtist(artist); setShowSearchOverlay(false); }}>
+                      <div className="dash-artist-img" style={{backgroundImage: `url(${song?.img || ''})`}} />
+                      <div className="dash-artist-name">{artist}</div>
+                      <div className="dash-artist-label">Artist</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {(searchTab === "Playlists" || searchTab === "Podcasts") && (
+              <div style={{textAlign: 'center', color: 'var(--text-secondary)', padding: 40, fontSize: 16}}>
+                No {searchTab.toLowerCase()} found for &ldquo;{searchOverlayQuery}&rdquo;
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
