@@ -221,15 +221,22 @@ export default function PlayingOverlay({
           exit={{ y: "100%", opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          {/* Ambient blurred reflection background */}
+          {/* True Blurred Image Background */}
           <div style={{
             position: 'absolute',
-            inset: 0,
+            inset: '-10%',
             backgroundImage: `url(${track.img})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'blur(80px) opacity(0.35)',
-            transform: 'scale(1.2)',
+            filter: 'blur(60px)',
+            zIndex: 0,
+            pointerEvents: 'none',
+          }} />
+          {/* Darkening Overlay for text contrast */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
             zIndex: 0,
             pointerEvents: 'none'
           }} />

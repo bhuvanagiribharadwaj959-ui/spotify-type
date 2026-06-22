@@ -326,7 +326,10 @@ export async function POST(req: NextRequest) {
       return { audioUrl, coverUrl, artistPic };
     })();
 
-    const [lyricsResult, audioResult] = await Promise.all([lyricsPromise, audioPromise]);
+    const lyricsResult = await lyricsPromise;
+    // As requested: wait for a few milliseconds to avoid router/proxy problems
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const audioResult = await audioPromise;
 
     return NextResponse.json({
       audioUrl: audioResult.audioUrl,
