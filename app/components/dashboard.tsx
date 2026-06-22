@@ -1341,10 +1341,10 @@ export default function Dashboard() {
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                          <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ x: [3, -3, 3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-                          <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ y: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+                          <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ y: [3, -3, 3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
+                          <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ y: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
                         </svg>
                         <h1 style={{ fontSize: '48px', fontWeight: 900, margin: 0, letterSpacing: '-2px', color: '#fff' }}>
                           SONIC
