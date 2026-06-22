@@ -337,6 +337,13 @@ export default function Dashboard() {
                 }
               });
             } catch (err) {}
+            fetched.sort((a, b) => {
+              const aEng = (a.language || "").toLowerCase() === "english";
+              const bEng = (b.language || "").toLowerCase() === "english";
+              if (aEng && !bEng) return -1;
+              if (!aEng && bEng) return 1;
+              return 0;
+            });
 
             setDbSongs(fetched);
             setCurrentSong((prev) => (prev.id === "dummy" && fetched.length > 0) ? fetched[0] : prev);
@@ -1044,7 +1051,7 @@ export default function Dashboard() {
                       setSearchQuery("");
                     }}
                   >
-                    <img src={s.img} alt={s.title} />
+                    <img src={s.img} alt={s.title} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                     <div className="dash-search-item-info">
                       <div className="dash-search-item-title">{s.title}</div>
                       <div className="dash-search-item-artist">{s.artist}</div>
@@ -1822,7 +1829,7 @@ export default function Dashboard() {
                     onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                   >
                     <div style={{ width: 32, textAlign: "right", marginRight: 16, color: "rgba(255,255,255,0.5)", fontSize: 16 }}>{i + 1}</div>
-                    <img src={song.img} alt={song.title} style={{ width: 40, height: 40, borderRadius: 4, marginRight: 16 }} />
+                    <img src={song.img} alt={song.title} style={{ width: 40, height: 40, borderRadius: 4, marginRight: 16, objectFit: 'cover' }} />
                     <div style={{ flex: 1 }}>
                       <div style={{ color: currentSong.id === song.id ? "#1db954" : "white", fontSize: 16, fontWeight: 500 }}>{song.title}</div>
                     </div>
@@ -1909,7 +1916,7 @@ export default function Dashboard() {
 
             {/* Album Header */}
             <div className="dash-album-header">
-              <img src={popupAlbum.img} alt={popupAlbum.title} className="dash-album-cover" />
+              <img src={popupAlbum.img} alt={popupAlbum.title} className="dash-album-cover" style={{ objectFit: 'cover' }} />
               <div className="dash-album-info">
                 <h2>{popupAlbum.title}</h2>
                 <div className="dash-album-info-meta">
