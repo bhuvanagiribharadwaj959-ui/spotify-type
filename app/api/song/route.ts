@@ -96,7 +96,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
     let songLink = permaUrl;
     if (!songLink) {
       const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(2500) });
+      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(3500) });
       if (searchRes.ok) {
         const searchData = await searchRes.json();
         if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
@@ -122,7 +122,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
 
     if (songLink) {
       const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(2500) });
+      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(3500) });
       if (playRes.ok) {
         const playData = await playRes.json();
         if (playData.status === "success" && playData.data && playData.data.stream_url) {
@@ -281,7 +281,7 @@ export async function POST(req: NextRequest) {
       })() : Promise.resolve(null);
 
       const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(title, artist) : Promise.resolve(null);
-      const proxyJioPromise = (needsSearch && !isIndian) ? Promise.resolve(null) : (needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null));
+      const proxyJioPromise = needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null);
 
       // Wait for all three requests in parallel
       const [deezerRes, directJioRes, proxyJioRes] = await Promise.all([

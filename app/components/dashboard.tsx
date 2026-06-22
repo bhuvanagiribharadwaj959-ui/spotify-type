@@ -126,6 +126,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<DashboardTrack[]>([]);
   const [dbSongs, setDbSongs] = useState<DashboardTrack[]>([]);
+  const [randomPicks, setRandomPicks] = useState<DashboardTrack[]>([]);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
   const [likedSongs, setLikedSongs] = useState<Set<string>>(new Set());
@@ -496,6 +497,10 @@ export default function Dashboard() {
     const staticSlides = dbSongs.slice(0, 16);
     setRandomHeroSlides(staticSlides);
 
+    // Initial random picks for discovery section
+    const shuffled = [...dbSongs].sort(() => 0.5 - Math.random());
+    setRandomPicks(shuffled.slice(0, 12));
+
     const uniqueArtistsMap = new Map<string, string>();
     staticSlides.forEach(t => {
       if (!uniqueArtistsMap.has(t.artist)) {
@@ -599,6 +604,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    let active = true;
     const fetchSongData = async () => {
       setIsLoadingAudio(true);
       setLyrics("");
@@ -651,13 +657,20 @@ export default function Dashboard() {
             language: currentSong.language
           })
         });
+
+        if (!active) return;
+
         if (!res.ok) {
           const errData = await res.json();
-          setLyrics(`Failed to load song. Error: ${errData.details || errData.error || 'Unknown error'}`);
+          if (active) {
+            setLyrics(`Failed to load song. Error: ${errData.details || errData.error || 'Unknown error'}`);
+          }
           return;
         }
 
         const data = await res.json();
+        if (!active) return;
+
         if (data.alternatives) {
           setAlternatives(data.alternatives);
         } else {
@@ -683,19 +696,35 @@ export default function Dashboard() {
           }
         } else if (!hasPlayedStatic && data.error) {
           console.warn("Audio fetching failed:", data.error);
-          setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
+          if (active) {
+            setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
+          }
           return;
         }
-        setLyrics(data.lyrics || "No lyrics found");
+
+        if (active) {
+          setLyrics(data.lyrics || "No lyrics found");
+        }
       } catch (e: any) {
         console.error("Error fetching song", e);
-        setLyrics(`Network error: ${e.message}`);
+        if (active) {
+          setLyrics(`Network error: ${e.message}`);
+        }
       } finally {
-        setIsLoadingAudio(false);
+        if (active) {
+          setIsLoadingAudio(false);
+        }
       }
     };
-    fetchSongData();
-  }, [currentSong]);
+
+    if (currentSong && currentSong.id && currentSong.id !== "dummy") {
+      fetchSongData();
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [currentSong.id]);
 
   useEffect(() => {
     if (currentSong && currentSong.id !== "dummy") {
@@ -920,7 +949,9 @@ export default function Dashboard() {
       key={`${song.id}-${i}`}
       className="dash-song-card"
       onClick={() => {
-        setPopupAlbum(song);
+        setCurrentSong(song);
+        setPlaying(true);
+        setIsExpanded(true);
       }}
       onContextMenu={(e) => handleContextMenu(e, song)}
     >
@@ -936,9 +967,11 @@ export default function Dashboard() {
             e.stopPropagation();
             if (currentSong.id === song.id) {
               setPlaying((prev) => !prev);
+              setIsExpanded(true);
             } else {
               setCurrentSong(song);
               setPlaying(true);
+              setIsExpanded(true);
             }
           }}
         >
@@ -1292,10 +1325,23 @@ export default function Dashboard() {
             <div className="dash-content" style={{ paddingTop: 0 }}>
               {subActive === "Home" && (
                 <>
-                  {/* Spotify Style Hero Grid */}
-                  <h1 className="dash-greeting">
-                    {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"}
-                  </h1>
+                  {/* Spotify Style Hero Grid with Animated Greeting Container */}
+                  <div className="dash-greeting-container">
+                    <div className="dash-greeting-wave">
+                      <span className="wave-bar bar-1"></span>
+                      <span className="wave-bar bar-2"></span>
+                      <span className="wave-bar bar-3"></span>
+                      <span className="wave-bar bar-4"></span>
+                      <span className="wave-bar bar-5"></span>
+                    </div>
+                    <h1 className="dash-greeting">
+                      {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"}
+                    </h1>
+                    <div className="dash-greeting-subtitle">
+                      Welcome back, {profileName}
+                    </div>
+                  </div>
+
                   {mounted && randomHeroSlides.length > 0 && (
                     <div className="dash-hero-grid">
                       {randomHeroSlides.slice(0, 6).map((track, i) => (
@@ -1316,9 +1362,11 @@ export default function Dashboard() {
                               e.stopPropagation();
                               if (currentSong.id === track.id) {
                                 setPlaying((prev) => !prev);
+                                setIsExpanded(true);
                               } else {
                                 setCurrentSong(track);
                                 setPlaying(true);
+                                setIsExpanded(true);
                               }
                             }}
                           >
@@ -1330,6 +1378,40 @@ export default function Dashboard() {
                           </button>
                         </div>
                       ))}
+                    </div>
+                  )}
+
+                  {/* Lucky Shuffles - Discover Random Songs Section */}
+                  {mounted && randomPicks.length > 0 && (
+                    <div style={{ marginTop: 32 }}>
+                      <div className="dash-section-head">
+                        <div className="dash-section-title">Discover Random Picks</div>
+                        <div className="dash-section-nav">
+                          <button 
+                            className="dash-more-btn"
+                            onClick={() => {
+                              const shuffled = [...dbSongs].sort(() => 0.5 - Math.random());
+                              setRandomPicks(shuffled.slice(0, 12));
+                            }}
+                            style={{
+                              background: 'rgba(255,255,255,0.05)',
+                              padding: '6px 16px',
+                              borderRadius: '20px',
+                              border: '1px solid rgba(255,255,255,0.1)',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              color: 'var(--text-primary)',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease'
+                            }}
+                          >
+                            Shuffle Again
+                          </button>
+                        </div>
+                      </div>
+                      <div className="dash-songs">
+                        {randomPicks.map((song, i) => renderSongCard(song, i))}
+                      </div>
                     </div>
                   )}
 
