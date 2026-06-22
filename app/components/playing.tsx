@@ -234,13 +234,6 @@ export default function PlayingOverlay({
             pointerEvents: 'none'
           }} />
 
-          {/* Dynamic Floating Aurora Blobs for Premium Glassmorphism Look */}
-          <div className="playing-aurora-bg">
-            <div className="aurora-blob blob-1" style={{ backgroundColor: 'var(--accent, #1db954)' }} />
-            <div className="aurora-blob blob-2" style={{ backgroundColor: '#2563eb' }} />
-            <div className="aurora-blob blob-3" style={{ backgroundColor: '#7c3aed' }} />
-          </div>
-
           {/* Top Navigation Bar */}
           <div className="playing-topbar" style={{ zIndex: 1 }}>
             <button className="playing-icon-btn" onClick={onClose} aria-label="Minimize">
@@ -311,38 +304,15 @@ export default function PlayingOverlay({
             {/* Right Column: Synced Lyrics Scrolling View */}
             <div className="playing-lyrics-container" ref={lyricsContainerRef} style={{
               flex: 6,
-              position: 'relative',
               display: 'flex',
               flexDirection: 'column',
               overflowY: 'auto',
               height: '100%',
-              paddingRight: '24px'
+              paddingRight: '24px',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%)'
             }}>
-              
-              {/* Fade Masks */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '80px',
-                background: 'linear-gradient(to bottom, #050505 0%, transparent 100%)',
-                pointerEvents: 'none',
-                zIndex: 2
-              }} />
-              
-              <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '120px',
-                background: 'linear-gradient(to top, #050505 0%, transparent 100%)',
-                pointerEvents: 'none',
-                zIndex: 2
-              }} />
-
-              <div className="playing-lyrics" style={{ padding: '80px 20px 180px 20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div className="playing-lyrics" style={{ padding: '100px 20px 180px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 {isLoading ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '300px', gap: '24px' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', height: '60px' }}>

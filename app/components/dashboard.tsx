@@ -138,7 +138,7 @@ export default function Dashboard() {
   const [popupArtist, setPopupArtist] = useState<string | null>(null);
   const [popupAlbum, setPopupAlbum] = useState<DashboardTrack | null>(null);
   const [volume, setVolume] = useState(1);
-  const [subActive, setSubActive] = useState("Hot & New");
+  const [subActive, setSubActive] = useState("Home");
   const [recentTracks, setRecentTracks] = useState<DashboardTrack[]>([]);
   const [showQueue, setShowQueue] = useState(false);
   const [queue, setQueue] = useState<DashboardTrack[]>([]);
@@ -1072,11 +1072,9 @@ export default function Dashboard() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '28px',
-        zIndex: 9999,
-        fontFamily: "'Inter', sans-serif"
+        gap: '24px',
+        zIndex: 9999
       }}>
-        {/* LOGO */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: 44,
@@ -1092,26 +1090,11 @@ export default function Dashboard() {
           </div>
           <span style={{ fontSize: 26, fontWeight: 900, color: 'white', letterSpacing: '-0.75px' }}>SONIC</span>
         </div>
-
-        {/* Dynamic Equalizer Bouncing Bars Loader */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', height: '60px', marginTop: '10px' }}>
-          <motion.span style={{ width: '8px', background: 'var(--accent, #1db954)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "40px", "10px"] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
-          <motion.span style={{ width: '8px', background: 'var(--accent, #1db954)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "60px", "10px"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.1 }} />
-          <motion.span style={{ width: '8px', background: 'var(--accent, #1db954)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "30px", "10px"] }} transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut", delay: 0.2 }} />
-          <motion.span style={{ width: '8px', background: 'var(--accent, #1db954)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "50px", "10px"] }} transition={{ repeat: Infinity, duration: 1.1, ease: "easeInOut", delay: 0.3 }} />
-        </div>
-
-        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <motion.h1 
-            style={{ fontSize: '22px', fontWeight: 800, margin: 0, color: '#ffffff', letterSpacing: '-0.5px' }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-          >
-            Initializing SONIC...
-          </motion.h1>
-          <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)' }}>
-            Preparing your premium music dashboard
-          </div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', height: '40px', marginTop: '24px' }}>
+          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "30px", "10px"] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
+          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "40px", "10px"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut", delay: 0.1 }} />
+          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "20px", "10px"] }} transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut", delay: 0.2 }} />
+          <motion.span style={{ width: '8px', background: 'var(--accent)', borderRadius: '4px', margin: '0 4px' }} animate={{ height: ["10px", "35px", "10px"] }} transition={{ repeat: Infinity, duration: 1.1, ease: "easeInOut", delay: 0.3 }} />
         </div>
       </div>
     );
