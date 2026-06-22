@@ -196,7 +196,7 @@ body, html {
 .dash-main {
   flex: 1;
   background: var(--bg);
-  background-image: linear-gradient(to bottom, rgba(30,215,96,0.1) 0%, var(--bg) 400px);
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.03) 0%, var(--bg) 400px);
   position: relative;
   border-radius: 8px;
   overflow-y: auto;
@@ -377,7 +377,7 @@ body, html {
   position: relative;
   overflow: hidden;
   padding: 16px 24px;
-  background: linear-gradient(135deg, rgba(29, 185, 84, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
   border-radius: 12px;
   border-left: 4px solid var(--accent);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -1302,7 +1302,7 @@ input[type=range]::-webkit-slider-thumb {
   transition: var(--transition);
 }
 .queue-track:hover { background: rgba(255,255,255,0.06); }
-.queue-track.active { background: rgba(29,185,84,0.15); }
+.queue-track.active { background: rgba(255,255,255,0.1); }
 .queue-track-img {
   width: 40px;
   height: 40px;

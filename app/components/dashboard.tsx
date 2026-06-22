@@ -107,11 +107,10 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '460px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#050505', borderRadius: '16px', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.05)' }}>
-      {/* Top sonic symbol */}
       <div style={{ position: 'absolute', top: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ y: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
-            <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ y: [2, -2, 2] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} />
+            <path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" />
+            <path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" />
          </svg>
       </div>
 
@@ -1176,11 +1175,13 @@ export default function Dashboard() {
           <span style={{ fontSize: 26, fontWeight: 900, color: 'white', letterSpacing: '-0.75px' }}>SONIC</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', marginTop: '40px' }}>
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <motion.path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-            <motion.path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" animate={{ x: [3, -3, 3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-            <motion.path d="M2 18c.6 0 1.2-.2 1.7-.6C4.8 16.3 6.3 16.3 7.4 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 16.3 13.4 16.3 14.5 17.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 16.3 20.6 16.3 21.7 17.4c.5.4 1.2.6 1.7.6" animate={{ x: [-3, 3, -3] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} />
-          </svg>
+          <div style={{ width: '48px', overflow: 'hidden' }}>
+            <motion.div style={{ display: 'flex' }} animate={{ x: [-48, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}>
+              <svg width="96" height="24" viewBox="0 0 96 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M0 12 C 8 0, 16 0, 24 12 C 32 24, 40 24, 48 12 C 56 0, 64 0, 72 12 C 80 24, 88 24, 96 12" />
+              </svg>
+            </motion.div>
+          </div>
           <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', fontWeight: 500, letterSpacing: '2px' }}>LOADING</div>
         </div>
       </div>
@@ -1991,9 +1992,9 @@ export default function Dashboard() {
             
             {profileMessage && (
               <div style={{
-                backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                border: '1px solid rgba(29, 185, 84, 0.3)',
-                color: '#1db954',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                color: '#fff',
                 padding: '12px 16px',
                 borderRadius: '8px',
                 marginBottom: '24px',
@@ -2112,7 +2113,7 @@ export default function Dashboard() {
                     cursor: 'pointer',
                     width: 'fit-content',
                     alignSelf: 'flex-start',
-                    boxShadow: '0 4px 12px rgba(29, 185, 84, 0.3)',
+                    boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
                     transition: 'var(--transition)'
                   }}
                 >
