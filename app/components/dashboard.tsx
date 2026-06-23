@@ -513,6 +513,7 @@ export default function Dashboard() {
                  title: item.title || "Unknown Title",
                  artist: item.artist || "Unknown Artist",
                  img: cleanImgUrl(item.thumbnail),
+                 album: item.album || undefined,
                  language: "english",
                  genres: item.genre ? [item.genre] : [],
                  audioUrl: undefined,
@@ -535,6 +536,7 @@ export default function Dashboard() {
                        title: item.meta?.title || "Unknown Title",
                        artist: item.meta?.artist || "Unknown Artist",
                        img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
+                       album: item.meta?.album || undefined,
                        language: item.meta?.language || "english",
                        genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
                        audioUrl: item.supabase?.audio_storage_url || undefined,
@@ -2425,7 +2427,16 @@ export default function Dashboard() {
             <div style={{ padding: "48px 32px 0 32px" }}>
               <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Albums</h3>
               <div className="dash-monochrome-grid">
-                {allTracks.filter(t => matchArtist(t.artist, popupArtist)).map((song, i) => (
+                {(() => {
+                  const artistTracks = allTracks.filter(t => matchArtist(t.artist, popupArtist));
+                  const uniqueAlbumsMap = new Map<string, DashboardTrack>();
+                  for (const t of artistTracks) {
+                    const albumName = t.album || t.title;
+                    if (!uniqueAlbumsMap.has(albumName)) {
+                      uniqueAlbumsMap.set(albumName, t);
+                    }
+                  }
+                  return Array.from(uniqueAlbumsMap.values()).map((song, i) => (
                   <div 
                     key={`artist-album-${song.id}-${i}`} 
                     className="dash-album-card" 
@@ -2437,10 +2448,11 @@ export default function Dashboard() {
                     <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
                       <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
                     </div>
-                    <div className="dash-album-title">{song.title}</div>
-                    <div className="dash-album-meta">{popupArtist} • Album</div>
+                    <div className="dash-album-title">{song.album || song.title}</div>
+                    <div className="dash-album-meta">{popupArtist} • {new Date().getFullYear()}</div>
                   </div>
-                ))}
+                  ));
+                })()}
               </div>
             </div>
           </motion.div>
@@ -2482,9 +2494,9 @@ export default function Dashboard() {
             <div className="dash-album-header">
               <img src={popupAlbum.img} alt={popupAlbum.title} className="dash-album-cover" style={{ objectFit: 'cover' }} />
               <div className="dash-album-info">
-                <h2>{popupAlbum.title}</h2>
+                <h2>{popupAlbum.album || popupAlbum.title}</h2>
                 <div className="dash-album-info-meta">
-                  {new Date().getFullYear()} • 1 track
+                  {new Date().getFullYear()} • {allTracks.filter(t => (t.album || t.title) === (popupAlbum.album || popupAlbum.title) && matchArtist(t.artist, popupAlbum.artist)).length} tracks
                 </div>
                 <div className="dash-album-info-copyright">
                   By <span 
@@ -2533,7 +2545,10 @@ export default function Dashboard() {
               </div>
               
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {[popupAlbum].map((song, i) => (
+                {(() => {
+                  const albumName = popupAlbum.album || popupAlbum.title;
+                  const albumTracks = allTracks.filter(t => (t.album || t.title) === albumName && matchArtist(t.artist, popupAlbum.artist));
+                  return albumTracks.map((song, i) => (
                   <div 
                     key={song.id} 
                     onClick={() => {
@@ -2560,7 +2575,8 @@ export default function Dashboard() {
                       <MoreVertical size={16} />
                     </div>
                   </div>
-                ))}
+                  ));
+                })()}
               </div>
             </div>
           </motion.div>
@@ -2585,7 +2601,14 @@ export default function Dashboard() {
             />
             <div>
               <div className="dash-player-name">{currentSong.title}</div>
-              <div className="dash-player-artist">{currentSong.artist}</div>
+              <div 
+                className="dash-player-artist"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPopupArtist(currentSong.artist);
+                }}
+                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              >{currentSong.artist}</div>
             </div>
             {playing && (
               <div className="eq" aria-hidden>
@@ -2727,6 +2750,10 @@ export default function Dashboard() {
         onDownload={(e: any) => downloadTrack(e, currentSong)}
         alternatives={alternatives}
         onAlternativeSelect={handleAlternativeSelect}
+        onSelectArtist={(artistName) => {
+          setPopupArtist(artistName);
+          setIsExpanded(false);
+        }}
       />
 
       {/* ===== Context Menu ===== */}
