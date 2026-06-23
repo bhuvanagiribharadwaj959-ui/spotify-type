@@ -35,7 +35,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #1ED760;
+  background: #ffffff;
 }
 
 .sonic-nav-links {
@@ -65,7 +65,7 @@
   padding: 100px 48px 48px 80px;
   position: relative;
   z-index: 2;
-  background: radial-gradient(circle at 15% 90%, rgba(30, 215, 96, 0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at 15% 90%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
 }
 
 .sonic-form-container {
@@ -161,7 +161,7 @@
 }
 
 .sonic-field input:focus {
-  border-color: #1ED760;
+  border-color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -224,8 +224,8 @@
 }
 
 .sonic-check input:checked {
-  background: #1ED760;
-  border-color: #1ED760;
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 .sonic-check input:checked::after {
@@ -256,7 +256,7 @@
   padding: 16px;
   border-radius: 999px;
   border: none;
-  background: #1ED760;
+  background: #ffffff;
   color: #000000;
   font-size: 15px;
   font-weight: 700;
@@ -265,7 +265,7 @@
 }
 
 .sonic-submit:hover {
-  background: #1fdf64;
+  background: #e0e0e0;
   transform: scale(1.02);
 }
 
@@ -389,16 +389,16 @@
 
 .sonic-player-controls button:hover {
   transform: scale(1.1);
-  color: #1ED760;
+  color: #ffffff;
 }
 
 .sonic-play-btn {
-  color: #1ED760 !important;
+  color: #ffffff !important;
 }
 
 .sonic-play-btn:hover {
   transform: scale(1.15) !important;
-  color: #1fdf64 !important;
+  color: #e0e0e0 !important;
 }
 
 .sonic-floating-chip {

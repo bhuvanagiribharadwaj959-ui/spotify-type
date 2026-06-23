@@ -101,61 +101,64 @@ function useReveal() {
 }
 
 const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (track: DashboardTrack) => void }) => {
-  const [currentIndex, setCurrentIndex] = useState(2);
-  const items = tracks.length >= 5 ? tracks.slice(0, 5) : tracks;
-  
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const items = tracks.slice(0, 10);
+
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % items.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [items.length]);
+
   if (items.length === 0) return null;
 
-  const currentImg = items[currentIndex]?.img;
-
   return (
-    <div style={{ position: 'relative', width: '100%', height: '460px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#050505', borderRadius: '16px', marginBottom: '40px', border: '1px solid rgba(255,255,255,0.05)' }}>
-      {currentImg && (
-         <motion.div
-           key={currentImg}
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           transition={{ duration: 0.5 }}
-           style={{
-             position: 'absolute',
-             inset: '-20%',
-             backgroundImage: `url(${currentImg})`,
-             backgroundSize: 'cover',
-             backgroundPosition: 'center',
-             filter: 'blur(50px)',
-             zIndex: 0
-           }}
-         />
-      )}
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 0 }} />
-
-      <div style={{ position: 'absolute', top: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 6c.6 0 1.2-.2 1.7-.6C4.8 4.3 6.3 4.3 7.4 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 4.3 13.4 4.3 14.5 5.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 4.3 20.6 4.3 21.7 5.4c.5.4 1.2.6 1.7.6" />
-            <path d="M2 12c.6 0 1.2-.2 1.7-.6C4.8 10.3 6.3 10.3 7.4 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C11.9 10.3 13.4 10.3 14.5 11.4c.5.4 1.1.6 1.7.6s1.2-.2 1.7-.6C19.1 10.3 20.6 10.3 21.7 11.4c.5.4 1.2.6 1.7.6" />
-         </svg>
-      </div>
-
-      <div style={{ position: 'relative', width: '100%', height: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1000, marginTop: '20px', zIndex: 1 }}>
+    <div style={{ 
+      position: 'relative', 
+      width: '100%', 
+      height: '500px', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      overflow: 'hidden', 
+      borderRadius: '24px', 
+      marginBottom: '40px', 
+      border: '1px solid rgba(176, 38, 255, 0.2)',
+      boxShadow: '0 0 40px rgba(57, 255, 20, 0.05), inset 0 0 80px rgba(176, 38, 255, 0.05)'
+    }}>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `url(${items[currentIndex]?.img || ''})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: 'blur(40px) brightness(0.3)',
+        transform: 'scale(1.2)',
+        zIndex: 0
+      }} />
+      <div style={{ position: 'relative', width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1200, marginTop: '20px', zIndex: 1 }}>
         {items.map((track, i) => {
           let relativeIndex = i - currentIndex;
-          if (items.length === 5) {
-             if (relativeIndex > 2) relativeIndex -= 5;
-             if (relativeIndex < -2) relativeIndex += 5;
-          }
+          const half = items.length / 2;
+          if (relativeIndex > half) relativeIndex -= items.length;
+          if (relativeIndex < -half) relativeIndex += items.length;
+
+          const absRel = Math.abs(relativeIndex);
           const isCenter = relativeIndex === 0;
-          const zIndex = 10 - Math.abs(relativeIndex);
-          const xOffset = relativeIndex * 130; 
-          const rotateY = relativeIndex * -25;
-          const scale = isCenter ? 1.1 : 0.85 - Math.abs(relativeIndex) * 0.1;
-          const opacity = Math.abs(relativeIndex) > 2 ? 0 : 1;
+          const zIndex = 100 - Math.floor(absRel); // Center is in front
+          const scale = Math.max(0.4, 1 - absRel * 0.15); // Center is largest
+          const xOffset = Math.sign(relativeIndex) * (absRel * 100 + Math.pow(absRel, 1.5) * 20);
+          const rotateY = relativeIndex * -18; // Wrap forward
+          const opacity = Math.max(0, 1 - (absRel - 3.5) * 2);
 
           return (
             <motion.div
-              key={track.id}
+              key={`${track.id}-${i}`}
               onClick={() => {
-                if (isCenter) onPlay(track);
-                else setCurrentIndex(i);
+                onPlay(track);
               }}
               animate={{
                 x: xOffset,
@@ -164,48 +167,39 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
                 opacity: opacity,
                 zIndex: zIndex,
               }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
               style={{
                 position: 'absolute',
                 width: '180px',
-                height: '180px',
-                borderRadius: '20px',
+                height: '240px',
+                borderRadius: '16px',
                 overflow: 'hidden',
                 cursor: 'pointer',
-                boxShadow: isCenter ? '0 20px 40px rgba(0,0,0,0.8)' : '0 10px 20px rgba(0,0,0,0.5)',
-                border: isCenter ? '2px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.05)',
+                boxShadow: `0 20px 40px rgba(0,0,0,0.8), 0 0 15px ${isCenter ? 'rgba(57, 255, 20, 0.3)' : 'rgba(176, 38, 255, 0.1)'}`,
+                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.03)',
+                backdropFilter: 'blur(10px)',
                 transformOrigin: 'center center'
               }}
             >
               <img src={track.img} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              {isCenter && (
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%)', display: 'flex', alignItems: 'flex-end', padding: '16px', justifyContent: 'center' }}>
-                  <div style={{ color: '#fff', fontSize: '15px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center' }}>{track.title}</div>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%)', display: 'flex', alignItems: 'flex-end', padding: '16px', justifyContent: 'center' }}>
+                <div style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+                  {track.title}
                 </div>
-              )}
-              {!isCenter && <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)' }} />}
+              </div>
             </motion.div>
           );
         })}
       </div>
-      
-      <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 10 }}>
-        <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 400, margin: '0 0 16px 0', letterSpacing: '0.5px' }}>Music That Stands Out</h2>
-        <button 
-          onClick={() => onPlay(items[currentIndex])}
-          style={{ background: '#fff', color: '#000', padding: '10px 28px', borderRadius: '30px', fontSize: '14px', fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'transform 0.2s' }}
-          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          Start Listening
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3v18l15-9L5 3z"/></svg>
-        </button>
-      </div>
+
+
     </div>
   );
 };
 
-export default function Dashboard() {
+
+export default function Dashboard({ slug }: { slug?: string[] }) {
   const cleanImgUrl = (url?: string) => {
     if (!url) return "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300&h=300";
     let clean = url;
@@ -218,7 +212,11 @@ export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoaded, setAuthLoaded] = useState(false);
-  const [active, setActive] = useState("Home");
+  const [active, setActive] = useState(() => {
+    if (slug?.[0] === 'about') return 'About';
+    if (slug?.[0] === 'report') return 'Report';
+    return 'Home';
+  });
   const [playlistsOpen, setPlaylistsOpen] = useState(true);
   const [cat, setCat] = useState("English");
   const [playing, setPlaying] = useState(false);
@@ -240,8 +238,20 @@ export default function Dashboard() {
   const [isABLoop, setIsABLoop] = useState(false);
   const [abLoopStart, setAbLoopStart] = useState<number | null>(null);
   const [abLoopEnd, setAbLoopEnd] = useState<number | null>(null);
+  const cleanArtistName = (raw: string | null) => {
+    if (!raw) return null;
+    let clean = raw.split(" - ")[0].trim();
+    clean = clean.split(",")[0].trim();
+    clean = clean.split("&")[0].trim();
+    return clean;
+  };
+
+  const initialArtist = cleanArtistName(slug?.[0] === 'artist' ? decodeURIComponent(slug[1] || '') : null);
+
   const [popupGenre, setPopupGenre] = useState<string | null>(null);
-  const [popupArtist, setPopupArtist] = useState<string | null>(null);
+  const [_popupArtist, _setPopupArtist] = useState<string | null>(initialArtist);
+  const popupArtist = _popupArtist;
+  const setPopupArtist = (artist: string | null) => _setPopupArtist(cleanArtistName(artist));
   const [popupAlbum, setPopupAlbum] = useState<DashboardTrack | null>(null);
   const [volume, setVolume] = useState(1);
   const [subActive, setSubActive] = useState("Home");
@@ -252,10 +262,10 @@ export default function Dashboard() {
   const [searchOverlayQuery, setSearchOverlayQuery] = useState("");
   const [searchOverlayResults, setSearchOverlayResults] = useState<DashboardTrack[]>([]);
   const [searchTab, setSearchTab] = useState("Tracks");
-  const [ctxMenu, setCtxMenu] = useState<{show: boolean, x: number, y: number, track: DashboardTrack | null}>({show: false, x: 0, y: 0, track: null});
+  const [ctxMenu, setCtxMenu] = useState<{ show: boolean, x: number, y: number, track: DashboardTrack | null }>({ show: false, x: 0, y: 0, track: null });
   const [showPopularAll, setShowPopularAll] = useState(false);
   const [showUnreleased, setShowUnreleased] = useState(false);
-  const [settingsState, setSettingsState] = useState({hiRes: true, privacy: true, scrobbling: false, notifications: true, autoplay: true, crossfade: false});
+  const [settingsState, setSettingsState] = useState({ hiRes: true, privacy: true, scrobbling: false, notifications: true, autoplay: true, crossfade: false });
 
   const matchArtist = (trackArtist: string, targetArtist: string | null): boolean => {
     if (!targetArtist) return false;
@@ -277,7 +287,7 @@ export default function Dashboard() {
         setCustomAvatar(base64String);
         localStorage.setItem("sonic_user_avatar", base64String);
         setProfileMessage("Avatar updated successfully!");
-        
+
         if (user) {
           updateProfile(user, { photoURL: base64String })
             .then(() => console.log("Firebase profile image updated"))
@@ -374,7 +384,37 @@ export default function Dashboard() {
 
   const [lyrics, setLyrics] = useState<string>("");
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isInitialMount = useRef(true);
+  const isPopStateNav = useRef(false);
+
+  // Sync state to URL
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (isPopStateNav.current) {
+      isPopStateNav.current = false;
+      return;
+    }
+    const updateUrl = () => {
+      if (popupArtist) {
+        window.history.pushState({}, '', `/dashboard/artist/${encodeURIComponent(popupArtist)}`);
+      } else if (popupAlbum) {
+        const albumName = popupAlbum.album || popupAlbum.title;
+        window.history.pushState({}, '', `/dashboard/album/${encodeURIComponent(albumName)}`);
+      } else if (active === 'About') {
+        window.history.pushState({}, '', `/dashboard/about`);
+      } else if (active === 'Report') {
+        window.history.pushState({}, '', `/dashboard/report`);
+      } else {
+        window.history.pushState({}, '', `/dashboard`);
+      }
+    };
+    const timeout = setTimeout(updateUrl, 50);
+    return () => clearTimeout(timeout);
+  }, [popupArtist, popupAlbum, active]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -386,10 +426,50 @@ export default function Dashboard() {
   const [popularArtists, setPopularArtists] = useState<{ name: string, img: string }[]>([]);
   const [mounted, setMounted] = useState(false);
   const [alternatives, setAlternatives] = useState<any[]>([]);
+  const [artistExtraTracks, setArtistExtraTracks] = useState<DashboardTrack[]>([]);
+
+  // Fetch more songs when an artist is clicked
+  useEffect(() => {
+    if (!popupArtist) {
+      return;
+    }
+    const fetchArtistSongs = async () => {
+      try {
+        const res = await fetch(`/api/artist?q=${encodeURIComponent(popupArtist)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "success" && data.results) {
+            const parsedResults = data.results.map((r: any) => {
+              return {
+                id: r.id || Math.random().toString(36).substring(7),
+                title: r.title || "Unknown Title",
+                artist: r.artist || "Unknown Artist",
+                img: cleanImgUrl(r.thumbnail),
+                album: r.album || undefined,
+                language: r.language || "english",
+                permaUrl: r.perma_url || r.url || r.link
+              };
+            });
+            // strictly filter to match this artist
+            const filtered = parsedResults.filter((s: DashboardTrack) => matchArtist(s.artist, popupArtist));
+            setArtistExtraTracks(prev => {
+              const map = new Map();
+              for (const t of prev) map.set(t.id, t);
+              for (const t of filtered) map.set(t.id, t);
+              return Array.from(map.values());
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch artist extra tracks:", err);
+      }
+    };
+    fetchArtistSongs();
+  }, [popupArtist]);
 
   const allTracks = useMemo(() => {
     // Put dashboardTracks first so they have priority over dbSongs!
-    const combined = [...dashboardTracks, ...dbSongs];
+    const combined = [...dashboardTracks, ...dbSongs, ...artistExtraTracks];
     const unique = [];
     const seenTitles = new Set<string>();
     for (const track of combined) {
@@ -410,7 +490,106 @@ export default function Dashboard() {
       }
     }
     return [...goodTracks, ...badTracks];
-  }, [dbSongs]);
+  }, [dbSongs, artistExtraTracks]);
+
+  const fetchedMissingAlbums = useRef(new Set<string>());
+
+  // Handle Initial Album Load and Popstate
+  useEffect(() => {
+    if (allTracks.length > 0) {
+      if (slug?.[0] === 'album' && slug[1] && !popupAlbum) {
+        const albumName = decodeURIComponent(slug[1]);
+        const song = allTracks.find(t => (t.album || t.title) === albumName);
+        if (song) {
+          setPopupAlbum(song);
+        } else if (!fetchedMissingAlbums.current.has(albumName)) {
+          fetchedMissingAlbums.current.add(albumName);
+          // Immediately set a loading placeholder to prevent Home screen from flashing
+          setPopupAlbum({
+            id: 'loading-' + Date.now(),
+            title: albumName,
+            artist: "Loading...",
+            img: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?q=80&w=500&auto=format&fit=crop",
+            album: albumName,
+            language: "english",
+            permaUrl: ""
+          });
+
+          const fetchMissingAlbum = async () => {
+            try {
+              const res = await fetch(`/api/artist?q=${encodeURIComponent(albumName)}`);
+              if (res.ok) {
+                const data = await res.json();
+                if (data.status === "success" && data.results && data.results.length > 0) {
+                  const parsedResults = data.results.map((r: any) => {
+                    let cleanArtist = r.more_info?.artistMap?.primary_artists?.[0]?.name;
+                    if (!cleanArtist && r.subtitle) cleanArtist = r.subtitle.split(" - ")[0].trim();
+                    return {
+                      id: r.id || Math.random().toString(36).substring(7),
+                      title: r.title || "Unknown Title",
+                      artist: cleanArtist || "Unknown Artist",
+                      img: cleanImgUrl(r.thumbnail),
+                      album: r.more_info?.album || undefined,
+                      language: r.language || "english",
+                      permaUrl: r.perma_url || r.url || r.link
+                    };
+                  });
+
+                  setArtistExtraTracks(prev => {
+                    const map = new Map();
+                    for (const t of prev) map.set(t.id, t);
+                    for (const t of parsedResults) map.set(t.id, t);
+                    return Array.from(map.values());
+                  });
+
+                  // Automatically swap the loading placeholder with the real first track!
+                  const realSong = parsedResults.find((t: DashboardTrack) => (t.album || t.title) === albumName) || parsedResults[0];
+                  if (realSong) setPopupAlbum(realSong);
+                }
+              }
+            } catch (err) { }
+          };
+          fetchMissingAlbum();
+        }
+      }
+    }
+
+    const handlePopState = () => {
+      isPopStateNav.current = true;
+      const path = window.location.pathname;
+      if (path.startsWith('/dashboard/artist/')) {
+        const artist = decodeURIComponent(path.replace('/dashboard/artist/', ''));
+        setPopupArtist(artist);
+        setPopupAlbum(null);
+        setPopupGenre(null);
+      } else if (path.startsWith('/dashboard/album/')) {
+        const albumName = decodeURIComponent(path.replace('/dashboard/album/', ''));
+        const song = allTracks.find(t => (t.album || t.title) === albumName);
+        if (song) {
+          setPopupAlbum(song);
+          setPopupArtist(null);
+          setPopupGenre(null);
+        }
+      } else if (path === '/dashboard/about' || path === '/dashboard/about/') {
+        setActive('About');
+        setPopupArtist(null);
+        setPopupAlbum(null);
+        setPopupGenre(null);
+      } else if (path === '/dashboard/report' || path === '/dashboard/report/') {
+        setActive('Report');
+        setPopupArtist(null);
+        setPopupAlbum(null);
+        setPopupGenre(null);
+      } else {
+        setActive('Home');
+        setPopupArtist(null);
+        setPopupAlbum(null);
+        setPopupGenre(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [allTracks, slug, popupAlbum]);
 
   useEffect(() => {
     const savedName = localStorage.getItem("sonic_display_name");
@@ -470,13 +649,13 @@ export default function Dashboard() {
           }
         };
         fetchLikes();
-        
+
         const fetchDbSongs = async () => {
           try {
             const isDev = process.env.NODE_ENV === 'development';
             const baseUrl = 'https://test-0k.onrender.com';
             let trendingList: any[] = [];
-            
+
             try {
               const res = await fetch(`${baseUrl}/trending/?country=us&limit=100`);
               if (res.ok) {
@@ -495,7 +674,7 @@ export default function Dashboard() {
                       trendingList = data.data.trending;
                     }
                   }
-                } catch (e) {}
+                } catch (e) { }
               }
             }
 
@@ -504,50 +683,50 @@ export default function Dashboard() {
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-             // Map trending songs first
-             trendingList.forEach((item: any) => {
-               const titleLower = (item.title || "").toLowerCase();
-               if (titleLower) seenTitles.add(titleLower);
-               fetched.push({
-                 id: item.song_id || item.id || Math.random().toString(36).substring(7),
-                 title: item.title || "Unknown Title",
-                 artist: item.artist || "Unknown Artist",
-                 img: cleanImgUrl(item.thumbnail),
-                 album: item.album || undefined,
-                 language: "english",
-                 genres: item.genre ? [item.genre] : [],
-                 audioUrl: undefined,
-                 lyrics: undefined,
-                 permaUrl: item.perma_url || item.url || item.link
-               });
-             });
- 
-             // Map local attractive/popular songs from songs.json
-             try {
-               const jsonRes = await fetch('/songs.json');
-               if (jsonRes.ok) {
-                 const localData = await jsonRes.json();
-                 localData.forEach((item: any) => {
-                   const titleLower = (item.meta?.title || "").toLowerCase();
-                   if (!seenTitles.has(titleLower)) {
-                     seenTitles.add(titleLower);
-                     fetched.push({
-                       id: item.id,
-                       title: item.meta?.title || "Unknown Title",
-                       artist: item.meta?.artist || "Unknown Artist",
-                       img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
-                       album: item.meta?.album || undefined,
-                       language: item.meta?.language || "english",
-                       genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
-                       audioUrl: item.supabase?.audio_storage_url || undefined,
-                       lyrics: item.assets?.lyrics || undefined
-                     });
-                   }
-                 });
-               }
-             } catch (err) {
-               console.error("Local songs load error:", err);
-             }
+            // Map trending songs first
+            trendingList.forEach((item: any) => {
+              const titleLower = (item.title || "").toLowerCase();
+              if (titleLower) seenTitles.add(titleLower);
+              fetched.push({
+                id: item.song_id || item.id || Math.random().toString(36).substring(7),
+                title: item.title || "Unknown Title",
+                artist: item.artist || "Unknown Artist",
+                img: cleanImgUrl(item.thumbnail),
+                album: item.album || undefined,
+                language: "english",
+                genres: item.genre ? [item.genre] : [],
+                audioUrl: undefined,
+                lyrics: undefined,
+                permaUrl: item.perma_url || item.url || item.link
+              });
+            });
+
+            // Map local attractive/popular songs from songs.json
+            try {
+              const jsonRes = await fetch('/songs.json');
+              if (jsonRes.ok) {
+                const localData = await jsonRes.json();
+                localData.forEach((item: any) => {
+                  const titleLower = (item.meta?.title || "").toLowerCase();
+                  if (!seenTitles.has(titleLower)) {
+                    seenTitles.add(titleLower);
+                    fetched.push({
+                      id: item.id,
+                      title: item.meta?.title || "Unknown Title",
+                      artist: item.meta?.artist || "Unknown Artist",
+                      img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
+                      album: item.meta?.album || undefined,
+                      language: item.meta?.language || "english",
+                      genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
+                      audioUrl: item.supabase?.audio_storage_url || undefined,
+                      lyrics: item.assets?.lyrics || undefined
+                    });
+                  }
+                });
+              }
+            } catch (err) {
+              console.error("Local songs load error:", err);
+            }
 
             // Keep the firebase fetch just in case there are custom songs uploaded by the user
             try {
@@ -566,7 +745,7 @@ export default function Dashboard() {
                   });
                 }
               });
-            } catch (err) {}
+            } catch (err) { }
             fetched.sort((a, b) => {
               const aEng = (a.language || "").toLowerCase() === "english";
               const bEng = (b.language || "").toLowerCase() === "english";
@@ -599,25 +778,25 @@ export default function Dashboard() {
       if (saved) {
         setRecentTracks(JSON.parse(saved));
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Ensure unique artists in the Hero Carousel to avoid repeated album covers
     const seenArtists = new Set<string>();
     const uniqueArtistSlides = [];
     for (const song of dbSongs) {
-      if (!seenArtists.has(song.artist)) {
+      if ((song.language || "").toLowerCase() === "english" && !seenArtists.has(song.artist)) {
         seenArtists.add(song.artist);
         uniqueArtistSlides.push(song);
       }
-      if (uniqueArtistSlides.length >= 16) break;
+      if (uniqueArtistSlides.length >= 10) break;
     }
-    // Fallback padding if there aren't enough unique artists
-    if (uniqueArtistSlides.length < 16) {
+    // Fallback padding if there aren't enough unique english artists
+    if (uniqueArtistSlides.length < 10) {
       for (const song of dbSongs) {
-        if (!uniqueArtistSlides.find(s => s.id === song.id)) {
+        if ((song.language || "").toLowerCase() === "english" && !uniqueArtistSlides.find(s => s.id === song.id)) {
           uniqueArtistSlides.push(song);
         }
-        if (uniqueArtistSlides.length >= 16) break;
+        if (uniqueArtistSlides.length >= 10) break;
       }
     }
 
@@ -634,20 +813,20 @@ export default function Dashboard() {
       }
     });
     const artistList = Array.from(uniqueArtistsMap.entries()).map(([name, img]) => ({ name, img }));
-    setPopularArtists(artistList.slice(0, 6));
+    setPopularArtists(artistList.slice(0, 8)); // Increase to 8 for the Bento Grid
   }, [dbSongs]);
 
   const languageFilteredSongs = useMemo(() => {
     if (!cat) return allTracks;
     const catLower = cat.toLowerCase();
-    
+
     // Check if the cat is a language
     const languages = ["english", "hindi", "punjabi", "tamil", "telugu", "marathi", "kannada", "bhojpuri", "gujarati", "bengali", "urdu", "spanish", "korean"];
     if (languages.includes(catLower)) {
       const filtered = allTracks.filter(s => s.language?.toLowerCase() === catLower);
       return filtered.length > 0 ? filtered : allTracks;
     }
-    
+
     // If not a language, filter by genre!
     const filteredByGenre = allTracks.filter(s => {
       if (!s.genres || s.genres.length === 0) return false;
@@ -673,16 +852,16 @@ export default function Dashboard() {
         if (res.ok) {
           const data = await res.json();
           if (data.status === "success" && data.results) {
-             const parsedResults = data.results.map((r: any) => {
-               return {
-                 id: r.id || Math.random().toString(36).substring(7),
-                 title: r.title || "Unknown Title",
-                 artist: r.artist || "Unknown Artist",
-                 img: cleanImgUrl(r.thumbnail),
-                 language: r.language || "english",
-                 permaUrl: r.perma_url || r.url || r.link
-               };
-             });
+            const parsedResults = data.results.map((r: any) => {
+              return {
+                id: r.id || Math.random().toString(36).substring(7),
+                title: r.title || "Unknown Title",
+                artist: r.artist || "Unknown Artist",
+                img: cleanImgUrl(r.thumbnail),
+                language: r.language || "english",
+                permaUrl: r.perma_url || r.url || r.link
+              };
+            });
             setSearchResults(parsedResults);
           }
         }
@@ -1054,7 +1233,7 @@ export default function Dashboard() {
         const audioRes = await fetch(data.audioUrl);
         const blob = await audioRes.blob();
         const url = URL.createObjectURL(blob);
-        
+
         const a = document.createElement("a");
         a.href = url;
         a.download = `${song.artist} - ${song.title}.mp3`;
@@ -1122,7 +1301,7 @@ export default function Dashboard() {
         setPopupArtist(null);
         setPopupAlbum(null);
         setShowSearchOverlay(false);
-        setCtxMenu(prev => ({...prev, show: false}));
+        setCtxMenu(prev => ({ ...prev, show: false }));
         setShowQueue(false);
       }
       if (e.key === "/" && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
@@ -1136,7 +1315,7 @@ export default function Dashboard() {
 
   const handleContextMenu = (e: React.MouseEvent, track: DashboardTrack) => {
     e.preventDefault();
-    setCtxMenu({show: true, x: Math.min(e.clientX, window.innerWidth - 240), y: Math.min(e.clientY, window.innerHeight - 400), track});
+    setCtxMenu({ show: true, x: Math.min(e.clientX, window.innerWidth - 240), y: Math.min(e.clientY, window.innerHeight - 400), track });
   };
 
   const addToQueue = (track: DashboardTrack) => {
@@ -1333,16 +1512,16 @@ export default function Dashboard() {
 
         <div className="dash-sidebar-sep" />
         <div className="dash-pinned-links">
-          <div className="dash-pinned-link" onClick={() => setActive("About")}>
+          <div className="dash-pinned-link" onClick={() => { setActive("About"); setPopupAlbum(null); setPopupArtist(null); setPopupGenre(null); }}>
             <Info size={16} /> About
+          </div>
+          <div className="dash-pinned-link" onClick={() => { setActive("Report"); setPopupAlbum(null); setPopupArtist(null); setPopupGenre(null); }}>
+            <MessageCircle size={16} /> Report Issue
           </div>
           <a className="dash-pinned-link" href="https://discord.gg/monochrome" target="_blank" rel="noreferrer">
             <MessageCircle size={16} /> Discord
           </a>
-          <div className="dash-pinned-link" onClick={() => setActive("Home")}>
-            <PartyPopper size={16} /> Parties
-          </div>
-          <a className="dash-pinned-link" href="https://github.com/monochrome-music/monochrome" target="_blank" rel="noreferrer">
+          <a className="dash-pinned-link" href="https://github.com/bhuvanagiribharadwaj" target="_blank" rel="noreferrer">
             <ExternalLink size={16} /> GitHub
           </a>
         </div>
@@ -1399,9 +1578,9 @@ export default function Dashboard() {
             )}
             {searchQuery.trim() && searchResults.length > 0 && (
               <div className="dash-search-dropdown">
-                {searchResults.slice(0, 8).map(s => (
+                {searchResults.slice(0, 8).map((s, i) => (
                   <div
-                    key={s.id}
+                    key={`${s.id}-${i}`}
                     className="dash-search-item"
                     onClick={() => {
                       setCurrentSong(s);
@@ -1450,13 +1629,13 @@ export default function Dashboard() {
                 <>
                   {/* Creative Animated Hero Carousel */}
                   {mounted && randomHeroSlides.length > 0 && (
-                    <HeroCarousel 
-                      tracks={randomHeroSlides} 
+                    <HeroCarousel
+                      tracks={randomHeroSlides}
                       onPlay={(track) => {
                         setCurrentSong(track);
                         setPlaying(true);
                         setIsExpanded(true);
-                      }} 
+                      }}
                     />
                   )}
 
@@ -1466,7 +1645,7 @@ export default function Dashboard() {
                       <div className="dash-section-head">
                         <div className="dash-section-title">Discover Random Picks</div>
                         <div className="dash-section-nav">
-                          <button 
+                          <button
                             className="dash-more-btn"
                             onClick={() => {
                               const shuffled = [...dbSongs].sort(() => 0.5 - Math.random());
@@ -1546,20 +1725,70 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Recommended Artists */}
-                  <div style={{ marginTop: 32 }}>
-                    <div className="dash-section-head">
-                      <div className="dash-section-title">Recommended Artists</div>
-                      <div className="dash-section-nav">
-                        <button className="dash-more-btn">See all</button>
+                  {/* Explore your favorite artists (Bento Grid) */}
+                  <div style={{ marginTop: 60, marginBottom: 60 }}>
+                    <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                      <div>
+                        <h2 style={{ fontSize: '42px', fontWeight: 600, margin: 0, letterSpacing: '-1px', color: '#fff' }}>Explore your favorite artists</h2>
+                        <p style={{ color: '#a0a0a0', margin: '8px 0 0 0', fontSize: '16px' }}>Curated list of the most popular creators right now.</p>
                       </div>
+                      <button style={{ background: '#fff', color: '#000', border: 'none', borderRadius: '30px', padding: '12px 24px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'transform 0.2s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+                        Enter Store <span style={{ fontSize: '18px' }}>→</span>
+                      </button>
                     </div>
-                    <div className="shelf-scroll">
-                      {popularArtists.slice(0, 6).map((artist, i) => (
-                        <div key={`ra-${i}`} className="dash-artist-card" style={{minWidth: 180}} onClick={() => { setPopupArtist(artist.name); setPopupAlbum(null); }}>
-                          <div className="dash-artist-img" style={{backgroundImage: `url(${artist.img})`, width: 120, height: 120}} />
-                          <div className="dash-artist-name">{artist.name}</div>
-                          <div className="dash-artist-label">Artist</div>
+                    
+                    <div style={{
+                      display: 'flex',
+                      gap: '16px',
+                      width: '100%',
+                      height: '500px' // Fixed height for the bento container
+                    }}>
+                      {[
+                        { artists: popularArtists.slice(0, 2), flexes: [6, 4] },
+                        { artists: popularArtists.slice(2, 4), flexes: [4.5, 5.5] },
+                        { artists: popularArtists.slice(4, 6), flexes: [5, 5] },
+                        { artists: popularArtists.slice(6, 8), flexes: [4, 6] }
+                      ].map((col, colIndex) => (
+                        <div key={`bento-col-${colIndex}`} style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, height: '100%' }}>
+                          {col.artists.map((artist, i) => artist ? (
+                            <div 
+                              key={`bento-item-${colIndex}-${i}`}
+                              onClick={() => { setPopupArtist(artist.name); setPopupAlbum(null); }}
+                              style={{
+                                flex: col.flexes[i],
+                                borderRadius: '16px',
+                                backgroundImage: `url(${artist.img})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                cursor: 'pointer',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                                filter: 'grayscale(15%) contrast(1.05)',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(0.97)';
+                                e.currentTarget.style.filter = 'grayscale(0%) contrast(1.15)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.filter = 'grayscale(15%) contrast(1.05)';
+                              }}
+                            >
+                              <div style={{
+                                position: 'absolute',
+                                bottom: 0, left: 0, right: 0,
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
+                                padding: '30px 20px 16px',
+                                color: '#fff',
+                                fontSize: '20px',
+                                fontWeight: 800,
+                                letterSpacing: '-0.5px'
+                              }}>
+                                {artist.name}
+                              </div>
+                            </div>
+                          ) : null)}
                         </div>
                       ))}
                     </div>
@@ -1576,14 +1805,14 @@ export default function Dashboard() {
                       </div>
                       <div className="shelf-scroll">
                         {recentTracks.slice(0, 5).map((song, i) => (
-                          <div key={`jb-${song.id}-${i}`} className="dash-song-card" style={{minWidth: 180}} onClick={() => { setCurrentSong(song); setPlaying(true); }}>
+                          <div key={`jb-${song.id}-${i}`} className="dash-song-card" style={{ minWidth: 180 }} onClick={() => { setCurrentSong(song); setPlaying(true); }}>
                             <div className="dash-song-cover-wrapper">
-                              <div className="dash-song-img" style={{backgroundImage: `url(${song.img})`}} />
+                              <div className="dash-song-img" style={{ backgroundImage: `url(${song.img})` }} />
                             </div>
                             <div className="dash-song-meta">
                               <div className="dash-song-title">{song.title}</div>
                               <div className="dash-song-artist">{song.artist}</div>
-                              <div className="resume-bar"><div className="resume-fill" style={{width: `${30 + Math.random() * 60}%`}} /></div>
+                              <div className="resume-bar"><div className="resume-fill" style={{ width: `${30 + (i * 17 % 60)}%` }} /></div>
                             </div>
                           </div>
                         ))}
@@ -1601,13 +1830,13 @@ export default function Dashboard() {
                     </div>
                     <div className="shelf-scroll">
                       {[
-                        {name: "Chill Vibes Room", host: "DJ_Aurora", listeners: 234, color: "#1a1a2e"},
-                        {name: "Late Night R&B", host: "SoulSeeker", listeners: 89, color: "#16213e"},
-                        {name: "Indie Discovery", host: "VinylHunter", listeners: 156, color: "#1a1a2e"},
+                        { name: "Chill Vibes Room", host: "DJ_Aurora", listeners: 234, color: "#1a1a2e" },
+                        { name: "Late Night R&B", host: "SoulSeeker", listeners: 89, color: "#16213e" },
+                        { name: "Indie Discovery", host: "VinylHunter", listeners: 156, color: "#1a1a2e" },
                       ].map((party, i) => (
-                        <div key={`party-${i}`} className="party-card" style={{background: party.color}}>
+                        <div key={`party-${i}`} className="party-card" style={{ background: party.color }}>
                           <div className="party-live-badge"><div className="party-live-dot" /> LIVE</div>
-                          <div style={{fontSize: 18, fontWeight: 700}}>{party.name}</div>
+                          <div style={{ fontSize: 18, fontWeight: 700 }}>{party.name}</div>
                           <div className="party-listeners">Hosted by {party.host} · {party.listeners} listening</div>
                           <button className="party-join">Join</button>
                         </div>
@@ -1644,7 +1873,7 @@ export default function Dashboard() {
                           <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                           <div className="dash-album-title">{song.title}</div>
                           <div className="dash-album-meta">
-                            <span 
+                            <span
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setPopupArtist(song.artist);
@@ -1679,7 +1908,7 @@ export default function Dashboard() {
                                 <span className="dash-track-badge">HD</span>
                               </div>
                               <div className="dash-track-meta">
-                                <span 
+                                <span
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setPopupArtist(song.artist);
@@ -1708,7 +1937,7 @@ export default function Dashboard() {
                           <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                           <div className="dash-album-title">{song.title}</div>
                           <div className="dash-album-meta">
-                            <span 
+                            <span
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setPopupArtist(song.artist);
@@ -1736,7 +1965,7 @@ export default function Dashboard() {
                         <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                         <div className="dash-album-title">{song.title}</div>
                         <div className="dash-album-meta">
-                          <span 
+                          <span
                             onClick={(e) => {
                               e.stopPropagation();
                               setPopupArtist(song.artist);
@@ -1763,7 +1992,7 @@ export default function Dashboard() {
                         <img src={song.img} alt={song.title} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} />
                         <div className="dash-album-title">{song.title}</div>
                         <div className="dash-album-meta">
-                          <span 
+                          <span
                             onClick={(e) => {
                               e.stopPropagation();
                               setPopupArtist(song.artist);
@@ -1869,10 +2098,10 @@ export default function Dashboard() {
         {active === "Library" && !popupGenre && !popupArtist && !popupAlbum && (
           <div style={{ padding: "0 24px 24px" }}>
             <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "white" }}>Your Library</h2>
-            
+
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
               {/* Liked Songs Playlist Card */}
-              <div 
+              <div
                 style={{
                   background: "linear-gradient(135deg, #450af5 0%, #c4efd9 100%)",
                   width: "100%",
@@ -1922,7 +2151,7 @@ export default function Dashboard() {
                               <span className="dash-track-title">{song.title}</span>
                             </div>
                             <div className="dash-track-meta">
-                              <span 
+                              <span
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setPopupArtist(song.artist);
@@ -1968,8 +2197,8 @@ export default function Dashboard() {
                   const timeStr = song.playedAt ? new Date(song.playedAt).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : "Just now";
                   const bgImage = song.artistPic || song.img;
                   return (
-                    <div 
-                      key={`recent-${song.id}-${i}`} 
+                    <div
+                      key={`recent-${song.id}-${i}`}
                       onClick={() => { setCurrentSong(song); setPlaying(true); }}
                       style={{
                         position: 'relative',
@@ -2041,30 +2270,30 @@ export default function Dashboard() {
               <div className="settings-title">Audio</div>
               <div className="settings-item">
                 <div><div className="settings-label">Hi-Res Audio</div><div className="settings-desc">Enable lossless FLAC streaming when available</div></div>
-                <button className={`settings-toggle ${settingsState.hiRes ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, hiRes: !s.hiRes}))} />
+                <button className={`settings-toggle ${settingsState.hiRes ? 'on' : ''}`} onClick={() => setSettingsState(s => ({ ...s, hiRes: !s.hiRes }))} />
               </div>
               <div className="settings-item">
                 <div><div className="settings-label">Autoplay</div><div className="settings-desc">Keep playing similar tracks when your queue ends</div></div>
-                <button className={`settings-toggle ${settingsState.autoplay ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, autoplay: !s.autoplay}))} />
+                <button className={`settings-toggle ${settingsState.autoplay ? 'on' : ''}`} onClick={() => setSettingsState(s => ({ ...s, autoplay: !s.autoplay }))} />
               </div>
               <div className="settings-item">
                 <div><div className="settings-label">Crossfade</div><div className="settings-desc">Smooth transition between tracks</div></div>
-                <button className={`settings-toggle ${settingsState.crossfade ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, crossfade: !s.crossfade}))} />
+                <button className={`settings-toggle ${settingsState.crossfade ? 'on' : ''}`} onClick={() => setSettingsState(s => ({ ...s, crossfade: !s.crossfade }))} />
               </div>
             </div>
             <div className="settings-section">
               <div className="settings-title">Privacy</div>
               <div className="settings-item">
                 <div><div className="settings-label">Private Session</div><div className="settings-desc">Your activity won&apos;t appear in listening history</div></div>
-                <button className={`settings-toggle ${settingsState.privacy ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, privacy: !s.privacy}))} />
+                <button className={`settings-toggle ${settingsState.privacy ? 'on' : ''}`} onClick={() => setSettingsState(s => ({ ...s, privacy: !s.privacy }))} />
               </div>
               <div className="settings-item">
                 <div><div className="settings-label">Last.fm Scrobbling</div><div className="settings-desc">Share your listening activity with Last.fm</div></div>
-                <button className={`settings-toggle ${settingsState.scrobbling ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, scrobbling: !s.scrobbling}))} />
+                <button className={`settings-toggle ${settingsState.scrobbling ? 'on' : ''}`} onClick={() => setSettingsState(s => ({ ...s, scrobbling: !s.scrobbling }))} />
               </div>
               <div className="settings-item">
                 <div><div className="settings-label">Notifications</div><div className="settings-desc">Get notified about new releases from artists you follow</div></div>
-                <button className={`settings-toggle ${settingsState.notifications ? 'on' : ''}`} onClick={() => setSettingsState(s => ({...s, notifications: !s.notifications}))} />
+                <button className={`settings-toggle ${settingsState.notifications ? 'on' : ''}`} onClick={() => setSettingsState(s => ({ ...s, notifications: !s.notifications }))} />
               </div>
             </div>
           </div>
@@ -2074,7 +2303,7 @@ export default function Dashboard() {
         {active === "Profile" && !popupGenre && !popupArtist && !popupAlbum && (
           <div style={{ padding: "0 32px 40px", maxWidth: 640 }}>
             <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 32 }}>Profile Settings</h2>
-            
+
             {profileMessage && (
               <div style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -2107,15 +2336,15 @@ export default function Dashboard() {
                     transition: 'opacity 0.2s'
                   }}>
                     Upload New Image
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={handleAvatarUpload} 
-                      style={{ display: 'none' }} 
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      style={{ display: 'none' }}
                     />
                   </label>
                   {customAvatar && (
-                    <button 
+                    <button
                       onClick={() => {
                         setCustomAvatar(null);
                         localStorage.removeItem("sonic_user_avatar");
@@ -2286,18 +2515,103 @@ export default function Dashboard() {
 
         {/* ===== About Page ===== */}
         {active === "About" && !popupGenre && !popupArtist && !popupAlbum && (
-          <div style={{ padding: "0 32px 40px", maxWidth: 700 }}>
-            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>About SONIC</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 16, lineHeight: 1.8, marginBottom: 24 }}>
-              SONIC is a lightweight, privacy-focused music streaming client designed for high-fidelity audio playback. Built with modern web technologies, it provides a clean, distraction-free listening experience.
-            </p>
-            <div style={{ background: '#181818', borderRadius: 8, padding: 24, marginBottom: 24 }}>
-              <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8 }}>Version</div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>2.5.0</div>
+          <div style={{ padding: "0 32px 40px", maxWidth: 800, margin: "0 auto", marginTop: 40 }}>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ width: 80, height: 80, background: 'white', borderRadius: '50%', margin: '0 auto 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(255, 255, 255, 0.2)' }}>
+                <Info size={40} color="black" />
+              </div>
+              <h2 style={{ fontSize: 48, fontWeight: 900, marginBottom: 16, letterSpacing: '-0.02em', color: 'white' }}>About SONIC</h2>
+              <div style={{ fontSize: 16, color: 'white', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Version 2.5.0</div>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: 12, lineHeight: 1.8 }}>
-              This is an independent client and is not affiliated with or endorsed by TIDAL or any music streaming service. This application does not host, store, or distribute any media files.
-            </p>
+
+            <div style={{ background: 'linear-gradient(145deg, #181818 0%, #121212 100%)', borderRadius: 16, padding: 32, marginBottom: 24, border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 16px 40px rgba(0,0,0,0.5)' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 18, lineHeight: 1.8, margin: 0, textAlign: 'center' }}>
+                Handcrafted with lots of love, way too much caffeine, and completely open source.
+                We're dedicated to giving you the sleekest music experience possible without tracking your every move.
+              </p>
+            </div>
+
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: 16, padding: 32, marginBottom: 24, border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                <Info size={24} color="white" />
+                <h3 style={{ fontSize: 20, color: 'white', margin: 0, fontWeight: 700 }}>Potato Server Warning</h3>
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 16, lineHeight: 1.7, margin: 0 }}>
+                Since this masterpiece is currently running on a potato-powered server in my basement (a.k.a. a very low-end free tier server),
+                things might occasionally get stuck, buffer, or take a nap. Please be patient with it—it's trying its best!
+              </p>
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: 48 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.8 }}>
+                This is an independent open-source client. No potatoes were harmed in the making of this server.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ===== Report Issue Page ===== */}
+        {active === "Report" && !popupGenre && !popupArtist && !popupAlbum && (
+          <div style={{ padding: "0 32px 40px", maxWidth: 800, margin: "0 auto", marginTop: 40 }}>
+            <div style={{ marginBottom: 40, textAlign: 'center' }}>
+              <h2 style={{ fontSize: 48, fontWeight: 900, marginBottom: 16, letterSpacing: '-0.02em', color: 'white' }}>Report an Issue</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 18, lineHeight: 1.6, maxWidth: 600, margin: '0 auto' }}>
+                Did the potato server crash? Song not playing? Found a bug?<br />
+                Let me know below and your message will be beamed directly to <strong style={{ color: 'white' }}>bhuvanagiribharadwaj</strong>!
+              </p>
+            </div>
+
+            <div style={{ background: '#181818', borderRadius: 16, padding: 40, border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 16px 40px rgba(0,0,0,0.3)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: 12, fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Describe the issue</label>
+                  <textarea
+                    placeholder="What went wrong? Please include any error messages..."
+                    style={{
+                      width: '100%', height: 160, background: '#242424', border: '1px solid transparent',
+                      borderRadius: 12, padding: 20, color: 'white', resize: 'none', fontFamily: 'inherit',
+                      fontSize: 16, lineHeight: 1.6, transition: 'all 0.2s', outline: 'none', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)'
+                    }}
+                    onFocus={(e) => e.currentTarget.style.border = '1px solid #555'}
+                    onBlur={(e) => e.currentTarget.style.border = '1px solid transparent'}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: 12, fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Upload Screenshot (Optional)</label>
+                  <div style={{
+                    background: '#242424', border: '2px dashed #404040', borderRadius: 12, padding: '40px 20px',
+                    textAlign: 'center', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12
+                  }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'white'; e.currentTarget.style.background = '#2a2a2a'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#404040'; e.currentTarget.style.background = '#242424'; }}
+                  >
+                    <input type="file" id="screenshot-upload" style={{ display: 'none' }} accept="image/*" />
+                    <label htmlFor="screenshot-upload" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%' }}>
+                      <div style={{ width: 48, height: 48, background: '#333', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                      </div>
+                      <div style={{ color: 'white', fontSize: 16, fontWeight: 600 }}>Click to browse or drag & drop</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: 14 }}>Supports JPG, PNG, GIF</div>
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => alert('Message successfully sent! (UI placeholder)')}
+                  style={{
+                    background: 'white', color: 'black', border: 'none', padding: '16px 32px',
+                    borderRadius: 32, fontSize: 16, fontWeight: 800, cursor: 'pointer',
+                    alignSelf: 'center', marginTop: 16, transition: 'transform 0.1s, background 0.2s',
+                    boxShadow: '0 8px 16px rgba(255, 255, 255, 0.2)'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.background = '#e0e0e0'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = 'white'; }}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -2336,10 +2650,10 @@ export default function Dashboard() {
               >
                 <ChevronLeft size={24} />
               </button>
-              
+
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, color: "white" }}>
                 <div style={{ background: "#3d91f4", borderRadius: "50%", padding: 2, display: "flex" }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg>
                 </div>
                 <span style={{ fontSize: 14, fontWeight: 500 }}>Verified Artist</span>
               </div>
@@ -2351,7 +2665,7 @@ export default function Dashboard() {
 
             {/* Artist Controls */}
             <div style={{ padding: "24px 32px", display: "flex", alignItems: "center", gap: 32, background: "linear-gradient(rgba(0,0,0,0.6) 0%, var(--bg) 100%)" }}>
-              <button 
+              <button
                 onClick={() => {
                   const firstSong = allTracks.find(t => matchArtist(t.artist, popupArtist));
                   if (firstSong) {
@@ -2359,10 +2673,10 @@ export default function Dashboard() {
                     setPlaying(true);
                   }
                 }}
-                style={{ 
-                  width: 56, height: 56, borderRadius: "50%", background: "#1db954", 
-                  border: "none", display: "flex", justifyContent: "center", alignItems: "center", 
-                  color: "black", cursor: "pointer", boxShadow: "0 8px 8px rgba(0,0,0,0.3)" 
+                style={{
+                  width: 56, height: 56, borderRadius: "50%", background: "#1db954",
+                  border: "none", display: "flex", justifyContent: "center", alignItems: "center",
+                  color: "black", cursor: "pointer", boxShadow: "0 8px 8px rgba(0,0,0,0.3)"
                 }}
               >
                 <Play size={28} fill="currentColor" style={{ marginLeft: 4 }} />
@@ -2380,16 +2694,16 @@ export default function Dashboard() {
               <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Popular</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {allTracks.filter(t => matchArtist(t.artist, popupArtist)).slice(0, showPopularAll ? 20 : 5).map((song, i) => (
-                  <div 
-                    key={song.id} 
+                  <div
+                    key={`${song.id}-${i}`}
                     onClick={() => {
                       setCurrentSong(song);
                       setPlaying(true);
                     }}
                     onContextMenu={(e) => handleContextMenu(e, song)}
-                    style={{ 
-                      display: "flex", alignItems: "center", padding: "8px 16px", 
-                      borderRadius: 4, cursor: "pointer", transition: "background 0.2s" 
+                    style={{
+                      display: "flex", alignItems: "center", padding: "8px 16px",
+                      borderRadius: 4, cursor: "pointer", transition: "background 0.2s"
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
                     onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
@@ -2413,8 +2727,8 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
-              <button 
-                onClick={() => setShowPopularAll(prev => !prev)} 
+              <button
+                onClick={() => setShowPopularAll(prev => !prev)}
                 style={{ background: "transparent", border: "none", color: "var(--text-secondary)", fontSize: 14, fontWeight: 700, cursor: "pointer", padding: "12px 0", transition: "color 0.2s" }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "#fff"}
                 onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-secondary)"}
@@ -2422,7 +2736,7 @@ export default function Dashboard() {
                 {showPopularAll ? "Show less" : "Show more"}
               </button>
             </div>
-            
+
             {/* Albums Section */}
             <div style={{ padding: "48px 32px 0 32px" }}>
               <h3 style={{ fontSize: 24, fontWeight: 700, color: "white", marginBottom: 24 }}>Albums</h3>
@@ -2437,20 +2751,20 @@ export default function Dashboard() {
                     }
                   }
                   return Array.from(uniqueAlbumsMap.values()).map((song, i) => (
-                  <div 
-                    key={`artist-album-${song.id}-${i}`} 
-                    className="dash-album-card" 
-                    onClick={() => {
-                      setPopupAlbum(song);
-                      setPopupArtist(null);
-                    }}
-                  >
-                    <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                    <div
+                      key={`artist-album-${song.id}-${i}`}
+                      className="dash-album-card"
+                      onClick={() => {
+                        setPopupAlbum(song);
+                        setPopupArtist(null);
+                      }}
+                    >
+                      <div className="dash-album-cover-wrapper" style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                        <div style={{ width: '100%', height: '100%', backgroundImage: `url(${song.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                      </div>
+                      <div className="dash-album-title">{song.album || song.title}</div>
+                      <div className="dash-album-meta">{popupArtist} • {new Date().getFullYear()}</div>
                     </div>
-                    <div className="dash-album-title">{song.album || song.title}</div>
-                    <div className="dash-album-meta">{popupArtist} • {new Date().getFullYear()}</div>
-                  </div>
                   ));
                 })()}
               </div>
@@ -2499,7 +2813,7 @@ export default function Dashboard() {
                   {new Date().getFullYear()} • {allTracks.filter(t => (t.album || t.title) === (popupAlbum.album || popupAlbum.title) && matchArtist(t.artist, popupAlbum.artist)).length} tracks
                 </div>
                 <div className="dash-album-info-copyright">
-                  By <span 
+                  By <span
                     onClick={(e) => {
                       e.stopPropagation();
                       setPopupArtist(popupAlbum.artist);
@@ -2510,18 +2824,18 @@ export default function Dashboard() {
                     {popupAlbum.artist}
                   </span> • (P) {new Date().getFullYear()} Records
                 </div>
-                
+
                 {/* Controls */}
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 24 }}>
-                  <button 
+                  <button
                     onClick={() => {
                       setCurrentSong(popupAlbum);
                       setPlaying(true);
                     }}
-                    style={{ 
-                      width: 56, height: 56, borderRadius: "50%", background: "#ffffff", 
-                      border: "none", display: "flex", justifyContent: "center", alignItems: "center", 
-                      color: "black", cursor: "pointer", boxShadow: "0 4px 12px rgba(255, 255, 255, 0.3)" 
+                    style={{
+                      width: 56, height: 56, borderRadius: "50%", background: "#ffffff",
+                      border: "none", display: "flex", justifyContent: "center", alignItems: "center",
+                      color: "black", cursor: "pointer", boxShadow: "0 4px 12px rgba(255, 255, 255, 0.3)"
                     }}
                   >
                     <Play size={28} fill="currentColor" style={{ marginLeft: 4 }} />
@@ -2543,38 +2857,38 @@ export default function Dashboard() {
                 <div style={{ width: 80, textAlign: "right", marginRight: 32 }}>Duration</div>
                 <div style={{ width: 48 }}>Menu</div>
               </div>
-              
+
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {(() => {
                   const albumName = popupAlbum.album || popupAlbum.title;
                   const albumTracks = allTracks.filter(t => (t.album || t.title) === albumName && matchArtist(t.artist, popupAlbum.artist));
                   return albumTracks.map((song, i) => (
-                  <div 
-                    key={song.id} 
-                    onClick={() => {
-                      setCurrentSong(song);
-                      setPlaying(true);
-                    }}
-                    style={{ 
-                      display: "flex", alignItems: "center", padding: "12px 16px", 
-                      borderRadius: 4, cursor: "pointer", transition: "background 0.2s",
-                      background: currentSong.id === song.id ? "rgba(255,255,255,0.08)" : "transparent"
-                    }}
-                    onMouseEnter={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "rgba(255,255,255,0.04)" }}
-                    onMouseLeave={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "transparent" }}
-                  >
-                    <div style={{ width: 32, marginRight: 16, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>1-{i + 1}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ color: currentSong.id === song.id ? "#ffffff" : "white", fontSize: 16, fontWeight: currentSong.id === song.id ? 600 : 500 }}>{song.title}</div>
-                      <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>{song.artist}</div>
+                    <div
+                      key={`${song.id}-${i}`}
+                      onClick={() => {
+                        setCurrentSong(song);
+                        setPlaying(true);
+                      }}
+                      style={{
+                        display: "flex", alignItems: "center", padding: "12px 16px",
+                        borderRadius: 4, cursor: "pointer", transition: "background 0.2s",
+                        background: currentSong.id === song.id ? "rgba(255,255,255,0.08)" : "transparent"
+                      }}
+                      onMouseEnter={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "rgba(255,255,255,0.04)" }}
+                      onMouseLeave={(e) => { if (currentSong.id !== song.id) e.currentTarget.style.background = "transparent" }}
+                    >
+                      <div style={{ width: 32, marginRight: 16, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>1-{i + 1}</div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ color: currentSong.id === song.id ? "#ffffff" : "white", fontSize: 16, fontWeight: currentSong.id === song.id ? 600 : 500 }}>{song.title}</div>
+                        <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>{song.artist}</div>
+                      </div>
+                      <div style={{ width: 80, textAlign: "right", marginRight: 32, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+                        3:11
+                      </div>
+                      <div style={{ width: 48, display: "flex", justifyContent: "flex-end", color: "rgba(255,255,255,0.5)" }}>
+                        <MoreVertical size={16} />
+                      </div>
                     </div>
-                    <div style={{ width: 80, textAlign: "right", marginRight: 32, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
-                      3:11
-                    </div>
-                    <div style={{ width: 48, display: "flex", justifyContent: "flex-end", color: "rgba(255,255,255,0.5)" }}>
-                      <MoreVertical size={16} />
-                    </div>
-                  </div>
                   ));
                 })()}
               </div>
@@ -2601,7 +2915,7 @@ export default function Dashboard() {
             />
             <div>
               <div className="dash-player-name">{currentSong.title}</div>
-              <div 
+              <div
                 className="dash-player-artist"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -2616,7 +2930,7 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-          
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '8px' }}>
             <motion.button
               className="dash-player-btn"
@@ -2759,59 +3073,59 @@ export default function Dashboard() {
       {/* ===== Context Menu ===== */}
       {ctxMenu.show && (
         <>
-          <div className="ctx-menu-overlay" onClick={() => setCtxMenu(prev => ({...prev, show: false}))} />
-          <div className="ctx-menu" style={{left: ctxMenu.x, top: ctxMenu.y}}>
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setCurrentSong(ctxMenu.track); setPlaying(true); setIsShuffle(true); } setCtxMenu(prev => ({...prev, show: false})); }}>
+          <div className="ctx-menu-overlay" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))} />
+          <div className="ctx-menu" style={{ left: ctxMenu.x, top: ctxMenu.y }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setCurrentSong(ctxMenu.track); setPlaying(true); setIsShuffle(true); } setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <Shuffle size={16} /> Shuffle play
             </div>
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <Radio size={16} /> Infinite Radio
             </div>
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <Disc3 size={16} /> Start Mix
             </div>
             <div className="ctx-menu-sep" />
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) playNext(ctxMenu.track); setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) playNext(ctxMenu.track); setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <SkipForward size={16} /> Play next
             </div>
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) addToQueue(ctxMenu.track); setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) addToQueue(ctxMenu.track); setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <ListMusic size={16} /> Add to queue
             </div>
             <div className="ctx-menu-sep" />
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) toggleLike(ctxMenu.track.id); setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) toggleLike(ctxMenu.track.id); setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <Heart size={16} fill={ctxMenu.track && likedSongs.has(ctxMenu.track.id) ? '#1db954' : 'none'} color={ctxMenu.track && likedSongs.has(ctxMenu.track.id) ? '#1db954' : 'currentColor'} /> {ctxMenu.track && likedSongs.has(ctxMenu.track.id) ? 'Unlike' : 'Like'}
             </div>
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <Pin size={16} /> Pin
             </div>
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <ListMusic size={16} /> Add to playlist
             </div>
             <div className="ctx-menu-sep" />
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <Music size={16} /> Request song
             </div>
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setPopupArtist(ctxMenu.track.artist); setPopupAlbum(null); } setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setPopupArtist(ctxMenu.track.artist); setPopupAlbum(null); } setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <Users size={16} /> Go to artist
             </div>
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setPopupAlbum(ctxMenu.track); } setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) { setPopupAlbum(ctxMenu.track); } setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <Disc3 size={16} /> Go to album
             </div>
             <div className="ctx-menu-sep" />
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) navigator.clipboard.writeText(`${window.location.origin}/track/${ctxMenu.track.id}`); setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) navigator.clipboard.writeText(`${window.location.origin}/track/${ctxMenu.track.id}`); setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <Copy size={16} /> Copy link
             </div>
-            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) downloadTrack(null, ctxMenu.track); setCtxMenu(prev => ({...prev, show: false})); }}>
+            <div className="ctx-menu-item" onClick={() => { if (ctxMenu.track) downloadTrack(null, ctxMenu.track); setCtxMenu(prev => ({ ...prev, show: false })); }}>
               <Download size={16} /> Download
             </div>
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <Info size={16} /> Track info
             </div>
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))}>
               <ExternalLink size={16} /> Open original URL
             </div>
             <div className="ctx-menu-sep" />
-            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({...prev, show: false}))} style={{color: '#e74c3c'}}>
+            <div className="ctx-menu-item" onClick={() => setCtxMenu(prev => ({ ...prev, show: false }))} style={{ color: '#e74c3c' }}>
               <Ban size={16} /> Block track / album / artist
             </div>
           </div>
@@ -2827,17 +3141,17 @@ export default function Dashboard() {
           </div>
           <div className="queue-list">
             {/* Currently Playing */}
-            <div className="queue-track active" onClick={() => {}}>
+            <div className="queue-track active" onClick={() => { }}>
               <img src={currentSong.img} alt="" className="queue-track-img" />
               <div className="queue-track-info">
-                <div className="queue-track-title" style={{color: 'var(--accent)'}}>{currentSong.title}</div>
+                <div className="queue-track-title" style={{ color: 'var(--accent)' }}>{currentSong.title}</div>
                 <div className="queue-track-artist">{currentSong.artist}</div>
               </div>
-              <div className="queue-track-duration" style={{color: 'var(--accent)'}}>Now</div>
+              <div className="queue-track-duration" style={{ color: 'var(--accent)' }}>Now</div>
             </div>
             {/* Queued tracks */}
             {queue.length === 0 ? (
-              <div style={{padding: 24, textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14}}>
+              <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14 }}>
                 Queue is empty. Right-click a track to add it.
               </div>
             ) : queue.map((t, i) => (
@@ -2872,14 +3186,14 @@ export default function Dashboard() {
           </div>
           <div className="search-results">
             {searchOverlayResults.length === 0 && searchOverlayQuery.trim() && (
-              <div style={{textAlign: 'center', color: 'var(--text-secondary)', padding: 40, fontSize: 16}}>Searching...</div>
+              <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: 40, fontSize: 16 }}>Searching...</div>
             )}
             {searchTab === "Tracks" && searchOverlayResults.map((s, i) => (
               <div key={`sr-${s.id}-${i}`} className="dash-track-row" onClick={() => { setCurrentSong(s); setPlaying(true); setShowSearchOverlay(false); setSearchOverlayQuery(""); }} onContextMenu={(e) => handleContextMenu(e, s)}>
                 <div className="dash-track-left">
-                  <div style={{width: 32, textAlign: 'right', marginRight: 16, color: 'rgba(255,255,255,0.5)', fontSize: 14}}>{i + 1}</div>
-                  <div style={{width: 40, height: 40, overflow: 'hidden', borderRadius: 4, marginRight: 12, flexShrink: 0}}>
-                    <div style={{width: '100%', height: '100%', backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
+                  <div style={{ width: 32, textAlign: 'right', marginRight: 16, color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>{i + 1}</div>
+                  <div style={{ width: 40, height: 40, overflow: 'hidden', borderRadius: 4, marginRight: 12, flexShrink: 0 }}>
+                    <div style={{ width: '100%', height: '100%', backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
                   </div>
                   <div className="dash-track-details">
                     <div className="dash-track-title">{s.title}</div>
@@ -2890,11 +3204,11 @@ export default function Dashboard() {
               </div>
             ))}
             {searchTab === "Albums" && (
-              <div className="dash-monochrome-grid" style={{marginTop: 16}}>
+              <div className="dash-monochrome-grid" style={{ marginTop: 16 }}>
                 {searchOverlayResults.slice(0, 12).map((s, i) => (
                   <div key={`sa-${s.id}-${i}`} className="dash-album-card" onClick={() => { setPopupAlbum(s); setShowSearchOverlay(false); }}>
-                    <div style={{width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)'}}>
-                      <div style={{width: '100%', height: '100%', backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
+                    <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                      <div style={{ width: '100%', height: '100%', backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
                     </div>
                     <div className="dash-album-title">{s.title}</div>
                     <div className="dash-album-meta">{s.artist}</div>
@@ -2903,12 +3217,12 @@ export default function Dashboard() {
               </div>
             )}
             {searchTab === "Artists" && (
-              <div className="dash-playlists artists-grid" style={{marginTop: 16}}>
+              <div className="dash-playlists artists-grid" style={{ marginTop: 16 }}>
                 {Array.from(new Set(searchOverlayResults.map(s => s.artist))).slice(0, 12).map((artist, i) => {
                   const song = searchOverlayResults.find(s => s.artist === artist);
                   return (
                     <div key={`artist-search-${i}`} className="dash-artist-card" onClick={() => { setPopupArtist(artist); setShowSearchOverlay(false); }}>
-                      <div className="dash-artist-img" style={{backgroundImage: `url(${song?.img || ''})`}} />
+                      <div className="dash-artist-img" style={{ backgroundImage: `url(${song?.img || ''})` }} />
                       <div className="dash-artist-name">{artist}</div>
                       <div className="dash-artist-label">Artist</div>
                     </div>
@@ -2917,7 +3231,7 @@ export default function Dashboard() {
               </div>
             )}
             {(searchTab === "Playlists" || searchTab === "Podcasts") && (
-              <div style={{textAlign: 'center', color: 'var(--text-secondary)', padding: 40, fontSize: 16}}>
+              <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: 40, fontSize: 16 }}>
                 No {searchTab.toLowerCase()} found for &ldquo;{searchOverlayQuery}&rdquo;
               </div>
             )}

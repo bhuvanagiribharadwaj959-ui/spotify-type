@@ -333,8 +333,8 @@ export function Login() {
                     width: '48px',
                     height: '48px',
                     borderRadius: '50%',
-                    backgroundColor: '#000',
-                    color: '#1ED760',
+                    backgroundColor: '#ffffff',
+                    color: '#000000',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -342,7 +342,7 @@ export function Login() {
                     padding: 0
                   }}
                 >
-                  {isPlaying ? <Pause size={24} fill="#1ED760" stroke="none" /> : <Play size={24} fill="#1ED760" stroke="none" style={{ marginLeft: '4px' }} />}
+                  {isPlaying ? <Pause size={24} fill="#000000" stroke="none" /> : <Play size={24} fill="#000000" stroke="none" style={{ marginLeft: '4px' }} />}
                 </button>
                 <button type="button" aria-label="Next" onClick={() => setIsPlaying(false)}><SkipForward size={20} fill="currentColor" /></button>
               </div>
