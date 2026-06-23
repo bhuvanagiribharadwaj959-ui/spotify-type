@@ -474,7 +474,7 @@ export default function Dashboard() {
         const fetchDbSongs = async () => {
           try {
             const isDev = process.env.NODE_ENV === 'development';
-            const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+            const baseUrl = 'https://test-0k.onrender.com';
             let trendingList: any[] = [];
             
             try {
@@ -668,7 +668,7 @@ export default function Dashboard() {
     const timer = setTimeout(async () => {
       try {
         const isDev = process.env.NODE_ENV === 'development';
-        const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+        const baseUrl = 'https://test-0k.onrender.com';
         const res = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(searchQuery)}`);
         if (res.ok) {
           const data = await res.json();
@@ -1156,7 +1156,7 @@ export default function Dashboard() {
     const timer = setTimeout(async () => {
       try {
         const isDev = process.env.NODE_ENV === 'development';
-        const baseUrl = isDev ? 'http://127.0.0.1:9999' : 'https://test-0k.onrender.com';
+        const baseUrl = 'https://test-0k.onrender.com';
         const res = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(searchOverlayQuery)}`);
         if (res.ok) {
           const data = await res.json();
