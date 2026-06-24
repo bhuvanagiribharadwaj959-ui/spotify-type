@@ -1518,9 +1518,6 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           <div className="dash-pinned-link" onClick={() => { setActive("Report"); setPopupAlbum(null); setPopupArtist(null); setPopupGenre(null); }}>
             <MessageCircle size={16} /> Report Issue
           </div>
-          <a className="dash-pinned-link" href="https://discord.gg/monochrome" target="_blank" rel="noreferrer">
-            <MessageCircle size={16} /> Discord
-          </a>
           <a className="dash-pinned-link" href="https://github.com/bhuvanagiribharadwaj" target="_blank" rel="noreferrer">
             <ExternalLink size={16} /> GitHub
           </a>
