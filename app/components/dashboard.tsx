@@ -993,9 +993,42 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           });
         }
 
+        let finalAudioUrl = data.audioUrl;
+
+        // If the backend failed to get the audio URL (likely due to Hugging Face IP blocking), 
+        // fallback to the Render proxy directly from the client's browser!
+        if (!finalAudioUrl && !hasPlayedStatic) {
+          try {
+            const baseUrl = 'https://test-0k.onrender.com';
+            let songLink = currentSong.permaUrl;
+            
+            if (!songLink) {
+              const searchRes = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(currentSong.artist + " " + currentSong.title)}`);
+              if (searchRes.ok) {
+                const searchData = await searchRes.json();
+                if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
+                  songLink = searchData.results[0].perma_url || searchData.results[0].url || searchData.results[0].link;
+                }
+              }
+            }
+            
+            if (songLink) {
+              const playRes = await fetch(`${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`);
+              if (playRes.ok) {
+                const playData = await playRes.json();
+                if (playData.status === "success" && playData.data && playData.data.stream_url) {
+                  finalAudioUrl = playData.data.stream_url;
+                }
+              }
+            }
+          } catch (e) {
+            console.error("Client fallback proxy failed", e);
+          }
+        }
+
         // Only use the fetched audio URL if we didn't already play the pre-calculated one
-        if (!hasPlayedStatic && data.audioUrl && audioRef.current) {
-          audioRef.current.src = data.audioUrl;
+        if (!hasPlayedStatic && finalAudioUrl && audioRef.current) {
+          audioRef.current.src = finalAudioUrl;
           if (playingRef.current) {
             playAudio();
           }
