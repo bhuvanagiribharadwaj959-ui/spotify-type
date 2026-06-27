@@ -685,7 +685,34 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-            // 1. Map local attractive/popular songs from songs.json FIRST 
+            // 1. Fetch from Jamendo API for instant playback
+            try {
+              const jamRes = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=a66a6034&format=json&limit=15&order=popularity_week`, { signal: AbortSignal.timeout(4000) });
+              if (jamRes.ok) {
+                const data = await jamRes.json();
+                if (data.results) {
+                  data.results.forEach((r: any) => {
+                    const titleLower = (r.name || "").toLowerCase();
+                    if (!seenTitles.has(titleLower)) {
+                      seenTitles.add(titleLower);
+                      fetched.push({
+                        id: 'jamendo-' + r.id,
+                        title: r.name,
+                        artist: r.artist_name,
+                        img: r.image,
+                        language: "english",
+                        audioUrl: r.audio,
+                        permaUrl: r.shareurl
+                      });
+                    }
+                  });
+                }
+              }
+            } catch(e) {
+              console.error("Jamendo fetch failed", e);
+            }
+
+            // 2. Map local attractive/popular songs from songs.json FIRST 
             // These are guaranteed to have working lyrics and high-quality artwork
             try {
               const jsonRes = await fetch('/songs.json');
@@ -931,9 +958,9 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
       // Pre-load the static CDN stream if we have it in the database!
       let hasPlayedStatic = false;
       let staticAudioUrl = currentSong.audioUrl;
-      // Only use staticAudioUrl if it's a direct Supabase or custom storage URL, 
+      // Only use staticAudioUrl if it's a direct Supabase, custom storage, or Jamendo URL, 
       // ignoring all cached JioSaavn/Deezer URLs to force fresh full-length streams
-      if (staticAudioUrl && !staticAudioUrl.includes('supabase.co')) {
+      if (staticAudioUrl && !(staticAudioUrl.includes('supabase.co') || staticAudioUrl.includes('jamendo.com'))) {
         staticAudioUrl = undefined;
       }
 
