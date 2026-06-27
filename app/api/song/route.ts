@@ -259,9 +259,9 @@ export async function POST(req: NextRequest) {
     };
 
     const fetchAudio = async () => {
-      let audioUrl = localAudioUrl;
-      let coverUrl = localCoverUrl;
-      let artistPic = localArtistPic;
+      let audioUrl: string | null = localAudioUrl;
+      let coverUrl: string | null = localCoverUrl;
+      let artistPic: string | null = localArtistPic;
 
       const needsSearch = !audioUrl;
       const needsDeezer = !coverUrl || !artistPic;
