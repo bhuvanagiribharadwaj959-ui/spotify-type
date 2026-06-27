@@ -683,7 +683,56 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-            // Map trending songs first
+            // 1. Fetch from Jamendo and Invidious (English APIs) First
+            let jamendoTracks: DashboardTrack[] = [];
+            let invidiousTracks: DashboardTrack[] = [];
+
+            try {
+              const [jamRes, invRes] = await Promise.allSettled([
+                fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=a66a6034&format=json&limit=15&order=popularity_week`, { signal: AbortSignal.timeout(4000) }),
+                fetch(`https://vid.puffyan.us/api/v1/trending?type=Music`, { signal: AbortSignal.timeout(4000) })
+              ]);
+
+              if (jamRes.status === 'fulfilled' && jamRes.value.ok) {
+                const data = await jamRes.value.json();
+                if (data.results) {
+                  jamendoTracks = data.results.map((r: any) => ({
+                    id: 'jamendo-' + r.id,
+                    title: r.name,
+                    artist: r.artist_name,
+                    img: r.image,
+                    language: "english",
+                    audioUrl: r.audio,
+                    permaUrl: r.shareurl
+                  }));
+                }
+              }
+
+              if (invRes.status === 'fulfilled' && invRes.value.ok) {
+                const data = await invRes.value.json();
+                if (data && data.length > 0) {
+                  invidiousTracks = data.slice(0, 15).map((r: any) => ({
+                    id: 'inv-' + r.videoId,
+                    title: r.title,
+                    artist: r.author,
+                    img: r.videoThumbnails?.find((t: any) => t.quality === 'high')?.url || r.videoThumbnails?.[0]?.url,
+                    language: "english",
+                    permaUrl: `https://www.youtube.com/watch?v=${r.videoId}`
+                  }));
+                }
+              }
+            } catch(e) {}
+
+            // Add English API tracks first
+            [...jamendoTracks, ...invidiousTracks].forEach(track => {
+              const titleLower = (track.title || "").toLowerCase();
+              if (!seenTitles.has(titleLower)) {
+                seenTitles.add(titleLower);
+                fetched.push(track);
+              }
+            });
+
+            // 2. Map JioSaavn trending songs
             trendingList.forEach((item: any) => {
               const titleLower = (item.title || "").toLowerCase();
               if (titleLower) seenTitles.add(titleLower);
