@@ -225,11 +225,12 @@ export default function PlayingOverlay({
           {/* True Blurred Image Background */}
           <div style={{
             position: 'absolute',
-            inset: '-10%',
+            inset: 0,
             backgroundImage: `url(${track.img})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'blur(60px)',
+            transform: 'scale(1.2)',
             zIndex: 0,
             pointerEvents: 'none',
           }} />
@@ -317,8 +318,8 @@ export default function PlayingOverlay({
               overflowY: 'auto',
               height: '100%',
               paddingRight: '24px',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 80%, transparent 100%)'
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 95%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 95%, transparent 100%)'
             }}>
               <div className="playing-lyrics" style={{ padding: '100px 20px 180px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 {isLoading ? (
