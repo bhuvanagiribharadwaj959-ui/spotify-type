@@ -192,10 +192,10 @@ export async function POST(req: NextRequest) {
     const isIndian = ["hindi", "punjabi", "tamil", "telugu", "bhojpuri", "malayalam", "kannada", "marathi", "bengali", "gujarati", "urdu", "indian"].includes(cleanLanguage) ||
                      (artist + " " + title).toLowerCase().match(/(arijit|nehha|badshah|diljit|shreya|arman|rahman|udit|kishore|rafi|lata|alkas|kumarsanu|jio|saavn|bollywood|playback)/i);
 
-    let localAudioUrl = null;
-    let localLyrics = null;
-    let localCoverUrl = null;
-    let localArtistPic = null;
+    let localAudioUrl: string | null = null;
+    let localLyrics: string | null = null;
+    let localCoverUrl: string | null = null;
+    let localArtistPic: string | null = null;
 
     // Sequential processing for lyrics and audio resolution to keep proxy load low
     const fetchLyrics = async () => {
