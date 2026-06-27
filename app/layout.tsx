@@ -16,6 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
+      <head>
+        <meta name="referrer" content="no-referrer" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
