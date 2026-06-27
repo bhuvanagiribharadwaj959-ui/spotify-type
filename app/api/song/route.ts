@@ -10,57 +10,6 @@ function isPreviewUrl(url: string | null | undefined): boolean {
          lower.includes('preview');
 }
 
-async function fetchJamendoAudio(title: string, artist: string): Promise<string | null> {
-  try {
-    const encodedQuery = encodeURIComponent(`${artist} ${title}`);
-    const res = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=a66a6034&format=json&limit=1&search=${encodedQuery}`, { signal: AbortSignal.timeout(8000) });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.results && data.results.length > 0 && data.results[0].audio) {
-        return data.results[0].audio;
-      }
-    }
-  } catch (e) {
-    console.error("Jamendo fetch failed:", e);
-  }
-  return null;
-}
-
-async function fetchInvidiousAudio(title: string, artist: string): Promise<string | null> {
-  const instances = [
-    'https://vid.puffyan.us',
-    'https://invidious.slipfox.xyz',
-    'https://invidious.fdn.fr'
-  ];
-  const query = encodeURIComponent(`${title} ${artist} audio`);
-  
-  for (const instance of instances) {
-    try {
-      const searchRes = await fetch(`${instance}/api/v1/search?q=${query}&type=video`, { signal: AbortSignal.timeout(8000) });
-      if (searchRes.ok) {
-        const searchData = await searchRes.json();
-        if (searchData && searchData.length > 0) {
-          const videoId = searchData[0].videoId;
-          if (videoId) {
-            const videoRes = await fetch(`${instance}/api/v1/videos/${videoId}`, { signal: AbortSignal.timeout(8000) });
-            if (videoRes.ok) {
-              const videoData = await videoRes.json();
-              const adaptiveFormats = videoData.adaptiveFormats || [];
-              const audioFormats = adaptiveFormats.filter((f: any) => f.type && f.type.startsWith('audio/'));
-              if (audioFormats.length > 0) {
-                audioFormats.sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0));
-                return audioFormats[0].url;
-              }
-            }
-          }
-        }
-      }
-    } catch (e) {
-      console.error(`Invidious fetch failed on ${instance}:`, e);
-    }
-  }
-  return null;
-}
 
 // Direct search and decryption using official JioSaavn API with strict timeouts
 async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
@@ -289,17 +238,12 @@ export async function POST(req: NextRequest) {
 
       const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(title, artist) : Promise.resolve(null);
       const proxyJioPromise = needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null);
-      
-      const jamendoPromise = (needsSearch && !isIndian) ? fetchJamendoAudio(title, artist) : Promise.resolve(null);
-      const invidiousPromise = (needsSearch && !isIndian) ? fetchInvidiousAudio(title, artist) : Promise.resolve(null);
 
       // Wait for all requests in parallel
-      const [deezerRes, directJioRes, proxyJioRes, jamendoRes, invidiousRes] = await Promise.all([
+      const [deezerRes, directJioRes, proxyJioRes] = await Promise.all([
         deezerPromise,
         directJioPromise,
-        proxyJioPromise,
-        jamendoPromise,
-        invidiousPromise
+        proxyJioPromise
       ]);
 
       // 2. Merge retrieved HD assets
@@ -307,35 +251,13 @@ export async function POST(req: NextRequest) {
       if (!artistPic && deezerRes?.artistPic) artistPic = deezerRes.artistPic;
 
       // 3. Resolve the audio stream URL based on priority
-      if (!isIndian) {
-        // Priority for English songs: Jamendo -> Invidious -> JioSaavn
-        if (!audioUrl && jamendoRes) audioUrl = jamendoRes;
-        if (!audioUrl && invidiousRes) audioUrl = invidiousRes;
-        
-        if (!audioUrl && directJioRes?.audioUrl) {
-          audioUrl = directJioRes.audioUrl;
-          if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
-        }
-        if (!audioUrl && proxyJioRes) {
-          audioUrl = proxyJioRes;
-        }
-      } else {
-        // Priority for Indian songs: JioSaavn -> Jamendo -> Invidious
-        if (!audioUrl && directJioRes?.audioUrl) {
-          audioUrl = directJioRes.audioUrl;
-          if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
-        }
-        if (!audioUrl && proxyJioRes) {
-          audioUrl = proxyJioRes;
-        }
-        
-        // For Indian songs, fallbacks weren't fetched in parallel to save load. Fetch them sequentially if JioSaavn failed.
-        if (!audioUrl) {
-          audioUrl = await fetchJamendoAudio(title, artist);
-        }
-        if (!audioUrl) {
-          audioUrl = await fetchInvidiousAudio(title, artist);
-        }
+      // Priority for all songs: JioSaavn Direct -> JioSaavn Proxy
+      if (!audioUrl && directJioRes?.audioUrl) {
+        audioUrl = directJioRes.audioUrl;
+        if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
+      }
+      if (!audioUrl && proxyJioRes) {
+        audioUrl = proxyJioRes;
       }
 
       return { audioUrl, coverUrl, artistPic };

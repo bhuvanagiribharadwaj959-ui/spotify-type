@@ -685,32 +685,6 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-            // 1. Fetch from Jamendo API for instant playback
-            try {
-              const jamRes = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=a66a6034&format=json&limit=15&order=popularity_week`, { signal: AbortSignal.timeout(4000) });
-              if (jamRes.ok) {
-                const data = await jamRes.json();
-                if (data.results) {
-                  data.results.forEach((r: any) => {
-                    const titleLower = (r.name || "").toLowerCase();
-                    if (!seenTitles.has(titleLower)) {
-                      seenTitles.add(titleLower);
-                      fetched.push({
-                        id: 'jamendo-' + r.id,
-                        title: r.name,
-                        artist: r.artist_name,
-                        img: r.image,
-                        language: "english",
-                        audioUrl: r.audio,
-                        permaUrl: r.shareurl
-                      });
-                    }
-                  });
-                }
-              }
-            } catch(e) {
-              console.error("Jamendo fetch failed", e);
-            }
 
             // 2. Map local attractive/popular songs from songs.json FIRST 
             // These are guaranteed to have working lyrics and high-quality artwork
