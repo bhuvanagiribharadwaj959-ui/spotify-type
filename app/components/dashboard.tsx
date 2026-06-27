@@ -997,12 +997,11 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           setAlternatives([]);
         }
 
-        if (data.coverUrl || data.artistPic) {
+        if (data.artistPic) {
           setCurrentSong(prev => {
             if (!prev || prev.id !== currentSong.id) return prev;
             return {
               ...prev,
-              img: data.coverUrl || prev.img,
               artistPic: data.artistPic || prev.artistPic
             };
           });
