@@ -150,24 +150,21 @@ export async function POST(req: NextRequest) {
     const fetchLyrics = async () => {
       if (localLyrics) return localLyrics;
 
-      // Try LRCLIB get first (extremely fast direct lookup)
-      try {
-        const getUrl = `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist.split(',')[0].trim())}&track_name=${encodeURIComponent(title.replace(/\s*\(.*?\)\s*/g, '').trim())}`;
-        const getRes = await fetch(getUrl, {
-          headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
-          signal: AbortSignal.timeout(4000)
-        });
-        if (getRes.ok) {
-          const getData = await getRes.json();
-          if (getData.syncedLyrics || getData.plainLyrics) {
-            return getData.syncedLyrics || getData.plainLyrics;
-          }
-        }
-      } catch (err) {}
+      function cleanMetadataString(str: string): string {
+        if (!str) return "";
+        return str
+          .replace(/\(feat\..*?\)/gi, '')
+          .replace(/\[.*?\]/g, '')
+          .replace(/- Live\s*/gi, '')
+          .trim();
+      }
 
-      // Try LRCLIB search
+      const cleanTitle = cleanMetadataString(title);
+      const cleanArtist = cleanMetadataString(artist.split(',')[0]);
+
+      // Try LRCLIB search endpoint which is fuzzy and safer
       try {
-        const searchUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(title.replace(/\s*\(.*?\)\s*/g, '').trim() + " " + artist.split(',')[0].trim())}`;
+        const searchUrl = `https://lrclib.net/api/search?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}`;
         const searchRes = await fetch(searchUrl, {
           headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
           signal: AbortSignal.timeout(5000)

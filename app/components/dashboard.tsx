@@ -238,6 +238,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   const [isABLoop, setIsABLoop] = useState(false);
   const [abLoopStart, setAbLoopStart] = useState<number | null>(null);
   const [abLoopEnd, setAbLoopEnd] = useState<number | null>(null);
+  const activeRequestId = useRef<number>(0);
   const cleanArtistName = (raw: string | null) => {
     if (!raw) return null;
     let clean = raw.split(" - ")[0].trim();
@@ -921,6 +922,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     const fetchSongData = async () => {
       setIsLoadingAudio(true);
       setLyrics("");
+      const currentId = ++activeRequestId.current;
 
       // Immediately stop the old song from playing while we fetch the new one
       if (audioRef.current) {
@@ -949,7 +951,9 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
         
         // If we also have lyrics locally, we are done!
         if (currentSong.lyrics) {
-          setIsLoadingAudio(false);
+          if (currentId === activeRequestId.current) {
+            setIsLoadingAudio(false);
+          }
           return;
         }
       }
@@ -971,14 +975,14 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
 
         if (!res.ok) {
           const errData = await res.json();
-          if (active) {
+          if (active && currentId === activeRequestId.current) {
             setLyrics(`Failed to load song. Error: ${errData.details || errData.error || 'Unknown error'}`);
           }
           return;
         }
 
         const data = await res.json();
-        if (!active) return;
+        if (!active || currentId !== activeRequestId.current) return;
 
         if (data.alternatives) {
           setAlternatives(data.alternatives);
@@ -1029,7 +1033,10 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           }
         }
 
-        if (!active) return;
+        if (!active || currentId !== activeRequestId.current) {
+          console.log("Discarded stale track response.");
+          return;
+        }
         
         // Ensure both audio and lyrics trigger simultaneously
         if (!hasPlayedStatic && finalAudioUrl && audioRef.current) {
@@ -1046,11 +1053,11 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
         }
       } catch (e: any) {
         console.error("Error fetching song", e);
-        if (active) {
+        if (active && currentId === activeRequestId.current) {
           setLyrics(`Network error: ${e.message}`);
         }
       } finally {
-        if (active) {
+        if (active && currentId === activeRequestId.current) {
           setIsLoadingAudio(false);
         }
       }
