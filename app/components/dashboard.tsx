@@ -866,28 +866,17 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     const timer = setTimeout(async () => {
       try {
         const isDev = process.env.NODE_ENV === 'development';
-        const baseUrl = 'https://test-0k.onrender.com';
-        const res = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(searchQuery)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
         if (res.ok) {
           const data = await res.json();
           if (data.status === "success" && data.results) {
-            const parsedResults = data.results.map((r: any) => {
-              return {
-                id: r.id || Math.random().toString(36).substring(7),
-                title: r.title || "Unknown Title",
-                artist: r.artist || "Unknown Artist",
-                img: cleanImgUrl(r.thumbnail),
-                language: r.language || "english",
-                permaUrl: r.perma_url || r.url || r.link
-              };
-            });
-            setSearchResults(parsedResults);
+            setSearchResults(data.results);
           }
         }
       } catch (err) {
-        console.error("Open source search failed:", err);
+        console.error("Local cached search failed:", err);
       }
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
@@ -1379,24 +1368,17 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     if (!searchOverlayQuery.trim()) { setSearchOverlayResults([]); return; }
     const timer = setTimeout(async () => {
       try {
-        const isDev = process.env.NODE_ENV === 'development';
-        const baseUrl = 'https://test-0k.onrender.com';
-        const res = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(searchOverlayQuery)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchOverlayQuery)}`);
         if (res.ok) {
           const data = await res.json();
           if (data.status === "success" && data.results) {
-            setSearchOverlayResults(data.results.map((r: any) => ({
-              id: r.id || Math.random().toString(36).substring(7),
-              title: r.title || "Unknown",
-              artist: r.artist || "Unknown",
-              img: cleanImgUrl(r.thumbnail),
-              language: r.language || "english",
-              permaUrl: r.perma_url || r.url || r.link
-            })));
+            setSearchOverlayResults(data.results);
+          } else {
+            setSearchOverlayResults([]);
           }
         }
       } catch (err) { console.error("Search overlay error:", err); }
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, [searchOverlayQuery]);
 
@@ -1462,6 +1444,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onEnded={handleEnded}
         loop={isRepeat}
+        preload="auto"
         style={{ display: 'none' }}
       />
       {/* Sidebar */}
