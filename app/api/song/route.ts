@@ -10,6 +10,58 @@ function isPreviewUrl(url: string | null | undefined): boolean {
          lower.includes('preview');
 }
 
+async function fetchJamendoAudio(title: string, artist: string): Promise<string | null> {
+  try {
+    const encodedQuery = encodeURIComponent(`${artist} ${title}`);
+    const res = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=a66a6034&format=json&limit=1&search=${encodedQuery}`, { signal: AbortSignal.timeout(8000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.results && data.results.length > 0 && data.results[0].audio) {
+        return data.results[0].audio;
+      }
+    }
+  } catch (e) {
+    console.error("Jamendo fetch failed:", e);
+  }
+  return null;
+}
+
+async function fetchInvidiousAudio(title: string, artist: string): Promise<string | null> {
+  const instances = [
+    'https://vid.puffyan.us',
+    'https://invidious.slipfox.xyz',
+    'https://invidious.fdn.fr'
+  ];
+  const query = encodeURIComponent(`${title} ${artist} audio`);
+  
+  for (const instance of instances) {
+    try {
+      const searchRes = await fetch(`${instance}/api/v1/search?q=${query}&type=video`, { signal: AbortSignal.timeout(8000) });
+      if (searchRes.ok) {
+        const searchData = await searchRes.json();
+        if (searchData && searchData.length > 0) {
+          const videoId = searchData[0].videoId;
+          if (videoId) {
+            const videoRes = await fetch(`${instance}/api/v1/videos/${videoId}`, { signal: AbortSignal.timeout(8000) });
+            if (videoRes.ok) {
+              const videoData = await videoRes.json();
+              const adaptiveFormats = videoData.adaptiveFormats || [];
+              const audioFormats = adaptiveFormats.filter((f: any) => f.type && f.type.startsWith('audio/'));
+              if (audioFormats.length > 0) {
+                audioFormats.sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0));
+                return audioFormats[0].url;
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error(`Invidious fetch failed on ${instance}:`, e);
+    }
+  }
+  return null;
+}
+
 // Direct search and decryption using official JioSaavn API with strict timeouts
 async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
   try {
@@ -18,8 +70,13 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
     const searchUrl = `https://www.jiosaavn.com/api.php?p=1&q=${encodedQuery}&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=10&__call=search.getResults`;
     
     const searchRes = await fetch(searchUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      signal: AbortSignal.timeout(15000)
+      headers: { 
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://www.jiosaavn.com/',
+        'Origin': 'https://www.jiosaavn.com/'
+      },
+      signal: AbortSignal.timeout(30000)
     });
     
     if (searchRes.ok) {
@@ -45,8 +102,13 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
         if (encryptedMediaUrl) {
           const authUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedMediaUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
           const authRes = await fetch(authUrl, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-            signal: AbortSignal.timeout(12000)
+            headers: { 
+              'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
+              'Accept': 'application/json, text/plain, */*',
+              'Referer': 'https://www.jiosaavn.com/',
+              'Origin': 'https://www.jiosaavn.com/'
+            },
+            signal: AbortSignal.timeout(30000)
           });
           
           if (authRes.ok) {
@@ -75,7 +137,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
     let songLink = permaUrl;
     if (!songLink) {
       const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(25000) });
+      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(35000) });
       if (searchRes.ok) {
         const searchData = await searchRes.json();
         if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
@@ -101,7 +163,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
 
     if (songLink) {
       const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(25000) });
+      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(35000) });
       if (playRes.ok) {
         const playData = await playRes.json();
         if (playData.status === "success" && playData.data && playData.data.stream_url) {
@@ -249,22 +311,13 @@ export async function POST(req: NextRequest) {
         audioUrl = proxyJioRes;
       }
       
-      if (!audioUrl && deezerRes?.preview) {
-        audioUrl = deezerRes.preview;
+      // Full-length fallbacks instead of 30-sec previews
+      if (!audioUrl) {
+        audioUrl = await fetchJamendoAudio(title, artist);
       }
 
-      // Final fallback to iTunes preview
       if (!audioUrl) {
-        try {
-          const encodedQuery = encodeURIComponent(`${artist} ${title}`);
-          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodedQuery}&media=music&limit=1`, { signal: AbortSignal.timeout(2000) });
-          if (itunesRes.ok) {
-            const itunesData = await itunesRes.json();
-            if (itunesData.results && itunesData.results.length > 0) {
-              audioUrl = itunesData.results[0].previewUrl;
-            }
-          }
-        } catch (e) {}
+        audioUrl = await fetchInvidiousAudio(title, artist);
       }
 
       return { audioUrl, coverUrl, artistPic };
