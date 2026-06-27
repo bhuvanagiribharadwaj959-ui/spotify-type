@@ -680,77 +680,13 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
 
             // using outer cleanImgUrl
 
+            // using outer cleanImgUrl
+
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-            // 1. Fetch from Jamendo and Invidious (English APIs) First
-            let jamendoTracks: DashboardTrack[] = [];
-            let invidiousTracks: DashboardTrack[] = [];
-
-            try {
-              const [jamRes, invRes] = await Promise.allSettled([
-                fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=a66a6034&format=json&limit=15&order=popularity_week`, { signal: AbortSignal.timeout(4000) }),
-                fetch(`https://vid.puffyan.us/api/v1/trending?type=Music`, { signal: AbortSignal.timeout(4000) })
-              ]);
-
-              if (jamRes.status === 'fulfilled' && jamRes.value.ok) {
-                const data = await jamRes.value.json();
-                if (data.results) {
-                  jamendoTracks = data.results.map((r: any) => ({
-                    id: 'jamendo-' + r.id,
-                    title: r.name,
-                    artist: r.artist_name,
-                    img: r.image,
-                    language: "english",
-                    audioUrl: r.audio,
-                    permaUrl: r.shareurl
-                  }));
-                }
-              }
-
-              if (invRes.status === 'fulfilled' && invRes.value.ok) {
-                const data = await invRes.value.json();
-                if (data && data.length > 0) {
-                  invidiousTracks = data.slice(0, 15).map((r: any) => ({
-                    id: 'inv-' + r.videoId,
-                    title: r.title,
-                    artist: r.author,
-                    img: r.videoThumbnails?.find((t: any) => t.quality === 'high')?.url || r.videoThumbnails?.[0]?.url,
-                    language: "english",
-                    permaUrl: `https://www.youtube.com/watch?v=${r.videoId}`
-                  }));
-                }
-              }
-            } catch(e) {}
-
-            // Add English API tracks first
-            [...jamendoTracks, ...invidiousTracks].forEach(track => {
-              const titleLower = (track.title || "").toLowerCase();
-              if (!seenTitles.has(titleLower)) {
-                seenTitles.add(titleLower);
-                fetched.push(track);
-              }
-            });
-
-            // 2. Map JioSaavn trending songs
-            trendingList.forEach((item: any) => {
-              const titleLower = (item.title || "").toLowerCase();
-              if (titleLower) seenTitles.add(titleLower);
-              fetched.push({
-                id: item.song_id || item.id || Math.random().toString(36).substring(7),
-                title: item.title || "Unknown Title",
-                artist: item.artist || "Unknown Artist",
-                img: cleanImgUrl(item.thumbnail),
-                album: item.album || undefined,
-                language: "english",
-                genres: item.genre ? [item.genre] : [],
-                audioUrl: undefined,
-                lyrics: undefined,
-                permaUrl: item.perma_url || item.url || item.link
-              });
-            });
-
-            // Map local attractive/popular songs from songs.json
+            // 1. Map local attractive/popular songs from songs.json FIRST 
+            // These are guaranteed to have working lyrics and high-quality artwork
             try {
               const jsonRes = await fetch('/songs.json');
               if (jsonRes.ok) {
@@ -776,6 +712,28 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             } catch (err) {
               console.error("Local songs load error:", err);
             }
+
+            // 2. Map JioSaavn trending songs
+            trendingList.forEach((item: any) => {
+              const titleLower = (item.title || "").toLowerCase();
+              if (titleLower && !seenTitles.has(titleLower)) {
+                seenTitles.add(titleLower);
+                fetched.push({
+                  id: item.song_id || item.id || Math.random().toString(36).substring(7),
+                  title: item.title || "Unknown Title",
+                  artist: item.artist || "Unknown Artist",
+                  img: cleanImgUrl(item.thumbnail),
+                  album: item.album || undefined,
+                  language: "english",
+                  genres: item.genre ? [item.genre] : [],
+                  audioUrl: undefined,
+                  lyrics: undefined,
+                  permaUrl: item.perma_url || item.url || item.link
+                });
+              }
+            });
+
+            // (songs.json moved to the top)
 
             // Keep the firebase fetch just in case there are custom songs uploaded by the user
             try {
