@@ -1,25 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-// Caching local songs.json in memory for sub-millisecond lookups
-let songsData: any[] = [];
-try {
-  const pathsToTry = [
-    path.join(process.cwd(), 'public', 'songs.json'),
-    path.join(process.cwd(), 'songs.json'),
-    path.join(process.cwd(), '.next', 'standalone', 'public', 'songs.json'),
-  ];
-  for (const p of pathsToTry) {
-    if (fs.existsSync(p)) {
-      songsData = JSON.parse(fs.readFileSync(p, 'utf-8'));
-      console.log(`Successfully loaded ${songsData.length} tracks from ${p}`);
-      break;
-    }
-  }
-} catch (err) {
-  console.error("Failed to load local songs.json in API route:", err);
-}
 
 // Helper to check if a string is a 30s preview URL
 function isPreviewUrl(url: string | null | undefined): boolean {
@@ -151,45 +130,10 @@ export async function POST(req: NextRequest) {
     const isIndian = ["hindi", "punjabi", "tamil", "telugu", "bhojpuri", "malayalam", "kannada", "marathi", "bengali", "gujarati", "urdu", "indian"].includes(cleanLanguage) ||
                      (artist + " " + title).toLowerCase().match(/(arijit|nehha|badshah|diljit|shreya|arman|rahman|udit|kishore|rafi|lata|alkas|kumarsanu|jio|saavn|bollywood|playback)/i);
 
-    // 1. Try to find the song inside our local 1000-song library
-    let localSong = null;
-    if (id && id !== 'dummy' && typeof id === 'string') {
-      localSong = songsData.find(s => s.id === id);
-    }
-    if (!localSong) {
-      const cleanTitle = title.toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
-      const cleanArtist = artist.toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
-      localSong = songsData.find(s => {
-        const sTitle = (s.meta?.title || '').toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
-        const sArtist = (s.meta?.artist || '').toLowerCase().trim().replace(/\s*\(.*?\)\s*/g, '');
-        return (sTitle === cleanTitle || sTitle.includes(cleanTitle) || cleanTitle.includes(sTitle)) && 
-               (sArtist === cleanArtist || sArtist.includes(cleanArtist) || cleanArtist.includes(sArtist) || cleanArtist.split(',')[0].trim() === sArtist);
-      });
-    }
-
     let localAudioUrl = null;
     let localLyrics = null;
     let localCoverUrl = null;
     let localArtistPic = null;
-
-    if (localSong) {
-      const storageUrl = localSong.supabase?.audio_storage_url;
-      const isNightChanges = title.toLowerCase().includes("night changes") || artist.toLowerCase().includes("one direction");
-      const isFallbackUrl = storageUrl && storageUrl.includes("song_1019.mp3");
-      const isPreview = isPreviewUrl(storageUrl);
-
-      // Only use the database audio URL if it's not a placeholder (song_1019.mp3) and not a short preview
-      if (storageUrl && (!isFallbackUrl || isNightChanges) && !isPreview) {
-        localAudioUrl = storageUrl;
-      }
-      
-      if (localSong.assets?.lyrics && localSong.assets.lyrics !== "No lyrics found") {
-        localLyrics = localSong.assets.lyrics;
-      }
-      
-      localCoverUrl = localSong.meta?.cover_url || localSong.assets?.cover_url || null;
-      localArtistPic = localSong.meta?.artist_cover_url || localSong.assets?.artist_cover_url || null;
-    }
 
     // Sequential processing for lyrics and audio resolution to keep proxy load low
     const fetchLyrics = async () => {
