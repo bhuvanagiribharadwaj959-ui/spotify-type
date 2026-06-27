@@ -225,14 +225,15 @@ export async function POST(req: NextRequest) {
       ]);
 
       // 2. Resolve the audio stream URL and cover based on priority
-      // Priority for all songs: JioSaavn Direct -> JioSaavn Proxy
-      if (!audioUrl && directJioRes?.audioUrl) {
+      if (permaUrl && proxyJioRes) {
+        audioUrl = proxyJioRes;
+      } else if (!audioUrl && directJioRes?.audioUrl) {
         audioUrl = directJioRes.audioUrl;
-        if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
-      }
-      if (!audioUrl && proxyJioRes) {
+      } else if (!audioUrl && proxyJioRes) {
         audioUrl = proxyJioRes;
       }
+      
+      if (!coverUrl && directJioRes?.coverUrl) coverUrl = directJioRes.coverUrl;
 
       return { audioUrl, coverUrl, artistPic };
     };
