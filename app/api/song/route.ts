@@ -213,44 +213,18 @@ export async function POST(req: NextRequest) {
       let artistPic: string | null = localArtistPic;
 
       const needsSearch = !audioUrl;
-      const needsDeezer = !coverUrl || !artistPic;
 
-      // 1. Run all external fetches in parallel to minimize response latency
-      const deezerPromise = (needsDeezer || !isIndian) ? (async () => {
-        try {
-          const res = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(artist + " " + title)}`, { signal: AbortSignal.timeout(2000) });
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.data && data.data.length > 0) {
-              const track = data.data[0];
-              return {
-                preview: track.preview,
-                cover: track.album?.cover_xl || track.album?.cover_big,
-                artistPic: track.artist?.picture_big || track.artist?.picture_medium
-              };
-            }
-          }
-        } catch (e) {
-          console.error("Parallel Deezer fetch failed/timed out:", e);
-        }
-        return null;
-      })() : Promise.resolve(null);
-
+      // 1. Run JioSaavn fetches in parallel to minimize response latency
       const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(title, artist) : Promise.resolve(null);
       const proxyJioPromise = needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null);
 
       // Wait for all requests in parallel
-      const [deezerRes, directJioRes, proxyJioRes] = await Promise.all([
-        deezerPromise,
+      const [directJioRes, proxyJioRes] = await Promise.all([
         directJioPromise,
         proxyJioPromise
       ]);
 
-      // 2. Merge retrieved HD assets
-      if (!coverUrl && deezerRes?.cover) coverUrl = deezerRes.cover;
-      if (!artistPic && deezerRes?.artistPic) artistPic = deezerRes.artistPic;
-
-      // 3. Resolve the audio stream URL based on priority
+      // 2. Resolve the audio stream URL and cover based on priority
       // Priority for all songs: JioSaavn Direct -> JioSaavn Proxy
       if (!audioUrl && directJioRes?.audioUrl) {
         audioUrl = directJioRes.audioUrl;

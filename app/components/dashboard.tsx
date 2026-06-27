@@ -755,11 +755,22 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
               });
             } catch (err) { }
             fetched.sort((a, b) => {
-              const aEng = (a.language || "").toLowerCase() === "english";
-              const bEng = (b.language || "").toLowerCase() === "english";
-              if (aEng && !bEng) return -1;
-              if (!aEng && bEng) return 1;
-              return 0;
+              const getPriority = (song: any) => {
+                const lang = (song.language || "").toLowerCase();
+                // User requested telugu, english, hindhi first
+                const isPriorityLang = lang === "telugu" || lang === "english" || lang === "hindi";
+                const hasValidCover = song.img && 
+                                      !song.img.includes('placeholder') && 
+                                      !song.img.includes('default_cover_image') && 
+                                      !song.img.includes('24596bcd24eb0adab57edfd0fa06a5d5');
+                
+                if (isPriorityLang && hasValidCover) return 3;
+                if (isPriorityLang) return 2;
+                if (hasValidCover) return 1;
+                return 0;
+              };
+              
+              return getPriority(b) - getPriority(a);
             });
 
             setDbSongs(fetched);
@@ -940,16 +951,15 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
 
       if (staticAudioUrl && audioRef.current) {
         audioRef.current.src = encodeURI(staticAudioUrl);
+        setLyrics(currentSong.lyrics || "Loading lyrics...");
+        setAlternatives([]);
         if (playingRef.current) {
           playAudio();
         }
         hasPlayedStatic = true;
-      }
-
-      if (currentSong.lyrics) {
-        setLyrics(currentSong.lyrics);
-        setAlternatives([]);
-        if (hasPlayedStatic) {
+        
+        // If we also have lyrics locally, we are done!
+        if (currentSong.lyrics) {
           setIsLoadingAudio(false);
           return;
         }
@@ -1031,21 +1041,19 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           }
         }
 
-        // Only use the fetched audio URL if we didn't already play the pre-calculated one
+        if (!active) return;
+        
+        // Ensure both audio and lyrics trigger simultaneously
         if (!hasPlayedStatic && finalAudioUrl && audioRef.current) {
           audioRef.current.src = finalAudioUrl;
+          setLyrics(data.lyrics || "No lyrics found");
           if (playingRef.current) {
             playAudio();
           }
         } else if (!hasPlayedStatic && data.error) {
           console.warn("Audio fetching failed:", data.error);
-          if (active) {
-            setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
-          }
-          return;
-        }
-
-        if (active) {
+          setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
+        } else if (hasPlayedStatic) {
           setLyrics(data.lyrics || "No lyrics found");
         }
       } catch (e: any) {
