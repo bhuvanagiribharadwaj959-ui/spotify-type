@@ -114,12 +114,12 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
           if (authRes.ok) {
             const authData = await authRes.json();
             if (authData.status === 'success' && authData.auth_url) {
-              const proxiedUrl = `/api/audio-proxy?url=${encodeURIComponent(authData.auth_url)}`;
+              const directUrl = authData.auth_url;
               let cover = null;
               if (song.image) {
                 cover = song.image.replace("150x150", "500x500").replace("50x50", "500x500");
               }
-              return { audioUrl: proxiedUrl, coverUrl: cover };
+              return { audioUrl: directUrl, coverUrl: cover };
             }
           }
         }
@@ -167,7 +167,7 @@ async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: s
       if (playRes.ok) {
         const playData = await playRes.json();
         if (playData.status === "success" && playData.data && playData.data.stream_url) {
-          return `/api/audio-proxy?url=${encodeURIComponent(playData.data.stream_url)}`;
+          return playData.data.stream_url;
         }
       }
     }
