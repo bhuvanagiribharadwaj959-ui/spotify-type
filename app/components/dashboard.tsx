@@ -924,17 +924,14 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
       // Pre-load the static CDN stream if we have it in the database!
       let hasPlayedStatic = false;
       let staticAudioUrl = currentSong.audioUrl;
-      // Force API fetch for Blinding Lights to avoid bad local download
-      if (currentSong.title.toLowerCase().includes("blinding lights")) {
+      // Only use staticAudioUrl if it's a direct Supabase or custom storage URL, 
+      // ignoring all cached JioSaavn/Deezer URLs to force fresh full-length streams
+      if (staticAudioUrl && !staticAudioUrl.includes('supabase.co')) {
         staticAudioUrl = undefined;
       }
 
       if (staticAudioUrl && audioRef.current) {
-        if (staticAudioUrl.includes('supabase.co')) {
-          audioRef.current.src = encodeURI(staticAudioUrl);
-        } else {
-          audioRef.current.src = `/api/audio-proxy?url=${encodeURIComponent(staticAudioUrl)}`;
-        }
+        audioRef.current.src = encodeURI(staticAudioUrl);
         if (playingRef.current) {
           playAudio();
         }
