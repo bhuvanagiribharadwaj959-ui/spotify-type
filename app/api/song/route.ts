@@ -289,12 +289,17 @@ export async function POST(req: NextRequest) {
 
       const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(title, artist) : Promise.resolve(null);
       const proxyJioPromise = needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null);
+      
+      const jamendoPromise = (needsSearch && !isIndian) ? fetchJamendoAudio(title, artist) : Promise.resolve(null);
+      const invidiousPromise = (needsSearch && !isIndian) ? fetchInvidiousAudio(title, artist) : Promise.resolve(null);
 
-      // Wait for all three requests in parallel
-      const [deezerRes, directJioRes, proxyJioRes] = await Promise.all([
+      // Wait for all requests in parallel
+      const [deezerRes, directJioRes, proxyJioRes, jamendoRes, invidiousRes] = await Promise.all([
         deezerPromise,
         directJioPromise,
-        proxyJioPromise
+        proxyJioPromise,
+        jamendoPromise,
+        invidiousPromise
       ]);
 
       // 2. Merge retrieved HD assets
@@ -302,22 +307,35 @@ export async function POST(req: NextRequest) {
       if (!artistPic && deezerRes?.artistPic) artistPic = deezerRes.artistPic;
 
       // 3. Resolve the audio stream URL based on priority
-      if (!audioUrl && directJioRes?.audioUrl) {
-        audioUrl = directJioRes.audioUrl;
-        if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
-      }
-      
-      if (!audioUrl && proxyJioRes) {
-        audioUrl = proxyJioRes;
-      }
-      
-      // Full-length fallbacks instead of 30-sec previews
-      if (!audioUrl) {
-        audioUrl = await fetchJamendoAudio(title, artist);
-      }
-
-      if (!audioUrl) {
-        audioUrl = await fetchInvidiousAudio(title, artist);
+      if (!isIndian) {
+        // Priority for English songs: Jamendo -> Invidious -> JioSaavn
+        if (!audioUrl && jamendoRes) audioUrl = jamendoRes;
+        if (!audioUrl && invidiousRes) audioUrl = invidiousRes;
+        
+        if (!audioUrl && directJioRes?.audioUrl) {
+          audioUrl = directJioRes.audioUrl;
+          if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
+        }
+        if (!audioUrl && proxyJioRes) {
+          audioUrl = proxyJioRes;
+        }
+      } else {
+        // Priority for Indian songs: JioSaavn -> Jamendo -> Invidious
+        if (!audioUrl && directJioRes?.audioUrl) {
+          audioUrl = directJioRes.audioUrl;
+          if (!coverUrl && directJioRes.coverUrl) coverUrl = directJioRes.coverUrl;
+        }
+        if (!audioUrl && proxyJioRes) {
+          audioUrl = proxyJioRes;
+        }
+        
+        // For Indian songs, fallbacks weren't fetched in parallel to save load. Fetch them sequentially if JioSaavn failed.
+        if (!audioUrl) {
+          audioUrl = await fetchJamendoAudio(title, artist);
+        }
+        if (!audioUrl) {
+          audioUrl = await fetchInvidiousAudio(title, artist);
+        }
       }
 
       return { audioUrl, coverUrl, artistPic };
