@@ -483,7 +483,8 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     const goodTracks = [];
     const badTracks = [];
     for (const track of unique) {
-      const isBad = !track.img || track.img.includes('default_cover_image') || track.img.includes('24596bcd24eb0adab57edfd0fa06a5d5') || track.img.includes('placeholder');
+      const imgLower = (track.img || '').toLowerCase();
+      const isBad = !track.img || imgLower.includes('default') || imgLower.includes('24596bcd24eb0adab57edfd0fa06a5d5') || imgLower.includes('placeholder') || imgLower.includes('null');
       if (isBad) {
         badTracks.push(track);
       } else {
@@ -760,14 +761,16 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
                 const lang = (song.language || "").toLowerCase();
                 // User requested telugu, english, hindhi first
                 const isPriorityLang = lang === "telugu" || lang === "english" || lang === "hindi";
+                const imgLower = (song.img || '').toLowerCase();
                 const hasValidCover = song.img && 
-                                      !song.img.includes('placeholder') && 
-                                      !song.img.includes('default_cover_image') && 
-                                      !song.img.includes('24596bcd24eb0adab57edfd0fa06a5d5');
+                                      !imgLower.includes('placeholder') && 
+                                      !imgLower.includes('default') && 
+                                      !imgLower.includes('24596bcd24eb0adab57edfd0fa06a5d5') &&
+                                      !imgLower.includes('null');
                 
                 if (isPriorityLang && hasValidCover) return 3;
-                if (isPriorityLang) return 2;
-                if (hasValidCover) return 1;
+                if (hasValidCover) return 2; // prioritize valid covers heavily over just language
+                if (isPriorityLang) return 1;
                 return 0;
               };
               
@@ -860,6 +863,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   }, [cat, allTracks]);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (!searchQuery.trim()) {
       setSearchResults([]);
       return;
@@ -867,18 +871,21 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     const timer = setTimeout(async () => {
       try {
         const isDev = process.env.NODE_ENV === 'development';
-        const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`, { signal: controller.signal });
         if (res.ok) {
           const data = await res.json();
           if (data.status === "success" && data.results) {
             setSearchResults(data.results);
           }
         }
-      } catch (err) {
-        console.error("Local cached search failed:", err);
+      } catch (err: any) {
+        if (err.name !== 'AbortError') console.error("Local cached search failed:", err);
       }
     }, 300);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [searchQuery]);
 
   const handleNext = () => {
@@ -1372,10 +1379,11 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
     if (!searchOverlayQuery.trim()) { setSearchOverlayResults([]); return; }
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(searchOverlayQuery)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchOverlayQuery)}`, { signal: controller.signal });
         if (res.ok) {
           const data = await res.json();
           if (data.status === "success" && data.results) {
@@ -1384,9 +1392,14 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             setSearchOverlayResults([]);
           }
         }
-      } catch (err) { console.error("Search overlay error:", err); }
+      } catch (err: any) { 
+        if (err.name !== 'AbortError') console.error("Search overlay error:", err); 
+      }
     }, 300);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [searchOverlayQuery]);
 
   const navItems = [

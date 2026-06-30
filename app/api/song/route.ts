@@ -11,14 +11,13 @@ function isPreviewUrl(url: string | null | undefined): boolean {
 }
 
 
-// Direct search and decryption using official JioSaavn API with strict timeouts
-async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
+// Direct details fetch and decryption using official JioSaavn API with strict timeouts
+async function fetchJioSaavnAudioDirect(id: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
+  if (!id || id === 'dummy' || id.startsWith('loading-')) return { audioUrl: null, coverUrl: null };
   try {
-    const queryStr = `${artist} ${title}`;
-    const encodedQuery = encodeURIComponent(queryStr);
-    const searchUrl = `https://www.jiosaavn.com/api.php?p=1&q=${encodedQuery}&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=10&__call=search.getResults`;
+    const detailsUrl = `https://www.jiosaavn.com/api.php?__call=song.getDetails&cc=in&_marker=0%3F_marker%3D0&_format=json&pids=${encodeURIComponent(id)}`;
     
-    const searchRes = await fetch(searchUrl, {
+    const detailsRes = await fetch(detailsUrl, {
       headers: { 
         'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
         'Accept': 'application/json, text/plain, */*',
@@ -28,24 +27,10 @@ async function fetchJioSaavnAudioDirect(title: string, artist: string): Promise<
       signal: AbortSignal.timeout(30000)
     });
     
-    if (searchRes.ok) {
-      const searchData = await searchRes.json();
-      if (searchData.results && searchData.results.length > 0) {
-        let song = searchData.results[0];
-        const targetTitle = title.toLowerCase().trim();
-        const targetArtist = artist.toLowerCase().trim();
-        
-        for (const res of searchData.results) {
-          const resTitle = (res.title || '').toLowerCase().trim();
-          const subtitle = (res.subtitle || '').toLowerCase().trim();
-          if (resTitle.includes(targetTitle) && subtitle.includes(targetArtist)) {
-            song = res;
-            break;
-          }
-          if (resTitle === targetTitle) {
-            song = res;
-          }
-        }
+    if (detailsRes.ok) {
+      const detailsData = await detailsRes.json();
+      if (detailsData[id]) {
+        const song = detailsData[id];
         
         const encryptedMediaUrl = song.more_info?.encrypted_media_url;
         if (encryptedMediaUrl) {
@@ -212,7 +197,7 @@ export async function POST(req: NextRequest) {
       const needsSearch = !audioUrl;
 
       // 1. Run JioSaavn fetches in parallel to minimize response latency
-      const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(title, artist) : Promise.resolve(null);
+      const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(id) : Promise.resolve(null);
       const proxyJioPromise = needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null);
 
       // Wait for all requests in parallel
