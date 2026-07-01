@@ -66,6 +66,7 @@ type DashboardTrack = {
   audioUrl?: string;
   lyrics?: string;
   permaUrl?: string;
+  encryptedMediaUrl?: string;
   artistPic?: string;
   playedAt?: number;
 };
@@ -247,7 +248,10 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     return clean;
   };
 
-  const initialArtist = cleanArtistName(slug?.[0] === 'artist' ? decodeURIComponent(slug[1] || '') : null);
+  const initialArtist = cleanArtistName(
+    slug?.[0] === 'artist' ? decodeURIComponent(slug[1] || '') :
+    (slug?.length === 1 && !['about', 'report', 'song', 'album'].includes(slug[0])) ? decodeURIComponent(slug[0]) : null
+  );
 
   const [popupGenre, setPopupGenre] = useState<string | null>(null);
   const [_popupArtist, _setPopupArtist] = useState<string | null>(initialArtist);
@@ -401,7 +405,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     }
     const updateUrl = () => {
       if (popupArtist) {
-        window.history.pushState({}, '', `/dashboard/artist/${encodeURIComponent(popupArtist)}`);
+        window.history.pushState({}, '', `/dashboard/${encodeURIComponent(popupArtist)}`);
       } else if (popupAlbum) {
         const albumName = popupAlbum.album || popupAlbum.title;
         window.history.pushState({}, '', `/dashboard/album/${encodeURIComponent(albumName)}`);
@@ -499,7 +503,18 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   // Handle Initial Album Load and Popstate
   useEffect(() => {
     if (allTracks.length > 0) {
-      if (slug?.[0] === 'album' && slug[1] && !popupAlbum) {
+      if (slug?.[0] === 'song' && slug[1] && currentSong.id === 'dummy') {
+        const songId = decodeURIComponent(slug[1]);
+        const song = allTracks.find(t => t.id === songId);
+        if (song) {
+          setCurrentSong(song);
+          setActive('Playing');
+          if (!playingRef.current) {
+            setPlaying(true);
+            playingRef.current = true;
+          }
+        }
+      } else if (slug?.[0] === 'album' && slug[1] && !popupAlbum) {
         const albumName = decodeURIComponent(slug[1]);
         const song = allTracks.find(t => (t.album || t.title) === albumName);
         if (song) {
@@ -572,6 +587,15 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           setPopupArtist(null);
           setPopupGenre(null);
         }
+      } else if (path.startsWith('/dashboard/song/')) {
+        const songId = decodeURIComponent(path.replace('/dashboard/song/', ''));
+        const song = allTracks.find(t => t.id === songId);
+        if (song) {
+          setCurrentSong(song);
+          setPopupArtist(null);
+          setPopupAlbum(null);
+          setPopupGenre(null);
+        }
       } else if (path === '/dashboard/about' || path === '/dashboard/about/') {
         setActive('About');
         setPopupArtist(null);
@@ -580,6 +604,11 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
       } else if (path === '/dashboard/report' || path === '/dashboard/report/') {
         setActive('Report');
         setPopupArtist(null);
+        setPopupAlbum(null);
+        setPopupGenre(null);
+      } else if (path.startsWith('/dashboard/') && path !== '/dashboard' && path !== '/dashboard/') {
+        const artist = decodeURIComponent(path.replace('/dashboard/', ''));
+        setPopupArtist(artist);
         setPopupAlbum(null);
         setPopupGenre(null);
       } else {
@@ -654,108 +683,35 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
 
         const fetchDbSongs = async () => {
           try {
-            const isDev = process.env.NODE_ENV === 'development';
-            const baseUrl = 'https://test-0k.onrender.com';
-            let trendingList: any[] = [];
-
-            try {
-              const res = await fetch(`${baseUrl}/trending/?country=us&limit=100`);
-              if (res.ok) {
-                const data = await res.json();
-                if (data.data && data.data.trending) {
-                  trendingList = data.data.trending;
-                }
-              }
-            } catch (err) {
-              if (isDev) {
-                try {
-                  const res = await fetch(`https://test-0k.onrender.com/trending/?country=us&limit=100`);
-                  if (res.ok) {
-                    const data = await res.json();
-                    if (data.data && data.data.trending) {
-                      trendingList = data.data.trending;
-                    }
-                  }
-                } catch (e) { }
-              }
-            }
-
-            // using outer cleanImgUrl
-
-            // using outer cleanImgUrl
-
             const fetched: DashboardTrack[] = [];
             const seenTitles = new Set<string>();
 
-
-            // 2. Map local attractive/popular songs from songs.json FIRST 
-            // These are guaranteed to have working lyrics and high-quality artwork
+            // Map local static jiosaavn popular songs
             try {
-              const jsonRes = await fetch('/songs.json');
-              if (jsonRes.ok) {
-                const localData = await jsonRes.json();
-                localData.forEach((item: any) => {
-                  const titleLower = (item.meta?.title || "").toLowerCase();
+              const jioJsonRes = await fetch('/jiosaavn_songs.json');
+              if (jioJsonRes.ok) {
+                const jioLocalData = await jioJsonRes.json();
+                jioLocalData.forEach((item: any) => {
+                  const titleLower = (item.title || "").toLowerCase();
                   if (!seenTitles.has(titleLower)) {
                     seenTitles.add(titleLower);
                     fetched.push({
                       id: item.id,
-                      title: item.meta?.title || "Unknown Title",
-                      artist: item.meta?.artist || "Unknown Artist",
-                      img: cleanImgUrl(item.meta?.cover_url || item.assets?.cover_url),
-                      album: item.meta?.album || undefined,
-                      language: item.meta?.language || "english",
-                      genres: [item.meta?.category, ...(item.meta?.mood || [])].filter(Boolean),
-                      audioUrl: item.supabase?.audio_storage_url || undefined,
-                      lyrics: item.assets?.lyrics || undefined
+                      title: item.title || "Unknown Title",
+                      artist: item.artist || "Unknown Artist",
+                      img: cleanImgUrl(item.img),
+                      album: item.album || undefined,
+                      language: item.language || "english",
+                      genres: [],
+                      permaUrl: item.perma_url,
+                      encryptedMediaUrl: item.encrypted_media_url
                     });
                   }
                 });
               }
             } catch (err) {
-              console.error("Local songs load error:", err);
+              console.error("Local jiosaavn_songs load error:", err);
             }
-
-            // 2. Map JioSaavn trending songs
-            trendingList.forEach((item: any) => {
-              const titleLower = (item.title || "").toLowerCase();
-              if (titleLower && !seenTitles.has(titleLower)) {
-                seenTitles.add(titleLower);
-                fetched.push({
-                  id: item.song_id || item.id || Math.random().toString(36).substring(7),
-                  title: item.title || "Unknown Title",
-                  artist: item.artist || "Unknown Artist",
-                  img: cleanImgUrl(item.thumbnail),
-                  album: item.album || undefined,
-                  language: "english",
-                  genres: item.genre ? [item.genre] : [],
-                  audioUrl: undefined,
-                  lyrics: undefined,
-                  permaUrl: item.perma_url || item.url || item.link
-                });
-              }
-            });
-
-            // (songs.json moved to the top)
-
-            // Keep the firebase fetch just in case there are custom songs uploaded by the user
-            try {
-              const q = query(collection(db, "songs"));
-              const snapshot = await getDocs(q);
-              snapshot.forEach(docSnap => {
-                const docData = docSnap.data();
-                if (docData.is_public && !fetched.find(f => f.id === docSnap.id)) {
-                  fetched.push({
-                    id: docSnap.id,
-                    img: cleanImgUrl(docData.img),
-                    title: docData.title || "Unknown Title",
-                    artist: docData.artist || "Unknown Artist",
-                    language: docData.language,
-                    genres: docData.genres || [],
-                  });
-                }
-              });
-            } catch (err) { }
             fetched.sort((a, b) => {
               const getPriority = (song: any) => {
                 const lang = (song.language || "").toLowerCase();
@@ -778,7 +734,26 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             });
 
             setDbSongs(fetched);
-            setCurrentSong((prev) => (prev.id === "dummy" && fetched.length > 0) ? fetched[0] : prev);
+            // Only default to first track if no song URL was specified in the route
+            const isSongRoute = slug?.[0] === 'song' && slug[1];
+            setCurrentSong((prev) => {
+              if (prev.id !== "dummy") return prev; // already set by slug handler
+              if (isSongRoute) {
+                // Try to find the song from the slug
+                const songId = decodeURIComponent(slug![1]);
+                const match = fetched.find(t => t.id === songId);
+                if (match) {
+                  // Schedule UI updates for next tick to avoid batching issues
+                  setTimeout(() => {
+                    setActive('Playing');
+                    setPlaying(true);
+                    playingRef.current = true;
+                  }, 0);
+                  return match;
+                }
+              }
+              return fetched.length > 0 ? fetched[0] : prev;
+            });
           } catch (err) {
             console.error("Error fetching songs:", err);
           }
@@ -912,7 +887,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   };
 
   const playAudio = () => {
-    if (audioRef.current) {
+    if (audioRef.current && audioRef.current.src && audioRef.current.src !== window.location.href) {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
@@ -927,6 +902,11 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   useEffect(() => {
     let active = true;
     const fetchSongData = async () => {
+      // Update URL to match current song if it's not a back/forward navigation
+      if (currentSong.id && currentSong.id !== 'dummy' && !isPopStateNav.current) {
+        window.history.pushState({}, '', `/dashboard/song/${currentSong.id}`);
+      }
+
       setIsLoadingAudio(true);
       setLyrics("");
       const currentId = ++activeRequestId.current;
@@ -966,6 +946,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
       }
 
       try {
+        console.log(`[FRONTEND] Fetching song: id=${currentSong.id}, hasEncryptedUrl=${!!currentSong.encryptedMediaUrl}`);
         const res = await fetch('/api/song', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -974,7 +955,8 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             title: currentSong.title,
             artist: currentSong.artist,
             permaUrl: currentSong.permaUrl,
-            language: currentSong.language
+            language: currentSong.language,
+            encryptedMediaUrl: currentSong.encryptedMediaUrl
           })
         });
 
@@ -1009,35 +991,9 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
 
         let finalAudioUrl = data.audioUrl;
 
-        // If the backend failed to get the audio URL (likely due to Hugging Face IP blocking), 
-        // fallback to the Render proxy directly from the client's browser!
-        if (!finalAudioUrl && !hasPlayedStatic) {
-          try {
-            const baseUrl = 'https://test-0k.onrender.com';
-            let songLink = currentSong.permaUrl;
-            
-            if (!songLink) {
-              const searchRes = await fetch(`${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(currentSong.artist + " " + currentSong.title)}`);
-              if (searchRes.ok) {
-                const searchData = await searchRes.json();
-                if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
-                  songLink = searchData.results[0].perma_url || searchData.results[0].url || searchData.results[0].link;
-                }
-              }
-            }
-            
-            if (songLink) {
-              const playRes = await fetch(`${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`);
-              if (playRes.ok) {
-                const playData = await playRes.json();
-                if (playData.status === "success" && playData.data && playData.data.stream_url) {
-                  finalAudioUrl = playData.data.stream_url;
-                }
-              }
-            }
-          } catch (e) {
-            console.error("Client fallback proxy failed", e);
-          }
+        // Proxy saavncdn URLs through our own API to bypass CORS/origin restrictions
+        if (finalAudioUrl && finalAudioUrl.includes('saavncdn.com')) {
+          finalAudioUrl = `/api/stream?url=${encodeURIComponent(finalAudioUrl)}`;
         }
 
         if (!active || currentId !== activeRequestId.current) {
@@ -1052,9 +1008,10 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           if (playingRef.current) {
             playAudio();
           }
-        } else if (!hasPlayedStatic && data.error) {
-          console.warn("Audio fetching failed:", data.error);
-          setLyrics(`Audio Extraction Failed: ${data.error}\n\n${data.lyrics || ''}`);
+        } else if (!hasPlayedStatic && !finalAudioUrl) {
+          // Audio URL is null - show lyrics anyway and display error
+          setLyrics(data.lyrics || "Audio stream unavailable. Try another version.");
+          console.warn("No audio URL returned from API for:", currentSong.title);
         } else if (hasPlayedStatic) {
           setLyrics(data.lyrics || "No lyrics found");
         }
@@ -1406,7 +1363,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     { key: "Home", icon: Home },
     { key: "Library", icon: LibraryIcon },
     { key: "Recent", icon: Clock },
-    { key: "Unreleased", icon: Disc3 },
+    { key: "Your Music", icon: Disc3 },
     { key: "Donate", icon: Gift },
     { key: "Settings", icon: Settings },
   ];
@@ -2532,22 +2489,37 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
           </div>
         )}
 
-        {/* ===== Unreleased Page ===== */}
-        {active === "Unreleased" && !popupGenre && !popupArtist && !popupAlbum && (
+        {/* ===== Your Music Page ===== */}
+        {active === "Your Music" && !popupGenre && !popupArtist && !popupAlbum && (
           <div style={{ padding: "0 32px 40px" }}>
-            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>Unreleased</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24 }}>Leaked and unreleased tracks from your favorite artists. These may be removed at any time.</p>
+            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>Your Music</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24 }}>Tracks you have published from the Create Music studio.</p>
             {!showUnreleased ? (
-              <button onClick={() => setShowUnreleased(true)} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '12px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                Load Unreleased Projects
+              <button onClick={async () => {
+                setShowUnreleased(true);
+                // We'll manually fetch from Firestore here if needed, or rely on a state.
+                // Actually, the songs are likely not in `allTracks` if they don't match the format, or maybe they are?
+                // Let's implement the Firestore fetch here!
+                try {
+                  const q = query(collection(db, "songs"), where("creator_id", "==", user?.uid || "anonymous"));
+                  const snapshot = await getDocs(q);
+                  const userTracks = snapshot.docs.map(doc => doc.data() as DashboardTrack);
+                  setAlternatives(userTracks); // Reusing alternatives state for user tracks temporarily
+                } catch (e) {
+                  console.error(e);
+                }
+              }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '12px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                Load Published Tracks
               </button>
             ) : (
               <div className="dash-monochrome-grid">
-                {languageFilteredSongs.slice(50, 62).map((song, i) => (
-                  <div key={`unreleased-${song.id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)} style={{ opacity: 0.7 }}>
+                {alternatives.length === 0 ? (
+                  <p style={{ color: 'var(--text-secondary)' }}>You haven't published any music yet.</p>
+                ) : alternatives.map((song, i) => (
+                  <div key={`published-${song.id || song.song_id}-${i}`} className="dash-album-card" onClick={() => setPopupAlbum(song)}>
                     <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', borderRadius: 6, marginBottom: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)', position: 'relative' }}>
-                      <img src={song.img} alt={song.title} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
-                      <span style={{ position: 'absolute', top: 8, right: 8, background: '#e74c3c', color: 'white', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>UNRELEASED</span>
+                      <img src={song.img} alt={song.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <span style={{ position: 'absolute', top: 8, right: 8, background: '#1db954', color: 'black', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 4 }}>PUBLISHED</span>
                     </div>
                     <div className="dash-album-title">{song.title}</div>
                     <div className="dash-album-meta">{song.artist}</div>

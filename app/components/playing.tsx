@@ -311,17 +311,18 @@ export default function PlayingOverlay({
             </div>
 
             {/* Right Column: Synced Lyrics Scrolling View */}
-            <div className="playing-lyrics-container" ref={lyricsContainerRef} style={{
+            <div style={{
               flex: 6,
-              display: 'flex',
-              flexDirection: 'column',
-              overflowY: 'auto',
-              height: '100%',
-              paddingRight: '24px',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 95%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 95%, transparent 100%)'
+              height: '100%'
             }}>
-              <div className="playing-lyrics" style={{ padding: '100px 20px 180px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+              <div className="playing-lyrics-container" ref={lyricsContainerRef} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                height: '100%',
+                paddingRight: '24px'
+              }}>
+                <div className="playing-lyrics" style={{ padding: '100px 20px 40px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 {isLoading ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '300px', gap: '24px' }}>
                     <div style={{ width: '64px', overflow: 'hidden' }}>
@@ -367,6 +368,7 @@ export default function PlayingOverlay({
                   <h1 className="lyric-line">No lyrics found</h1>
                 )}
               </div>
+            </div>
             </div>
           </div>
         </motion.div>

@@ -116,7 +116,7 @@ const CATEGORIES = [
 ];
 
 const TRACK_COLORS = [
-  "#1db954", // Green
+  "var(--create-accent)", // Green
   "#2196f3", // Blue
   "#e91e63", // Pink
   "#ff9800", // Orange
@@ -772,7 +772,7 @@ export default function CreateMusicPage() {
       previewAudioRef.current.pause();
     }
     const audio = new Audio(sound.previews["preview-hq-mp3"]);
-    audio.volume = 0.5;
+    audio.volume = 1.0;
     audio.play().catch(console.error);
     audio.onended = () => setPreviewPlaying(null);
     previewAudioRef.current = audio;
@@ -1730,7 +1730,13 @@ export default function CreateMusicPage() {
             <ArrowLeft size={18} />
           </Link>
           <div className="create-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <img src="https://zgcbpjrvzmocydnlpexx.supabase.co/storage/v1/object/public/songs/logo.png" alt="Sonic" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+            <div className="dash-greeting-wave" style={{ width: 20, height: 20 }}>
+              <div className="wave-bar bar-1" style={{ width: 3, backgroundColor: 'white', animation: 'wave-animation 1.2s ease-in-out infinite alternate' }} />
+              <div className="wave-bar bar-2" style={{ width: 3, backgroundColor: 'white', animation: 'wave-animation 1.2s ease-in-out infinite alternate 0.2s' }} />
+              <div className="wave-bar bar-3" style={{ width: 3, backgroundColor: 'white', animation: 'wave-animation 1.2s ease-in-out infinite alternate 0.4s' }} />
+              <div className="wave-bar bar-4" style={{ width: 3, backgroundColor: 'white', animation: 'wave-animation 1.2s ease-in-out infinite alternate 0.1s' }} />
+              <div className="wave-bar bar-5" style={{ width: 3, backgroundColor: 'white', animation: 'wave-animation 1.2s ease-in-out infinite alternate 0.3s' }} />
+            </div>
             <span>SONIC</span>
           </div>
           <div className="create-divider" />
@@ -1808,7 +1814,7 @@ export default function CreateMusicPage() {
               setDeploySongName(projectName);
               setShowDeployModal(true);
             }}
-            style={{ background: '#1db954', color: 'black', fontWeight: 700 }}
+            style={{ background: 'var(--create-accent)', color: 'black', fontWeight: 700 }}
           >
             Deploy
           </button>
@@ -2384,7 +2390,7 @@ export default function CreateMusicPage() {
                       setDeploying(false);
                     }
                   }}
-                  style={{ padding: '10px 16px', background: '#1db954', border: 'none', color: 'black', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  style={{ padding: '10px 16px', background: 'var(--create-accent)', border: 'none', color: 'black', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   {deploying ? <Loader2 size={14} className="spin" /> : <UploadCloud size={14} />} 
                   {deploying ? "Publishing..." : "Publish"}

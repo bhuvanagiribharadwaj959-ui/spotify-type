@@ -3,9 +3,10 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 90px;
-  height: calc(100vh - 90px);
-  background-color: #050505;
+  bottom: 0;
+  height: 100vh;
+  padding-bottom: 90px;
+  background-color: #0a0a0a;
   display: flex;
   flex-direction: column;
   color: #fff;
@@ -61,8 +62,9 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  padding: 0 40px;
+  padding: 0 40px 20px;
   gap: 40px;
+  position: relative;
 }
 
 .playing-lyrics-container {

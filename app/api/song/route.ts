@@ -12,50 +12,53 @@ function isPreviewUrl(url: string | null | undefined): boolean {
 
 
 // Direct details fetch and decryption using official JioSaavn API with strict timeouts
-async function fetchJioSaavnAudioDirect(id: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
+async function fetchJioSaavnAudioDirect(id: string, providedEncryptedUrl?: string): Promise<{ audioUrl: string | null; coverUrl: string | null }> {
   if (!id || id === 'dummy' || id.startsWith('loading-')) return { audioUrl: null, coverUrl: null };
   try {
-    const detailsUrl = `https://www.jiosaavn.com/api.php?__call=song.getDetails&cc=in&_marker=0%3F_marker%3D0&_format=json&pids=${encodeURIComponent(id)}`;
-    
-    const detailsRes = await fetch(detailsUrl, {
-      headers: { 
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
-        'Accept': 'application/json, text/plain, */*',
-        'Referer': 'https://www.jiosaavn.com/',
-        'Origin': 'https://www.jiosaavn.com/'
-      },
-      signal: AbortSignal.timeout(30000)
-    });
-    
-    if (detailsRes.ok) {
-      const detailsData = await detailsRes.json();
-      if (detailsData[id]) {
-        const song = detailsData[id];
-        
-        const encryptedMediaUrl = song.more_info?.encrypted_media_url;
-        if (encryptedMediaUrl) {
-          const authUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedMediaUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
-          const authRes = await fetch(authUrl, {
-            headers: { 
-              'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
-              'Accept': 'application/json, text/plain, */*',
-              'Referer': 'https://www.jiosaavn.com/',
-              'Origin': 'https://www.jiosaavn.com/'
-            },
-            signal: AbortSignal.timeout(30000)
-          });
-          
-          if (authRes.ok) {
-            const authData = await authRes.json();
-            if (authData.status === 'success' && authData.auth_url) {
-              const directUrl = authData.auth_url;
-              let cover = null;
-              if (song.image) {
-                cover = song.image.replace("150x150", "500x500").replace("50x50", "500x500");
-              }
-              return { audioUrl: directUrl, coverUrl: cover };
-            }
+    let encryptedMediaUrl = providedEncryptedUrl;
+    let coverUrl: string | null = null;
+
+    if (!encryptedMediaUrl) {
+      const detailsUrl = `https://www.jiosaavn.com/api.php?__call=song.getDetails&cc=in&_marker=0%3F_marker%3D0&_format=json&pids=${encodeURIComponent(id)}`;
+      
+      const detailsRes = await fetch(detailsUrl, {
+        headers: { 
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+          'Referer': 'https://www.jiosaavn.com/',
+          'Origin': 'https://www.jiosaavn.com/'
+        },
+        signal: AbortSignal.timeout(30000)
+      });
+      
+      if (detailsRes.ok) {
+        const detailsData = await detailsRes.json();
+        if (detailsData[id]) {
+          const song = detailsData[id];
+          encryptedMediaUrl = song.encrypted_media_url || song.more_info?.encrypted_media_url;
+          if (song.image) {
+            coverUrl = song.image.replace("150x150", "500x500").replace("50x50", "500x500");
           }
+        }
+      }
+    }
+
+    if (encryptedMediaUrl) {
+      const authUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedMediaUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
+      const authRes = await fetch(authUrl, {
+        headers: { 
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+          'Referer': 'https://www.jiosaavn.com/',
+          'Origin': 'https://www.jiosaavn.com/'
+        },
+        signal: AbortSignal.timeout(30000)
+      });
+      
+      if (authRes.ok) {
+        const authData = await authRes.json();
+        if (authData.status === 'success' && authData.auth_url) {
+          return { audioUrl: authData.auth_url, coverUrl };
         }
       }
     }
@@ -65,55 +68,12 @@ async function fetchJioSaavnAudioDirect(id: string): Promise<{ audioUrl: string 
   return { audioUrl: null, coverUrl: null };
 }
 
-// Fallback search using Render API backend with strict timeouts
-async function fetchRenderProxyAudio(title: string, artist: string, permaUrl?: string, baseUrl?: string): Promise<string | null> {
-  try {
-    let songLink = permaUrl;
-    if (!songLink) {
-      const searchUrl = `${baseUrl}/api/jiosaavn/search?q=${encodeURIComponent(artist + " " + title)}`;
-      const searchRes = await fetch(searchUrl, { cache: 'no-store', signal: AbortSignal.timeout(35000) });
-      if (searchRes.ok) {
-        const searchData = await searchRes.json();
-        if (searchData.status === "success" && searchData.results && searchData.results.length > 0) {
-          const results = searchData.results;
-          let bestMatch = results[0];
-          const targetTitle = title.toLowerCase().trim();
-          const targetArtist = artist.toLowerCase().trim();
-          for (const r of results) {
-            const rTitle = (r.title || "").toLowerCase().trim();
-            const rArtist = (r.artist || "").toLowerCase().trim();
-            if (rTitle.includes(targetTitle) && rArtist.includes(targetArtist)) {
-              bestMatch = r;
-              break;
-            }
-            if (rTitle === targetTitle) {
-              bestMatch = r;
-            }
-          }
-          songLink = bestMatch.perma_url || bestMatch.url || bestMatch.link;
-        }
-      }
-    }
-
-    if (songLink) {
-      const playUrl = `${baseUrl}/api/jiosaavn/play?songLink=${encodeURIComponent(songLink)}`;
-      const playRes = await fetch(playUrl, { cache: 'no-store', signal: AbortSignal.timeout(35000) });
-      if (playRes.ok) {
-        const playData = await playRes.json();
-        if (playData.status === "success" && playData.data && playData.data.stream_url) {
-          return playData.data.stream_url;
-        }
-      }
-    }
-  } catch (err) {
-    console.error("Render proxy fetch failed:", err);
-  }
-  return null;
-}
 
 export async function POST(req: NextRequest) {
   try {
-    const { id, title, artist, permaUrl, language } = await req.json();
+    const { id, title, artist, permaUrl, language, encryptedMediaUrl } = await req.json();
+
+    console.log(`[SONG API] id=${id}, title=${title}, artist=${artist}, hasEncryptedUrl=${!!encryptedMediaUrl}`);
 
     if (!title || !artist) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -147,12 +107,27 @@ export async function POST(req: NextRequest) {
       const cleanTitle = cleanMetadataString(title);
       const cleanArtist = cleanMetadataString(artist.split(',')[0]);
 
-      // Try LRCLIB search endpoint which is fuzzy and safer
+      // 1. Try LRCLIB exact match endpoint
+      try {
+        const getUrl = `https://lrclib.net/api/get?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}`;
+        const getRes = await fetch(getUrl, {
+          headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
+          signal: AbortSignal.timeout(4000)
+        });
+        if (getRes.ok) {
+          const getData = await getRes.json();
+          if (getData && (getData.syncedLyrics || getData.plainLyrics)) {
+            return getData.syncedLyrics || getData.plainLyrics;
+          }
+        }
+      } catch (err) {}
+
+      // 2. Try LRCLIB search endpoint as a fallback
       try {
         const searchUrl = `https://lrclib.net/api/search?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}`;
         const searchRes = await fetch(searchUrl, {
           headers: { 'User-Agent': 'SONIC Music App (https://github.com/monochrome-music/monochrome)' },
-          signal: AbortSignal.timeout(5000)
+          signal: AbortSignal.timeout(4000)
         });
         if (searchRes.ok) {
           const searchData = await searchRes.json();
@@ -165,7 +140,19 @@ export async function POST(req: NextRequest) {
         }
       } catch (err) {}
 
-      // Try Lyrica API from render proxy as a fallback
+      // 3. Try api.lyrics.ovh as a plain text fallback
+      try {
+        const ovhUrl = `https://api.lyrics.ovh/v1/${encodeURIComponent(cleanArtist)}/${encodeURIComponent(cleanTitle)}`;
+        const ovhRes = await fetch(ovhUrl, { signal: AbortSignal.timeout(3000) });
+        if (ovhRes.ok) {
+          const ovhData = await ovhRes.json();
+          if (ovhData && ovhData.lyrics) {
+            return ovhData.lyrics;
+          }
+        }
+      } catch (e) {}
+
+      // 4. Try Lyrica API from render proxy as a fallback
       try {
         const lyricaUrl = `${baseUrl}/lyrics/?artist=${encodeURIComponent(artist)}&song=${encodeURIComponent(title)}&fast=true&timestamps=true&metadata=true`;
         const lyricaRes = await fetch(lyricaUrl, { cache: 'no-store', signal: AbortSignal.timeout(3000) });
@@ -186,6 +173,40 @@ export async function POST(req: NextRequest) {
         }
       } catch (e) {}
 
+      // 5. Try Genius API as a final fallback
+      if (process.env.GENIUS_API) {
+        try {
+          const geniusUrl = `https://api.genius.com/search?q=${encodeURIComponent(cleanTitle + " " + cleanArtist)}`;
+          const geniusRes = await fetch(geniusUrl, {
+            headers: { 'Authorization': `Bearer ${process.env.GENIUS_API}` },
+            signal: AbortSignal.timeout(3000)
+          });
+          if (geniusRes.status === 401 || geniusRes.status === 403) {
+            return "Genius API token is expired or invalid.";
+          }
+          if (geniusRes.ok) {
+             const gData = await geniusRes.json();
+             if (gData.response?.hits?.length > 0) {
+               const songUrl = gData.response.hits[0].result.url;
+               // Scrape the actual lyrics from the Genius page
+               const pageRes = await fetch(songUrl, { signal: AbortSignal.timeout(3000) });
+               const html = await pageRes.text();
+               const matches = html.match(/<div data-lyrics-container="true".*?>([\s\S]*?)<\/div>/g);
+               if (matches) {
+                 let scrapedLyrics = matches.map(m => m.replace(/<br.*?>/g, '\n').replace(/<[^>]+>/g, '')).join('\n');
+                 scrapedLyrics = scrapedLyrics.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+                 // Clean up Genius contributor junk (everything before the first '[')
+                 if (scrapedLyrics.includes('[')) {
+                   scrapedLyrics = scrapedLyrics.substring(scrapedLyrics.indexOf('['));
+                 }
+                 return scrapedLyrics.trim();
+               }
+               return `No synced lyrics found.\nRead lyrics online at: ${songUrl}`;
+             }
+          }
+        } catch (e) {}
+      }
+
       return 'No lyrics found';
     };
 
@@ -196,23 +217,12 @@ export async function POST(req: NextRequest) {
 
       const needsSearch = !audioUrl;
 
-      // 1. Run JioSaavn fetches in parallel to minimize response latency
-      const directJioPromise = needsSearch ? fetchJioSaavnAudioDirect(id) : Promise.resolve(null);
-      const proxyJioPromise = needsSearch ? fetchRenderProxyAudio(title, artist, permaUrl, baseUrl) : Promise.resolve(null);
-
-      // Wait for all requests in parallel
-      const [directJioRes, proxyJioRes] = await Promise.all([
-        directJioPromise,
-        proxyJioPromise
-      ]);
+      // 1. Run JioSaavn fetch directly, passing encryptedMediaUrl to bypass rate-limited details fetch if possible
+      const directJioRes = needsSearch ? await fetchJioSaavnAudioDirect(id, encryptedMediaUrl) : null;
 
       // 2. Resolve the audio stream URL and cover based on priority
-      if (permaUrl && proxyJioRes) {
-        audioUrl = proxyJioRes;
-      } else if (!audioUrl && directJioRes?.audioUrl) {
+      if (!audioUrl && directJioRes?.audioUrl) {
         audioUrl = directJioRes.audioUrl;
-      } else if (!audioUrl && proxyJioRes) {
-        audioUrl = proxyJioRes;
       }
       
       if (!coverUrl && directJioRes?.coverUrl) coverUrl = directJioRes.coverUrl;
