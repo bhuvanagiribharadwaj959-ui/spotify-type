@@ -320,7 +320,9 @@ export default function PlayingOverlay({
                 flexDirection: 'column',
                 overflowY: 'auto',
                 height: '100%',
-                paddingRight: '24px'
+                paddingRight: '24px',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
               }}>
                 <div className="playing-lyrics" style={{ padding: '100px 20px 40px 20px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 {isLoading ? (
