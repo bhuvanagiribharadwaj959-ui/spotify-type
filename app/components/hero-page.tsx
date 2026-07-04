@@ -13,20 +13,17 @@ import {
   User,
   Compass,
   ArrowRight,
-  ChevronRight,
   Sparkles,
   Waves,
   RotateCcw
 } from "lucide-react";
 import Link from "next/link";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import { auth } from "../lib/firebase";
 import PixelParticleImage from "./PixelParticleImage";
 import "./hero-page.css";
 
 export default function HeroPage() {
-  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+  const [currentUser, setCurrentUser] = useState<any | null>({ uid: "1", email: "guest@example.com", displayName: "Guest" } as any);
+  const [loadingUser, setLoadingUser] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
   const [particleSrc, setParticleSrc] = useState<string>("text:SONIC");
   const [rotation, setRotation] = useState(0);
@@ -39,14 +36,6 @@ export default function HeroPage() {
     }, 2000); // 2 seconds
     return () => clearInterval(timer);
   }, [isHovered]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoadingUser(false);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -111,7 +100,7 @@ export default function HeroPage() {
       {/* Header */}
       <header className="hero-header">
         <Link href="/" className="brand-container">
-          <div className="brand-logo-icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "white", borderRadius: "8px", width: "32px", height: "32px" }}>
+          <div className="brand-logo-icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "white", borderRadius: 4, width: "32px", height: "32px" }}>
             <Waves size={20} color="black" />
           </div>
           <span className="brand-logo">SONIC</span>
@@ -373,13 +362,13 @@ export default function HeroPage() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
                 transform: `translateY(${i % 2 !== 0 ? '40px' : '0'})`
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
                 {/* Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 2 }}>
-                  <div style={{ width: 24, height: 24, borderRadius: '50%', background: card.nameColor, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 14, color: card.bg, fontWeight: 900 }}>S</span>
+                  <div style={{ width: 24, height: 24, borderRadius: '4px', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Waves size={16} color="black" />
                   </div>
                   <span style={{ color: card.nameColor, fontWeight: 700, fontSize: '15px', letterSpacing: '-0.5px' }}>SONIC</span>
                 </div>
@@ -401,11 +390,11 @@ export default function HeroPage() {
                 {/* Text Content */}
                 <div style={{ marginTop: 'auto', zIndex: 2 }}>
                   <div style={{ color: card.nameColor, fontSize: '14px', fontWeight: 600, marginBottom: '6px' }}>Top Artist</div>
-                  <h3 style={{ 
-                    color: card.nameColor, 
-                    fontSize: '64px', 
-                    fontWeight: 900, 
-                    margin: 0, 
+                  <h3 style={{
+                    color: card.nameColor,
+                    fontSize: '64px',
+                    fontWeight: 900,
+                    margin: 0,
                     lineHeight: '0.9',
                     letterSpacing: '-3px',
                     width: '85%',

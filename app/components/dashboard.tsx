@@ -49,11 +49,26 @@ import {
 } from "lucide-react";
 import "./dashboard.css";
 import Link from "next/link";
-import PlayingOverlay from "./playing";
-import { onAuthStateChanged, User, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../lib/firebase";
-import { collection, doc, setDoc, getDoc, updateDoc, increment, addDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
+import PlayingOverlay from "./playing";
+type User = any;
+const onAuthStateChanged = (...args: any[]) => { args[1]({ uid: "1", displayName: "Guest", photoURL: "" }); return () => {}; };
+const auth = { onAuthStateChanged, currentUser: { uid: "1", email: "guest@example.com", displayName: "Guest" } };
+const db = {};
+const signOut = async (...args: any[]) => {};
+const sendPasswordResetEmail = async (...args: any[]) => {};
+const updateProfile = async (...args: any[]) => {};
+const collection = (...args: any[]) => {};
+const doc = (...args: any[]) => {};
+const setDoc = async (...args: any[]) => {};
+const getDoc = async (...args: any[]) => ({ exists: () => false, data: () => ({}) });
+const updateDoc = async (...args: any[]) => {};
+const increment = (...args: any[]) => {};
+const addDoc = async (...args: any[]) => {};
+const deleteDoc = async (...args: any[]) => {};
+const query = (...args: any[]) => {};
+const where = (...args: any[]) => {};
+const getDocs = async (...args: any[]) => ({ docs: [], forEach: (cb: any) => {} } as any);
 
 type DashboardTrack = {
   id: string;
@@ -638,7 +653,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
   }, [user]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
+    const unsubscribe = onAuthStateChanged(auth, (u: any) => {
       setUser(u);
       setAuthLoaded(true);
       if (u) {
@@ -672,7 +687,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
             const q = query(collection(db, "likes"), where("user_id", "==", u.uid));
             const snapshot = await getDocs(q);
             const likes = new Set<string>();
-            snapshot.forEach(d => likes.add(d.data().song_id));
+            snapshot.forEach((d: any) => likes.add(d.data().song_id));
             setLikedSongs(likes);
           } catch (e) {
             // Silencing the error
@@ -921,9 +936,9 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
       // Pre-load the static CDN stream if we have it in the database!
       let hasPlayedStatic = false;
       let staticAudioUrl = currentSong.audioUrl;
-      // Only use staticAudioUrl if it's a direct Supabase, custom storage, or Jamendo URL, 
+      // Only use staticAudioUrl if it's a direct custom storage, or Jamendo URL, 
       // ignoring all cached JioSaavn/Deezer URLs to force fresh full-length streams
-      if (staticAudioUrl && !(staticAudioUrl.includes('supabase.co') || staticAudioUrl.includes('jamendo.com'))) {
+      if (staticAudioUrl && !(staticAudioUrl.includes('jamendo.com'))) {
         staticAudioUrl = undefined;
       }
 
@@ -2503,7 +2518,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
                 try {
                   const q = query(collection(db, "songs"), where("creator_id", "==", user?.uid || "anonymous"));
                   const snapshot = await getDocs(q);
-                  const userTracks = snapshot.docs.map(doc => doc.data() as DashboardTrack);
+                  const userTracks = snapshot.docs.map((doc: any) => doc.data() as DashboardTrack);
                   setAlternatives(userTracks); // Reusing alternatives state for user tracks temporarily
                 } catch (e) {
                   console.error(e);

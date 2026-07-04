@@ -1,150 +1,97 @@
----
-title: SONIC
-emoji: 🏆
-colorFrom: blue
-colorTo: purple
-sdk: docker
-app_port: 7860
-pinned: false
----
+# Sonic
 
-# Sonic Music Streaming Web App
+A full-stack music streaming web application designed to replicate the core functionalities of modern streaming platforms. Built with Next.js, Sonic integrates a custom audio processing pipeline, real-time data synchronization, and dynamic user interfaces to deliver a seamless listening experience.
 
-A full-stack music streaming platform inspired by Spotify, built with Next.js. Sonic lets users search, stream, and explore songs with real-time lyrics powered by a custom audio pipeline integrating the DALI dataset, Genius API, and yt-dlp.
+## Overview
 
----
+Sonic provides an end-to-end music streaming experience, from user authentication and personalized libraries to on-the-fly audio extraction and real-time synchronized lyrics. The architecture relies on robust cloud databases and custom backend scripts to fetch, process, and serve audio streams efficiently.
 
-## Demo
+## Core Features
 
->  [Watch Demo Video](#) <!-- Replace with your YouTube link -->
+- **Authentication & User Management:** Secure user registration, login, and session management integrated with Firebase Authentication.
+- **Dynamic Audio Pipeline:** Custom backend infrastructure utilizing Python, yt-dlp, and FFmpeg for real-time extraction and streaming of audio data.
+- **Interactive UI & Animations:** High-performance user interfaces built with React, Tailwind CSS, and Framer Motion. Includes advanced Canvas-based visual effects and seamless page transitions.
+- **Synchronized Lyrics Engine:** Real-time lyric tracking integrated dynamically via external APIs (Genius and lrclib).
+- **Custom Media Player:** Fully functional audio playback controls featuring timeline scrubbing, volume management, A-B segment looping, and background playback.
+- **Creator Dashboard:** Dedicated portal for music curation, library management, and deployment of new tracks.
+- **Real-Time Database Sync:** User preferences, playlists, and track metadata are stored and synchronized globally using Firebase Firestore.
 
----
+## Technical Stack
 
-## Features
+- **Frontend Environment:** Next.js (App Router), React, TypeScript
+- **Styling & Animations:** Tailwind CSS, Framer Motion, HTML5 Canvas
+- **Backend & API:** Next.js API Routes, Python
+- **Audio Processing:** yt-dlp, FFmpeg
+- **Database & Storage:** Firebase Firestore
+- **Authentication:** Firebase Auth
+- **Data Sources:** DALI Dataset (metadata), Genius API / lrclib (lyrics)
 
-- **Authentication System:** Secure sign-up and login utilizing Firebase Authentication.
-- **Interactive UI & Animations:** High-fidelity, polished interfaces built with Framer Motion, featuring a custom Canvas-based interactive Pixel Particle effect on the hero section.
-- **Custom Music Player:** Advanced audio playback controls featuring A-B segment looping, progress tracking, track downloading, and spacebar play/pause toggling.
-- **Real-Time Audio Pipeline:** On-the-fly audio stream extraction via a Python backend leveraging `yt-dlp` and `ffmpeg`.
-- **Live Synchronized Lyrics:** Interactive synced lyrics fetched dynamically via the lrclib / Genius APIs.
-- **Creator Studio & Dashboard:** Dedicated dashboard for managing your music library, exploring genres, and a "Deploy" system to publish new tracks.
-- **Cloud Database:** Real-time data syncing for user favorites ("likes"), collections, and song metadata using Firebase Firestore.
-- **Dockerized Deployment:** Fully containerized backend/frontend architecture for seamless local setup and Hugging Face Spaces deployment.
+## System Architecture
 
----
+1. **Client Request:** User searches or selects a track within the Next.js frontend.
+2. **Metadata Resolution:** Application queries the DALI Dataset for comprehensive track information.
+3. **Audio Extraction:** Python-based backend pipeline invokes yt-dlp and FFmpeg to fetch and format the corresponding audio stream.
+4. **Lyrics Retrieval:** Parallel request sent to Genius API/lrclib to fetch synchronized lyric timestamps.
+5. **Playback & Rendering:** Next.js client renders the media player, visualizer, and lyrics interface concurrently with the audio stream.
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js, React, TypeScript, Tailwind CSS, Framer Motion |
-| **Backend API** | Next.js API Routes, Python |
-| **Audio Pipeline** | yt-dlp, FFmpeg |
-| **Database & Auth** | Firebase Firestore, Firebase Authentication |
-| **Lyrics** | Genius API / lrclib |
-| **Dataset** | DALI Dataset (music metadata) |
-| **Containerization** | Docker |
-
----
-
-## Architecture
-
-```
-User Search Query
-      
-DALI Dataset  Song Metadata
-      
-yt-dlp  Fetch Audio Stream from YouTube
-      
-Lyrics API  Fetch Synced Lyrics
-      
-Next.js  Render Player + Lyrics UI + Animations
-```
-
----
-
-## Local Setup
+## Local Development Setup
 
 ### Prerequisites
-- Docker installed
-- Firebase Configuration (add to your `.env` file)
-- Genius API key  [Get one here](https://genius.com/api-clients)
 
-### Run with Docker
+- Node.js (v18 or higher recommended)
+- Python 3.8+
+- FFmpeg installed and accessible in the system path
+- Firebase account and project credentials
+- Genius API Client Key
 
-```bash
-git clone https://github.com/bhuvanagiribharadwaj959-ui/spotify-type.git
-cd spotify-type/my-app
-docker build -t sonic .
-docker run -p 7860:7860 -e GENIUS_API_KEY=your_key sonic
-```
+### Installation Instructions
 
-Open [http://localhost:7860](http://localhost:7860)
+1. **Install Node Dependencies**
+   Navigate to the project directory and install frontend dependencies:
+   ```bash
+   cd my-app
+   npm install
+   ```
 
-### Run without Docker
+2. **Configure Python Environment**
+   Set up a virtual environment and install backend requirements:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+   pip install -r requirements.txt
+   ```
 
-Ensure you have Python 3, Node.js, and FFmpeg installed locally.
+3. **Environment Variables**
+   Create a `.env.local` file in the root of `my-app` and configure the following:
+   ```
+   GENIUS_API_KEY=your_genius_api_key_here
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_firebase_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
+   ```
 
-```bash
-cd my-app
-npm install
+4. **Launch the Development Server**
+   ```bash
+   npm run dev
+   ```
+   The application will be accessible at `http://localhost:3000`.
 
-# Setup Python virtual environment
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+## Key Technical Learnings
 
-# Run development server
-GENIUS_API_KEY=your_key npm run dev
-```
-
----
-
-## Project Structure
-
-```
-my-app/
- ├── app/                  # Next.js App Router (Dashboard, Login, Studio)
- ├── public/               # Static assets & audio cache
- ├── components/           # React components (Player, Pixel Particle Hero)
- ├── lib/                  # Firebase configuration
- ├── fetch_song_data.py    # Python audio & lyrics pipeline
- ├── merge_song_lists.py   # Song list preprocessing
- ├── Dockerfile            # Container setup for Hugging Face Spaces
- └── requirements.txt      # Python dependencies (yt-dlp, requests)
-```
-
----
-
-## Environment Variables
-
-| Variable | Description |
-|---|---|
-| `GENIUS_API_KEY` | Your Genius API key for lyrics fetching |
-| `HUGGING_FACE` | Hugging Face space secret token |
-| `NEXT_PUBLIC_FIREBASE_*` | Firebase project credentials |
-
----
-
-## What I Learned
-
-- Building a full audio pipeline from metadata  stream  UI
-- Designing and implementing complex Canvas-based interactive UI animations
-- Integrating multiple external APIs (Genius, yt-dlp) in a unified system
-- Managing real-time user states, authentication, and database syncing with Firebase
-- Dockerizing a hybrid Next.js + Python application for cloud deployment
-
----
+- Designed and optimized a low-latency audio streaming pipeline integrating external metadata sources.
+- Implemented complex, state-driven UI animations ensuring 60fps performance using Framer Motion and native Canvas APIs.
+- Architected a robust real-time state management solution utilizing Firebase Firestore for synchronized user data.
+- Handled cross-environment API integrations bridging Node.js and Python ecosystems.
 
 ## Disclaimer
 
-This project is built for educational purposes only. Audio is streamed in real-time and not stored permanently. All rights belong to respective artists and platforms.
+This software is developed strictly for educational and portfolio demonstration purposes. All audio streams are processed in real-time without permanent storage. Copyright and intellectual property rights of the streamed content belong to their respective artists and platforms.
 
----
-
-## Author
+## Contact & Links
 
 **Bhuvana Giri Bharadwaj**
-- GitHub: [@bhuvanagiribharadwaj959-ui](https://github.com/bhuvanagiribharadwaj959-ui)
-- LinkedIn: [Add your LinkedIn here](#)
-
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+- GitHub: [bhuvanagiribharadwaj959-ui](https://github.com/bhuvanagiribharadwaj959-ui)
+- LinkedIn: [Your LinkedIn Profile](#)

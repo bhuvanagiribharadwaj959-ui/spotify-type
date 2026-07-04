@@ -92,7 +92,7 @@ export default function PixelParticleImage({
       } else if (src.startsWith("text:")) {
         const text = src.substring(5);
         tmpCtx.fillStyle = "#ffffff";
-        
+
         // Adaptive font size based on canvas width
         const fontSize = Math.floor(W * 0.28);
         tmpCtx.font = `900 ${fontSize}px Inter, system-ui, -apple-system, sans-serif`;
@@ -110,7 +110,7 @@ export default function PixelParticleImage({
       const pixels = imageData.data;
 
       const particles: Particle[] = [];
-      
+
       // Use tighter grid for text to make letters super readable
       const gridSpacing = src.startsWith("text:") ? 4 : 5;
       const baseParticleSize = src.startsWith("text:") ? 1.5 : 1.8;
@@ -350,10 +350,10 @@ export default function PixelParticleImage({
         // Draw particle as a small square (as requested in the physics loop description: "Draw each particle as a small square")
         const brightness = (p.r + p.g + p.b) / 3;
         const currentSize = p.size * (0.7 + (brightness / 255) * 0.6);
-        
+
         ctx.globalAlpha = p.a / 255;
         ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
-        
+
         // Draw as square
         ctx.fillRect(p.x - currentSize / 2, p.y - currentSize / 2, currentSize, currentSize);
       }
@@ -385,8 +385,8 @@ export default function PixelParticleImage({
           boxShadow: "0 20px 40px rgba(0, 0, 0, 0.6)",
         }}
       />
-      <div 
-        className="pixel-particle-glow" 
+      <div
+        className="pixel-particle-glow"
         style={{
           position: "absolute",
           inset: 0,
