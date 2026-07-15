@@ -20,10 +20,20 @@ import {
 import Link from "next/link";
 import PixelParticleImage from "./PixelParticleImage";
 import "./hero-page.css";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 export default function HeroPage() {
-  const [currentUser, setCurrentUser] = useState<any | null>({ uid: "1", email: "guest@example.com", displayName: "Guest" } as any);
-  const [loadingUser, setLoadingUser] = useState(false);
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoadingUser(false);
+    });
+    return () => unsubscribe();
+  }, []);
   const [activeTab, setActiveTab] = useState("Home");
   const [particleSrc, setParticleSrc] = useState<string>("text:SONIC");
   const [rotation, setRotation] = useState(0);
@@ -387,22 +397,6 @@ export default function HeroPage() {
                 Curated list of the most popular creators right now.
               </p>
             </div>
-            <button style={{ 
-              background: '#fff', 
-              color: '#000', 
-              border: 'none', 
-              borderRadius: '30px', 
-              padding: isMobile ? '10px 20px' : '14px 28px', 
-              fontSize: isMobile ? '13px' : '15px', 
-              fontWeight: 700, 
-              cursor: 'pointer', 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              transition: 'transform 0.2s' 
-            }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
-              Enter Store <span style={{ fontSize: isMobile ? '15px' : '18px' }}>→</span>
-            </button>
           </div>
 
           {/* Bento Spotify Wrapped Style Layout */}

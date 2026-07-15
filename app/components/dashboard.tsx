@@ -647,6 +647,10 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     const unsubscribe = onAuthStateChanged(auth, (u: any) => {
       setUser(u);
       setAuthLoaded(true);
+      if (!u) {
+        router.push("/login");
+        return;
+      }
       if (u) {
         // Create user document if it doesn't exist
         const userRef = doc(db, "users", u.uid);
