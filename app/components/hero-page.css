@@ -1530,7 +1530,7 @@
 }
 
 /* ===== Tablet / Small Desktop ===== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .bg-sonic-text {
     font-size: 35vw;
   }

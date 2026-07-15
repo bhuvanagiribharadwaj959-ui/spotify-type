@@ -28,15 +28,18 @@ export default function HeroPage() {
   const [particleSrc, setParticleSrc] = useState<string>("text:SONIC");
   const [rotation, setRotation] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1200);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize(); // Set initial width
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const isMobile = windowWidth < 768;
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
+  
   useEffect(() => {
     if (isHovered) return;
     const timer = setInterval(() => {
@@ -294,10 +297,10 @@ export default function HeroPage() {
                 const angle = index * (360 / 21);
                 const worldAngle = ((angle + rotation) % 360 + 360) % 360;
                 
-                const radius = isMobile ? 380 : 1300;
-                const visibleThreshold = isMobile ? 150 : 500;
-                const fadeRange = isMobile ? 100 : 300;
-                const divisor = isMobile ? (radius * 1.5) : 2000;
+                const radius = isMobile ? 380 : (isTablet ? 700 : 1300);
+                const visibleThreshold = isMobile ? 150 : (isTablet ? 300 : 500);
+                const fadeRange = isMobile ? 100 : (isTablet ? 200 : 300);
+                const divisor = isMobile ? (radius * 1.5) : (isTablet ? (radius * 1.6) : 2000);
 
                 const z = -radius * Math.cos(worldAngle * Math.PI / 180);
 
@@ -402,10 +405,10 @@ export default function HeroPage() {
             </button>
           </div>
 
-          {/* 3-column Spotify Wrapped Style Layout */}
+          {/* Bento Spotify Wrapped Style Layout */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'),
             gap: '24px',
             width: '100%'
           }}>
@@ -422,14 +425,14 @@ export default function HeroPage() {
                 borderRadius: '8px',
                 padding: '24px',
                 position: 'relative',
-                height: isMobile ? '320px' : '450px',
+                height: (isMobile || isTablet) ? '320px' : '450px',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
                 transition: 'transform 0.3s',
                 cursor: 'pointer',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                transform: isMobile ? 'none' : `translateY(${i % 2 !== 0 ? '40px' : '0'})`
+                transform: (isMobile || isTablet) ? 'none' : `translateY(${i % 2 !== 0 ? '40px' : '0'})`
               }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -485,15 +488,15 @@ export default function HeroPage() {
       </section>
 
       {/* Centered Large-Scale Interactive Sandbox Section (Clean style, NO code walkthrough) */}
-      <section className="sandbox-section" style={{ paddingTop: isMobile ? '40px' : '100px' }}>
+      <section className="sandbox-section" style={{ paddingTop: (isMobile || isTablet) ? '40px' : '100px' }}>
         <div className="sandbox-centered-layout">
           {/* Centered Massive Canvas Sandbox */}
           <div className="sandbox-visual-container">
             <div className="sandbox-canvas-wrapper">
               <PixelParticleImage
                 src={particleSrc}
-                width={isMobile ? 340 : 800}
-                height={isMobile ? 240 : 380}
+                width={isMobile ? 340 : (isTablet ? 600 : 800)}
+                height={isMobile ? 240 : (isTablet ? 300 : 380)}
               />
             </div>
           </div>
