@@ -94,4 +94,4 @@ This software is developed strictly for educational and portfolio demonstration 
 
 **Bhuvana Giri Bharadwaj**
 - GitHub: [bhuvanagiribharadwaj959-ui](https://github.com/bhuvanagiribharadwaj959-ui)
-- LinkedIn: [Your LinkedIn Profile](#)
+- LinkedIn: [My LinkedIn Profile](https://www.linkedin.com/in/bhuvanagiri-bharadwaj-aba3353a6/)

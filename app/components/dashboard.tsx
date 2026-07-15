@@ -51,24 +51,10 @@ import "./dashboard.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PlayingOverlay from "./playing";
-type User = any;
-const onAuthStateChanged = (...args: any[]) => { args[1]({ uid: "1", displayName: "Guest", photoURL: "" }); return () => {}; };
-const auth = { onAuthStateChanged, currentUser: { uid: "1", email: "guest@example.com", displayName: "Guest" } };
-const db = {};
-const signOut = async (...args: any[]) => {};
-const sendPasswordResetEmail = async (...args: any[]) => {};
-const updateProfile = async (...args: any[]) => {};
-const collection = (...args: any[]) => {};
-const doc = (...args: any[]) => {};
-const setDoc = async (...args: any[]) => {};
-const getDoc = async (...args: any[]) => ({ exists: () => false, data: () => ({}) });
-const updateDoc = async (...args: any[]) => {};
-const increment = (...args: any[]) => {};
-const addDoc = async (...args: any[]) => {};
-const deleteDoc = async (...args: any[]) => {};
-const query = (...args: any[]) => {};
-const where = (...args: any[]) => {};
-const getDocs = async (...args: any[]) => ({ docs: [], forEach: (cb: any) => {} } as any);
+import { onAuthStateChanged, User, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
+import { auth, db } from "../lib/firebase";
+import { collection, doc, setDoc, getDoc, updateDoc, increment, addDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
+
 
 type DashboardTrack = {
   id: string;
