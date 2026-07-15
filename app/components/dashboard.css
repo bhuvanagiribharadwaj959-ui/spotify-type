@@ -948,7 +948,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* ===== Tablet Breakpoint ===== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   /* Root grid: remove sidebar column, stack vertically */
   .dash-root {
     grid-template-columns: 1fr;
@@ -962,7 +962,7 @@ input[type=range]::-webkit-slider-thumb {
     left: 0;
     right: 0;
     top: auto;
-    height: auto;
+    height: 72px;
     flex-direction: row;
     padding: 0;
     z-index: 150;
@@ -979,21 +979,22 @@ input[type=range]::-webkit-slider-thumb {
     gap: 0;
     width: 100%;
     justify-content: space-around;
-    padding: 8px 4px;
+    padding: 10px 4px;
+    height: 100%;
   }
 
   .dash-nav-item {
     flex-direction: column;
     gap: 4px;
     padding: 6px 8px;
-    font-size: 10px;
+    font-size: 11px;
     text-align: center;
     min-width: 0;
     flex: 1;
     border-radius: 8px;
   }
 
-  .dash-nav-icon { width: 20px; height: 20px; }
+  .dash-nav-icon { width: 22px; height: 22px; }
   .dash-nav-caret { display: none; }
 
   /* Hide non-essential sidebar items on mobile */
@@ -1016,7 +1017,7 @@ input[type=range]::-webkit-slider-thumb {
   .dash-player {
     grid-column: 1;
     position: fixed;
-    bottom: 60px; /* above the bottom tab bar */
+    bottom: 72px; /* above the bottom tab bar */
     left: 0;
     right: 0;
     grid-template-columns: 1fr auto;
