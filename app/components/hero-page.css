@@ -1529,11 +1529,42 @@
   }
 }
 
+/* ===== Tablet / Small Desktop ===== */
 @media (max-width: 768px) {
   .bg-sonic-text {
     font-size: 35vw;
   }
 
+  /* Header: compact layout */
+  .hero-header {
+    padding: 16px 5%;
+  }
+
+  .nav-menu-pills { display: none; }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .btn-login {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .btn-signup {
+    font-size: 13px;
+    padding: 8px 18px;
+  }
+
+  /* Hero body */
+  .hero-body {
+    padding: 24px 5% 40px;
+  }
+
+  /* Side toolbars */
+  .sidebar-left, .sidebar-right { display: none; }
+
+  /* Circles layout: stack vertically */
   .circles-stack-container {
     height: auto;
     flex-direction: column;
@@ -1577,4 +1608,152 @@
     display: none;
     /* Hide overlapping title text overlay on mobile stacked view */
   }
+
+  /* Bottom cards */
+  .cards-row-container {
+    margin-top: 24px;
+    padding: 0 16px;
+    max-width: 100%;
+  }
+
+  .feature-card {
+    padding: 18px;
+    border-radius: 16px;
+    height: auto;
+    min-height: 120px;
+  }
+
+  /* Fanned deck */
+  .fanned-deck-wrapper {
+    height: 280px;
+    margin: 24px 0 40px;
+  }
+
+  .fanned-deck-card {
+    width: 120px;
+    height: 170px;
+    border-radius: 12px;
+  }
+
+  .fanned-section-title {
+    font-size: 36px;
+    letter-spacing: -2px;
+  }
+
+  .fanned-section-subtitle {
+    font-size: 15px;
+  }
+
+  .fanned-card-label .card-song-name { font-size: 11px; }
+  .fanned-card-label .card-song-license { font-size: 7px; }
+  .fanned-card-overlay { padding: 12px; }
+
+  /* Info sections */
+  .info-sections-container {
+    padding: 80px 0;
+    gap: 80px;
+  }
+
+  .info-section-title {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  .info-section-description {
+    font-size: 15px;
+  }
+
+  .info-feature { font-size: 14px; }
+
+  /* Sandbox section */
+  .sandbox-section {
+    padding: 80px 5% 100px;
+  }
+
+  .sandbox-title {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  .sandbox-subtitle { font-size: 15px; }
+
+  .sandbox-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sandbox-upload-btn,
+  .sandbox-reset-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Analytics and Sequencer mocks */
+  .analytics-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-value { font-size: 16px; }
+
+  .step-nodes-row {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .sequencer-dials-panel {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+/* ===== Small Phone ===== */
+@media (max-width: 480px) {
+  .hero-header {
+    padding: 12px 4%;
+  }
+
+  .brand-logo { font-size: 18px; }
+  .brand-logo-icon { width: 28px; height: 28px; }
+
+  .btn-login { padding: 6px 10px; font-size: 12px; }
+  .btn-signup { padding: 8px 14px; font-size: 12px; }
+
+  .hero-body { padding: 16px 4% 32px; }
+
+  .circle-1 { width: 240px; height: 170px; }
+  .circle-2 { width: 240px; height: 240px; }
+  .circle-3 { width: 240px; height: 240px; }
+
+  .fanned-section-title { font-size: 28px; }
+  .fanned-section-subtitle { font-size: 14px; }
+
+  .fanned-deck-wrapper { height: 220px; }
+  .fanned-deck-card { width: 90px; height: 130px; border-radius: 10px; }
+  .fanned-card-overlay { padding: 8px; }
+  .fanned-card-label .card-song-name { font-size: 9px; }
+  .fanned-card-label .card-song-license { display: none; }
+
+  .info-section-title { font-size: 26px; }
+  .info-section-description { font-size: 14px; }
+  .info-section-tag { font-size: 10px; padding: 4px 10px; }
+
+  .sandbox-title { font-size: 26px; }
+  .sandbox-subtitle { font-size: 14px; }
+
+  .feature-card { padding: 14px; min-height: 100px; }
+  .card-title { font-size: 14px; }
+  .card-btn { font-size: 12px; }
+
+  .analytics-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-nodes-row {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .sequencer-row { gap: 8px; }
+  .row-label { width: 40px; font-size: 8px; }
+
+  .hero-footer-hint { margin-top: 30px; }
 }

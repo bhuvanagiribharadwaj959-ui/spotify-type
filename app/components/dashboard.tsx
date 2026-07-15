@@ -104,7 +104,15 @@ function useReveal() {
 
 const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (track: DashboardTrack) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const items = tracks.slice(0, 10);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (items.length <= 1) return;
@@ -116,18 +124,25 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
 
   if (items.length === 0) return null;
 
+  const containerH = isMobile ? '300px' : '500px';
+  const cardsAreaH = isMobile ? '200px' : '300px';
+  const cardW = isMobile ? '120px' : '180px';
+  const cardH = isMobile ? '160px' : '240px';
+  const xMul = isMobile ? 55 : 100;
+  const xPow = isMobile ? 10 : 20;
+
   return (
     <div style={{ 
       position: 'relative', 
       width: '100%', 
-      height: '500px', 
+      height: containerH, 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center', 
       overflow: 'hidden', 
-      borderRadius: '24px', 
-      marginBottom: '40px', 
+      borderRadius: isMobile ? '16px' : '24px', 
+      marginBottom: isMobile ? '24px' : '40px', 
       border: '1px solid rgba(176, 38, 255, 0.2)',
       boxShadow: '0 0 40px rgba(57, 255, 20, 0.05), inset 0 0 80px rgba(176, 38, 255, 0.05)'
     }}>
@@ -141,7 +156,8 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
         transform: 'scale(1.2)',
         zIndex: 0
       }} />
-      <div style={{ position: 'relative', width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1200, marginTop: '20px', zIndex: 1 }}>
+      
+      <div style={{ position: 'relative', width: '100%', height: cardsAreaH, display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: 1200, marginTop: isMobile ? '10px' : '20px', zIndex: 1 }}>
         {items.map((track, i) => {
           let relativeIndex = i - currentIndex;
           const half = items.length / 2;
@@ -150,31 +166,23 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
 
           const absRel = Math.abs(relativeIndex);
           const isCenter = relativeIndex === 0;
-          const zIndex = 100 - Math.floor(absRel); // Center is in front
-          const scale = Math.max(0.4, 1 - absRel * 0.15); // Center is largest
-          const xOffset = Math.sign(relativeIndex) * (absRel * 100 + Math.pow(absRel, 1.5) * 20);
-          const rotateY = relativeIndex * -18; // Wrap forward
+          const zIndex = 100 - Math.floor(absRel);
+          const scale = Math.max(0.4, 1 - absRel * 0.15);
+          const xOffset = Math.sign(relativeIndex) * (absRel * xMul + Math.pow(absRel, 1.5) * xPow);
+          const rotateY = relativeIndex * -18;
           const opacity = Math.max(0, 1 - (absRel - 3.5) * 2);
 
           return (
             <motion.div
               key={`${track.id}-${i}`}
-              onClick={() => {
-                onPlay(track);
-              }}
-              animate={{
-                x: xOffset,
-                rotateY: rotateY,
-                scale: scale,
-                opacity: opacity,
-                zIndex: zIndex,
-              }}
+              onClick={() => { onPlay(track); }}
+              animate={{ x: xOffset, rotateY, scale, opacity, zIndex }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
               style={{
                 position: 'absolute',
-                width: '180px',
-                height: '240px',
-                borderRadius: '16px',
+                width: cardW,
+                height: cardH,
+                borderRadius: isMobile ? '12px' : '16px',
                 overflow: 'hidden',
                 cursor: 'pointer',
                 boxShadow: `0 20px 40px rgba(0,0,0,0.8), 0 0 15px ${isCenter ? 'rgba(57, 255, 20, 0.3)' : 'rgba(176, 38, 255, 0.1)'}`,
@@ -185,8 +193,8 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
               }}
             >
               <img src={track.img} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%)', display: 'flex', alignItems: 'flex-end', padding: '16px', justifyContent: 'center' }}>
-                <div style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%)', display: 'flex', alignItems: 'flex-end', padding: isMobile ? '10px' : '16px', justifyContent: 'center' }}>
+                <div style={{ color: '#fff', fontSize: isMobile ? '12px' : '16px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                   {track.title}
                 </div>
               </div>
@@ -194,12 +202,9 @@ const HeroCarousel = ({ tracks, onPlay }: { tracks: DashboardTrack[], onPlay: (t
           );
         })}
       </div>
-
-
     </div>
   );
 };
-
 
 export default function Dashboard({ slug }: { slug?: string[] }) {
   const cleanImgUrl = (url?: string) => {

@@ -932,7 +932,7 @@ input[type=range]::-webkit-slider-thumb {
   background: var(--text-primary);
 }
 
-/* Responsive Grid */
+/* ===== Responsive Grid ===== */
 @media (max-width: 1400px) {
   .dash-songs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
@@ -944,8 +944,354 @@ input[type=range]::-webkit-slider-thumb {
 
 @media (max-width: 900px) {
   .dash-songs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .dash-player { grid-template-columns: 1fr; gap: 16px; height: auto; padding: 16px; }
+  .dash-playlists, .artists-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ===== Tablet Breakpoint ===== */
+@media (max-width: 768px) {
+  /* Root grid: remove sidebar column, stack vertically */
+  .dash-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  /* Sidebar: convert to bottom tab bar */
+  .dash-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    height: auto;
+    flex-direction: row;
+    padding: 0;
+    z-index: 150;
+    background: var(--sidebar-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: visible;
+    order: 2;
+  }
+
+  .dash-logo { display: none; }
+
+  .dash-nav {
+    flex-direction: row;
+    gap: 0;
+    width: 100%;
+    justify-content: space-around;
+    padding: 8px 4px;
+  }
+
+  .dash-nav-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 8px;
+    font-size: 10px;
+    text-align: center;
+    min-width: 0;
+    flex: 1;
+    border-radius: 8px;
+  }
+
+  .dash-nav-icon { width: 20px; height: 20px; }
+  .dash-nav-caret { display: none; }
+
+  /* Hide non-essential sidebar items on mobile */
+  .dash-sub,
+  .dash-create-music-btn,
+  .dash-sidebar-sep,
+  .dash-pinned-links,
+  .dash-user-profile,
+  .dash-logout { display: none; }
+
+  /* Main panel: full width, account for bottom nav + player */
+  .dash-main {
+    grid-column: 1;
+    margin-bottom: 0;
+    padding-bottom: 160px; /* space for bottom nav + player */
+    border-radius: 0;
+  }
+
+  /* Player bar: full width at bottom, above sidebar nav */
+  .dash-player {
+    grid-column: 1;
+    position: fixed;
+    bottom: 60px; /* above the bottom tab bar */
+    left: 0;
+    right: 0;
+    grid-template-columns: 1fr auto;
+    height: 64px;
+    padding: 0 12px;
+    z-index: 140;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: #181818;
+  }
+
+  .dash-player-now {
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .dash-player-cover {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dash-player-name {
+    font-size: 13px;
+    max-width: 140px;
+  }
+
+  .dash-player-artist {
+    max-width: 140px;
+  }
+
+  .dash-player-controls {
+    flex-direction: row;
+    gap: 0;
+    max-width: none;
+    width: auto;
+  }
+
+  .dash-player-buttons { gap: 12px; }
+
+  /* Hide progress bar and secondary controls on mobile player */
+  .dash-player-progress { display: none; }
   .dash-player-right { display: none; }
+  .dash-player-btn:not(.dash-player-main) { display: none; }
+  .dash-player-main {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Topbar */
+  .dash-topbar {
+    padding: 12px 16px;
+    height: 56px;
+    gap: 10px;
+  }
+
+  .dash-search {
+    max-width: 100%;
+    height: 36px;
+    padding: 0 12px;
+  }
+
+  .dash-search input { font-size: 13px; }
+
+  .dash-search-dropdown {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    top: 52px;
+  }
+
+  .dash-user-name { display: none; }
+
+  /* Content */
+  .dash-content {
+    padding: 16px;
+  }
+
+  /* Greeting */
+  .dash-greeting {
+    font-size: 22px;
+  }
+
+  .dash-greeting-container {
+    padding: 12px 16px;
+  }
+
+  .dash-greeting-subtitle {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  /* Hero grid */
+  .dash-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .dash-hero-card {
+    height: 64px;
+  }
+
+  .dash-hero-img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .dash-hero-title { font-size: 14px; }
+
+  .dash-hero-play {
+    width: 36px;
+    height: 36px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Songs grid */
+  .dash-songs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-bottom: 24px;
+  }
+
+  .dash-song-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .dash-song-play {
+    width: 36px;
+    height: 36px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dash-song-title { font-size: 14px; }
+  .dash-song-artist { font-size: 12px; }
+
+  /* Artists grid */
+  .dash-playlists, .artists-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .dash-artist-card { padding: 10px; gap: 10px; }
+  .dash-artist-name { font-size: 14px; }
+
+  /* Section headers */
+  .dash-section-title { font-size: 20px; }
+
+  /* Monochrome grid */
+  .dash-monochrome-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* Album view */
+  .dash-album-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 16px 16px;
+    text-align: center;
+  }
+
+  .dash-album-cover {
+    width: 200px;
+    height: 200px;
+  }
+
+  .dash-album-info h2 {
+    font-size: 1.8rem;
+  }
+
+  .dash-album-info {
+    align-items: center;
+  }
+
+  /* Queue panel */
+  .queue-panel {
+    width: 100%;
+    height: calc(100vh - 124px);
+  }
+
+  /* Search overlay */
+  .search-overlay {
+    padding: 60px 16px 16px;
+  }
+
+  .search-overlay-input {
+    font-size: 16px;
+    padding: 14px 18px;
+  }
+
+  .search-results { max-height: 50vh; }
+
+  /* Subnav tabs */
+  .dash-subnav {
+    padding: 12px 16px 8px;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .dash-subnav::-webkit-scrollbar { display: none; }
+
+  .dash-subnav-tab {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}
+
+/* ===== Small Phone Breakpoint ===== */
+@media (max-width: 480px) {
+  .dash-nav-item {
+    font-size: 9px;
+    padding: 6px 4px;
+  }
+
+  .dash-nav-icon { width: 18px; height: 18px; }
+
+  .dash-topbar {
+    padding: 10px 12px;
+    height: 48px;
+  }
+
+  .dash-search { height: 32px; }
+
+  .dash-content { padding: 12px; }
+
+  .dash-greeting { font-size: 18px; }
+
+  .dash-greeting-container {
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+
+  .dash-greeting-subtitle { display: none; }
+
+  .dash-section-title { font-size: 18px; }
+
+  .dash-songs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .dash-song-card {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .dash-song-title { font-size: 13px; }
+  .dash-song-artist { font-size: 11px; }
+
+  .dash-playlists, .artists-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .dash-monochrome-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .dash-album-cover { width: 160px; height: 160px; }
+  .dash-album-info h2 { font-size: 1.4rem; }
+
+  .dash-player {
+    height: 56px;
+    padding: 0 8px;
+    bottom: 56px;
+  }
+
+  .dash-player-cover { width: 40px; height: 40px; }
+  .dash-player-name { font-size: 12px; max-width: 120px; }
+  .dash-player-artist { font-size: 10px; }
 }
 
 /* ===== Monochrome.tf Styles ===== */
