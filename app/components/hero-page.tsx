@@ -28,6 +28,14 @@ export default function HeroPage() {
   const [particleSrc, setParticleSrc] = useState<string>("text:SONIC");
   const [rotation, setRotation] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (isHovered) return;
@@ -228,10 +236,30 @@ export default function HeroPage() {
 
         {/* REDESIGNED SECTION 1: Open Source Songs (Image 4 3D Fanned Album Deck Style) */}
         <div className="section-fanned-showcase" style={{ maxWidth: '1300px', margin: '0 auto', width: '100%', alignItems: 'flex-start' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', marginBottom: '0px' }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'flex-start', 
+            width: '100%', 
+            marginBottom: '0px',
+            padding: isMobile ? '0 16px' : '0'
+          }}>
             <div>
-              <h2 style={{ fontSize: '56px', fontWeight: 600, margin: 0, letterSpacing: '-2px', color: '#fff' }}>Open Source Songs</h2>
-              <p style={{ color: '#a0a0a0', margin: '12px 0 0 0', fontSize: '18px', maxWidth: '600px' }}>
+              <h2 style={{ 
+                fontSize: isMobile ? '32px' : '56px', 
+                fontWeight: 600, 
+                margin: 0, 
+                letterSpacing: '-1.5px', 
+                color: '#fff',
+                lineHeight: 1.1
+              }}>
+                Open Source Songs
+              </h2>
+              <p style={{ 
+                color: '#a0a0a0', 
+                margin: '8px 0 0 0', 
+                fontSize: isMobile ? '15px' : '18px', 
+                maxWidth: '600px' 
+              }}>
                 Turn your ideas into high-quality music in seconds. Stream, download, and remix stems with no licensing restrictions.
               </p>
             </div>
@@ -242,7 +270,7 @@ export default function HeroPage() {
             className="fanned-deck-wrapper"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            style={{ perspective: '1200px', margin: '10px 0 30px' }}
+            style={{ perspective: isMobile ? '800px' : '1200px', margin: '10px 0 30px' }}
           >
             {/* Spotlight background behind center card */}
             <div className="fanned-glow-spotlight"></div>
@@ -265,13 +293,18 @@ export default function HeroPage() {
               {[...fannedCovers, ...fannedCovers, ...fannedCovers].map((coverUrl, index) => {
                 const angle = index * (360 / 21);
                 const worldAngle = ((angle + rotation) % 360 + 360) % 360;
-                // Increased radius to 1300 to relax the curvature
-                const z = -1300 * Math.cos(worldAngle * Math.PI / 180);
+                
+                const radius = isMobile ? 380 : 1300;
+                const visibleThreshold = isMobile ? 150 : 500;
+                const fadeRange = isMobile ? 100 : 300;
+                const divisor = isMobile ? (radius * 1.5) : 2000;
+
+                const z = -radius * Math.cos(worldAngle * Math.PI / 180);
 
                 // Opacity fades out smoothly so we only see the back arc
-                const opacity = Math.max(0, Math.min(1, (-z - 500) / 300));
+                const opacity = Math.max(0, Math.min(1, (-z - visibleThreshold) / fadeRange));
                 // Relaxed dynamic scale
-                const dynamicScale = 1 + (z + 1300) / 2000;
+                const dynamicScale = 1 + (z + radius) / divisor;
 
                 const angleFixed = angle.toFixed(3);
                 const scaleFixed = dynamicScale.toFixed(3);
@@ -281,12 +314,11 @@ export default function HeroPage() {
                   { title: "Blinding Lights", license: "The Weeknd • Synthpop" },
                   { title: "Levitating", license: "Dua Lipa • Disco Pop" },
                   { title: "Cruel Summer", license: "Taylor Swift • Synthpop" },
-                  { title: "Midnight City", license: "M83 • Synthwave" },
+                  { title: "Midnight City", license: "Midnight City • Synthwave" },
                   { title: "Starboy", license: "The Weeknd • R&B" },
                   { title: "Riptide", license: "Vance Joy • Indie Folk" },
                   { title: "Sweater Weather", license: "The Neighbourhood • Indie" }
                 ];
-                // Map index to the 7 unique song metadata objects
                 const info = songInfo[index % 7];
 
                 return (
@@ -296,9 +328,8 @@ export default function HeroPage() {
                     style={{
                       backgroundImage: `url(${coverUrl})`,
                       position: 'absolute',
-                      transform: `rotateY(${angleFixed}deg) translateZ(-1300px) scale(${scaleFixed})`,
+                      transform: `rotateY(${angleFixed}deg) translateZ(-${radius}px) scale(${scaleFixed})`,
                       opacity: opacityFixed,
-                      // The container handles the positioning rotation. The card just handles its own opacity fade.
                       transition: 'opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.6s, border-color 0.6s'
                     }}
                   >
@@ -313,30 +344,68 @@ export default function HeroPage() {
               })}
             </div>
           </div>
-
-
         </div>
 
-
-
         {/* Section 3: Explore your favorite artists (Bento Grid) */}
-        <div className="info-section" style={{ flexDirection: 'column', alignItems: 'flex-start', maxWidth: '1300px', margin: '0 auto', gap: '40px' }}>
+        <div className="info-section" style={{ 
+          flexDirection: 'column', 
+          alignItems: 'flex-start', 
+          maxWidth: '1300px', 
+          margin: '0 auto', 
+          gap: isMobile ? '24px' : '40px',
+          padding: isMobile ? '0 16px' : '0 5%'
+        }}>
 
-          {/* Header row from the mockup */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%' }}>
+          {/* Header row */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'column' : 'row', 
+            justifyContent: 'space-between', 
+            alignItems: isMobile ? 'flex-start' : 'flex-end', 
+            width: '100%',
+            gap: isMobile ? '16px' : '0px'
+          }}>
             <div>
-              <h2 style={{ fontSize: '56px', fontWeight: 600, margin: 0, letterSpacing: '-2px', color: '#fff' }}>Explore your favorite artists</h2>
-              <p style={{ color: '#a0a0a0', margin: '12px 0 0 0', fontSize: '18px' }}>Curated list of the most popular creators right now.</p>
+              <h2 style={{ 
+                fontSize: isMobile ? '32px' : '56px', 
+                fontWeight: 600, 
+                margin: 0, 
+                letterSpacing: '-1.5px', 
+                color: '#fff',
+                lineHeight: 1.1
+              }}>
+                Explore your favorite artists
+              </h2>
+              <p style={{ 
+                color: '#a0a0a0', 
+                margin: '8px 0 0 0', 
+                fontSize: isMobile ? '15px' : '18px' 
+              }}>
+                Curated list of the most popular creators right now.
+              </p>
             </div>
-            <button style={{ background: '#fff', color: '#000', border: 'none', borderRadius: '30px', padding: '14px 28px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', transition: 'transform 0.2s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
-              Enter Store <span style={{ fontSize: '18px' }}>→</span>
+            <button style={{ 
+              background: '#fff', 
+              color: '#000', 
+              border: 'none', 
+              borderRadius: '30px', 
+              padding: isMobile ? '10px 20px' : '14px 28px', 
+              fontSize: isMobile ? '13px' : '15px', 
+              fontWeight: 700, 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px', 
+              transition: 'transform 0.2s' 
+            }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+              Enter Store <span style={{ fontSize: isMobile ? '15px' : '18px' }}>→</span>
             </button>
           </div>
 
           {/* 3-column Spotify Wrapped Style Layout */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
             gap: '24px',
             width: '100%'
           }}>
@@ -353,14 +422,14 @@ export default function HeroPage() {
                 borderRadius: '8px',
                 padding: '24px',
                 position: 'relative',
-                height: '450px',
+                height: isMobile ? '320px' : '450px',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
                 transition: 'transform 0.3s',
                 cursor: 'pointer',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                transform: `translateY(${i % 2 !== 0 ? '40px' : '0'})`
+                transform: isMobile ? 'none' : `translateY(${i % 2 !== 0 ? '40px' : '0'})`
               }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -376,10 +445,10 @@ export default function HeroPage() {
                 {/* Artist Image (Absolute positioning) */}
                 <div style={{
                   position: 'absolute',
-                  top: i % 2 === 0 ? '40px' : '90px', // stagger the image position
+                  top: isMobile ? '20px' : (i % 2 === 0 ? '40px' : '90px'),
                   right: 0,
-                  width: '55%',
-                  height: '45%',
+                  width: isMobile ? '45%' : '55%',
+                  height: isMobile ? '50%' : '45%',
                   backgroundImage: `url(${card.img})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
@@ -389,14 +458,14 @@ export default function HeroPage() {
 
                 {/* Text Content */}
                 <div style={{ marginTop: 'auto', zIndex: 2 }}>
-                  <div style={{ color: card.nameColor, fontSize: '14px', fontWeight: 600, marginBottom: '6px' }}>Top Artist</div>
+                  <div style={{ color: card.nameColor, fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>Top Artist</div>
                   <h3 style={{
                     color: card.nameColor,
-                    fontSize: '64px',
+                    fontSize: isMobile ? '36px' : '64px',
                     fontWeight: 900,
                     margin: 0,
                     lineHeight: '0.9',
-                    letterSpacing: '-3px',
+                    letterSpacing: isMobile ? '-1.5px' : '-3px',
                     width: '85%',
                     wordWrap: 'break-word',
                     textTransform: 'none'
@@ -405,7 +474,7 @@ export default function HeroPage() {
                       <div key={wIdx}>{word}</div>
                     ))}
                   </h3>
-                  <p style={{ color: card.descColor, fontSize: '14px', marginTop: '16px', maxWidth: '85%', lineHeight: 1.3, fontWeight: 600 }}>
+                  <p style={{ color: card.descColor, fontSize: isMobile ? '12px' : '14px', marginTop: isMobile ? '10px' : '16px', maxWidth: '85%', lineHeight: 1.3, fontWeight: 600 }}>
                     You spent {card.hrs} hours with your favorite artist {card.name}, and the pleasure is all theirs.
                   </p>
                 </div>
@@ -416,15 +485,15 @@ export default function HeroPage() {
       </section>
 
       {/* Centered Large-Scale Interactive Sandbox Section (Clean style, NO code walkthrough) */}
-      <section className="sandbox-section" style={{ paddingTop: '100px' }}>
+      <section className="sandbox-section" style={{ paddingTop: isMobile ? '40px' : '100px' }}>
         <div className="sandbox-centered-layout">
           {/* Centered Massive Canvas Sandbox */}
           <div className="sandbox-visual-container">
             <div className="sandbox-canvas-wrapper">
               <PixelParticleImage
                 src={particleSrc}
-                width={800}
-                height={380}
+                width={isMobile ? 340 : 800}
+                height={isMobile ? 240 : 380}
               />
             </div>
           </div>
