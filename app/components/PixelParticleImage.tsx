@@ -247,8 +247,28 @@ export default function PixelParticleImage({
       mouseRef.current.active = false;
     };
 
+    // Touch handlers for mobile
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        mouseRef.current.x = e.touches[0].clientX - rect.left;
+        mouseRef.current.y = e.touches[0].clientY - rect.top;
+        mouseRef.current.active = true;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      mouseRef.current.x = -9999;
+      mouseRef.current.y = -9999;
+      mouseRef.current.active = false;
+    };
+
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseleave", handleMouseLeave);
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: true });
+    canvas.addEventListener("touchstart", handleTouchMove, { passive: true });
+    canvas.addEventListener("touchend", handleTouchEnd);
+    canvas.addEventListener("touchcancel", handleTouchEnd);
 
     let frameCount = 0;
 
@@ -368,6 +388,10 @@ export default function PixelParticleImage({
       cancelAnimationFrame(rafRef.current);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseleave", handleMouseLeave);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchstart", handleTouchMove);
+      canvas.removeEventListener("touchend", handleTouchEnd);
+      canvas.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, [src, width, height, initParticles, spawnSmoke]);
 

@@ -410,7 +410,9 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
       return;
     }
     const updateUrl = () => {
-      if (popupArtist) {
+      if (isExpanded && currentSong && currentSong.id !== 'dummy') {
+        window.history.pushState({}, '', `/dashboard/song/${encodeURIComponent(currentSong.id)}`);
+      } else if (popupArtist) {
         window.history.pushState({}, '', `/dashboard/${encodeURIComponent(popupArtist)}`);
       } else if (popupAlbum) {
         const albumName = popupAlbum.album || popupAlbum.title;
@@ -425,7 +427,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
     };
     const timeout = setTimeout(updateUrl, 50);
     return () => clearTimeout(timeout);
-  }, [popupArtist, popupAlbum, active]);
+  }, [popupArtist, popupAlbum, active, isExpanded, currentSong]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -515,6 +517,7 @@ export default function Dashboard({ slug }: { slug?: string[] }) {
         if (song) {
           setCurrentSong(song);
           setActive('Playing');
+          setIsExpanded(true);
           if (!playingRef.current) {
             setPlaying(true);
             playingRef.current = true;

@@ -175,6 +175,98 @@
   letter-spacing: -12px;
 }
 
+/* Hero Top Text & CTA Section */
+.hero-text-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 30px;
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-mobile-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.hero-main-title {
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -3px;
+  line-height: 1.0;
+  margin-bottom: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
+}
+
+.hero-main-subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin: 0 auto 28px;
+}
+
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.hero-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hero-cta-btn.primary {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+}
+
+.hero-cta-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 255, 255, 0.4);
+}
+
+.hero-cta-btn.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.hero-cta-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
 /* Side toolbars */
 .sidebar-left,
 .sidebar-right {
@@ -561,12 +653,12 @@
    VISUALLY IMMERSIVE MIDDLE SHOWCASE SECTIONS (B&W THEME)
    ========================================================== */
 .info-sections-container {
-  padding: 140px 0;
+  padding: 60px 0 40px;
   /* Expanded full bleed width for sections */
   background: linear-gradient(to bottom, #000000 0%, #0c0c0c 50%, #000000 100%);
   display: flex;
   flex-direction: column;
-  gap: 160px;
+  gap: 60px;
   position: relative;
   z-index: 10;
 }
@@ -663,7 +755,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .fanned-header-block {
@@ -747,7 +839,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
 }
 
 /* Spotlight blur behind fanned deck - high-tech neon green and purple blend */
@@ -1317,7 +1409,7 @@
    CENTERED PARTICLE SANDBOX SECTION (CLEAN THEME, NO WALKTHROUGH)
    ========================================================== */
 .sandbox-section {
-  padding: 140px 5% 160px;
+  padding: 40px 5% 50px;
   background: #000000;
   position: relative;
   z-index: 10;
@@ -1540,7 +1632,9 @@
     padding: 16px 5%;
   }
 
-  .nav-menu-pills { display: none; }
+  .nav-menu-pills {
+    display: none;
+  }
 
   .header-actions {
     gap: 8px;
@@ -1562,7 +1656,10 @@
   }
 
   /* Side toolbars */
-  .sidebar-left, .sidebar-right { display: none; }
+  .sidebar-left,
+  .sidebar-right {
+    display: none;
+  }
 
   /* Circles layout: stack vertically */
   .circles-stack-container {
@@ -1644,14 +1741,22 @@
     font-size: 15px;
   }
 
-  .fanned-card-label .card-song-name { font-size: 11px; }
-  .fanned-card-label .card-song-license { font-size: 7px; }
-  .fanned-card-overlay { padding: 12px; }
+  .fanned-card-label .card-song-name {
+    font-size: 11px;
+  }
+
+  .fanned-card-label .card-song-license {
+    font-size: 7px;
+  }
+
+  .fanned-card-overlay {
+    padding: 12px;
+  }
 
   /* Info sections */
   .info-sections-container {
-    padding: 80px 0;
-    gap: 80px;
+    padding: 40px 0 20px;
+    gap: 40px;
   }
 
   .info-section-title {
@@ -1663,11 +1768,13 @@
     font-size: 15px;
   }
 
-  .info-feature { font-size: 14px; }
+  .info-feature {
+    font-size: 14px;
+  }
 
   /* Sandbox section */
   .sandbox-section {
-    padding: 80px 5% 100px;
+    padding: 30px 4% 40px;
   }
 
   .sandbox-title {
@@ -1675,7 +1782,9 @@
     letter-spacing: -1px;
   }
 
-  .sandbox-subtitle { font-size: 15px; }
+  .sandbox-subtitle {
+    font-size: 15px;
+  }
 
   .sandbox-controls {
     flex-direction: column;
@@ -1694,7 +1803,9 @@
     gap: 8px;
   }
 
-  .stat-value { font-size: 16px; }
+  .stat-value {
+    font-size: 16px;
+  }
 
   .step-nodes-row {
     grid-template-columns: repeat(8, 1fr);
@@ -1712,37 +1823,117 @@
     padding: 12px 4%;
   }
 
-  .brand-logo { font-size: 18px; }
-  .brand-logo-icon { width: 28px; height: 28px; }
+  .brand-logo {
+    font-size: 18px;
+  }
 
-  .btn-login { padding: 6px 10px; font-size: 12px; }
-  .btn-signup { padding: 8px 14px; font-size: 12px; }
+  .brand-logo-icon {
+    width: 28px;
+    height: 28px;
+  }
 
-  .hero-body { padding: 16px 4% 32px; }
+  .btn-login {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
 
-  .circle-1 { width: 240px; height: 170px; }
-  .circle-2 { width: 240px; height: 240px; }
-  .circle-3 { width: 240px; height: 240px; }
+  .btn-signup {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
 
-  .fanned-section-title { font-size: 28px; }
-  .fanned-section-subtitle { font-size: 14px; }
+  .hero-body {
+    padding: 16px 4% 32px;
+  }
 
-  .fanned-deck-wrapper { height: 220px; }
-  .fanned-deck-card { width: 90px; height: 130px; border-radius: 10px; }
-  .fanned-card-overlay { padding: 8px; }
-  .fanned-card-label .card-song-name { font-size: 9px; }
-  .fanned-card-label .card-song-license { display: none; }
+  .hero-main-title {
+    font-size: 38px;
+    letter-spacing: -1.5px;
+  }
 
-  .info-section-title { font-size: 26px; }
-  .info-section-description { font-size: 14px; }
-  .info-section-tag { font-size: 10px; padding: 4px 10px; }
+  .hero-mobile-badge {
+    font-size: 10px;
+    padding: 4px 12px;
+  }
 
-  .sandbox-title { font-size: 26px; }
-  .sandbox-subtitle { font-size: 14px; }
+  .hero-main-subtitle {
+    font-size: 13.5px;
+    margin-bottom: 20px;
+  }
 
-  .feature-card { padding: 14px; min-height: 100px; }
-  .card-title { font-size: 14px; }
-  .card-btn { font-size: 12px; }
+  .hero-cta-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero-cta-btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 13px;
+  }
+
+  .fanned-deck-wrapper {
+    height: 240px;
+    margin: 16px 0 24px;
+  }
+
+  .fanned-deck-card {
+    width: 100px;
+    height: 145px;
+    border-radius: 10px;
+  }
+
+  .fanned-card-overlay {
+    padding: 8px;
+  }
+
+  .fanned-card-label .card-song-name {
+    font-size: 10px;
+  }
+
+  .fanned-card-label .card-song-license {
+    display: none;
+  }
+
+  .info-section {
+    padding: 0 4%;
+    gap: 24px;
+  }
+
+  .info-section-title {
+    font-size: 26px;
+  }
+
+  .info-section-description {
+    font-size: 14px;
+  }
+
+  .info-section-tag {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  .sandbox-title {
+    font-size: 24px;
+  }
+
+  .sandbox-subtitle {
+    font-size: 13px;
+  }
+
+  .feature-card {
+    padding: 14px;
+    min-height: 100px;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+
+  .card-btn {
+    font-size: 12px;
+  }
 
   .analytics-stats-grid {
     grid-template-columns: 1fr;
@@ -1752,8 +1943,16 @@
     grid-template-columns: repeat(8, 1fr);
   }
 
-  .sequencer-row { gap: 8px; }
-  .row-label { width: 40px; font-size: 8px; }
+  .sequencer-row {
+    gap: 8px;
+  }
 
-  .hero-footer-hint { margin-top: 30px; }
+  .row-label {
+    width: 40px;
+    font-size: 8px;
+  }
+
+  .hero-footer-hint {
+    margin-top: 30px;
+  }
 }
